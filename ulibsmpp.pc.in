@@ -1,0 +1,16 @@
+#ulibsmpp pkg-config source file
+
+prefix=/usr/local
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+
+Name: ulibsmpp
+Cflags: -I${includedir}
+Libs: -L${libdir} -lulibsmpp
+
+Description: universal SMPP library
+Version: @VERSION@
+Requires: ulib
+
+

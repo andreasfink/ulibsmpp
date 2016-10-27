@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>471532D8-FD2E-46A3-B360-E873831241BD</string>
+	<key>IDESourceControlProjectName</key>
+	<string>ulibsmpp</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>578D5F842FF0323D93E10928FD7802F7888B8C9A</key>
+		<string>ssh://metropolis.fink.org/git/ulibsmpp.git</string>
+		<key>91e5b44e-3a6b-4313-a434-711f1ad70bd8++505</key>
+		<string>ssh://metropolis.fink.org/git/ulibsmpp.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>ulibsmpp.xcodeproj</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>578D5F842FF0323D93E10928FD7802F7888B8C9A</key>
+		<string>../..</string>
+		<key>91e5b44e-3a6b-4313-a434-711f1ad70bd8++505</key>
+		<string>../../../ulibsmpp</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>ssh://metropolis.fink.org/git/ulibsmpp.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>111</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>578D5F842FF0323D93E10928FD7802F7888B8C9A</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>91e5b44e-3a6b-4313-a434-711f1ad70bd8++505</string>
+			<key>IDESourceControlWCCName</key>
+			<string>ulibsmpp</string>
+		</dict>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>578D5F842FF0323D93E10928FD7802F7888B8C9A</string>
+			<key>IDESourceControlWCCName</key>
+			<string>ulibsmpp-git</string>
+		</dict>
+	</array>
+</dict>
+</plist>
