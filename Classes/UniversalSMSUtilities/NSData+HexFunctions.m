@@ -273,7 +273,7 @@
     len2 = (len * 7 + 3) / 4;
 	if(len2 > 0x7F)
     {
-		NSLog(@"trying to do gsm8to7 with len2 = %ld. That can't work",len2);
+		NSLog(@"trying to do gsm8to7 with len2 = %d. That can't work",(int)len2);
     }
 	*nibblelen = len2 & 0xFF;
 	//[result appendBytes:&b	length:1];
