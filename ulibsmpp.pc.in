@@ -7,7 +7,7 @@ includedir=${prefix}/include
 
 Name: ulibsmpp
 Cflags: -I${includedir}
-Libs: -L${libdir} -lulibsmpp
+Libs: -L${libdir} -l:libulibsmpp.@SHARED_LIBRARY_EXTENSION@.@MAJORVER@.@MINORVER@
 
 Description: universal SMPP library
 Version: @VERSION@
