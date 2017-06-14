@@ -1036,8 +1036,7 @@ end:
             memset(header,0xF0,16);
             if([[uc receiveBuffer] length] < 16)
             {
-                debugLastLocation = NULL;
-                return;
+                break;
             }
             
             @synchronized(uc.receiveBuffer)
@@ -1066,8 +1065,7 @@ end:
                 [uc sendString:@"</body>\r\n"];
                 [uc sendString:@"</html>\r\n"];
                 endThisConnection=YES;
-                debugLastLocation = NULL;
-                return;
+                break;
             }
             
             l	= ((header[0] << 24) | (header[1] << 16) | (header[2] << 8) | (header[3]));
@@ -1076,9 +1074,8 @@ end:
                 long len = [[uc receiveBuffer] length];
                 NSString *msg = [NSString stringWithFormat:@"[SmscConnectionSMPP checkForPackets]: received packet with erroneous length (claimed %d, was %ld)\r\n", l, len];
                 [logFeed minorError:0 inSubsection:@"smpp" withText:msg];
-                debugLastLocation = NULL;
-                return;
-            }
+                break;
+           }
             
             pdu = [[SmppPdu alloc] initFromData:[uc receiveBuffer]];
             if(pdu)
