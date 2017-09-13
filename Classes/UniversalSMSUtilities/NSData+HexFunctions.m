@@ -112,7 +112,6 @@
 	return result;	
 }
 
-
 -(NSString *) stringFromGsm8
 {
 	ssize_t i;
