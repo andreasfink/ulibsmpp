@@ -74,10 +74,10 @@
         deliverReportQueue      = [[UMQueue alloc] init];
         ackNackQueue            = [[UMQueue alloc] init];
 #endif
-        inboundMessagesThroughput = [[UMThroughputCounter alloc]init];
-        outboundMessagesThroughput = [[UMThroughputCounter alloc]init];
-        inboundReportsThroughput = [[UMThroughputCounter alloc]init];
-        outboundReportsThroughput = [[UMThroughputCounter alloc]init];
+        inboundMessagesThroughput = [[UMThroughputCounter alloc]initWithResolutionInSeconds: 1.0 maxDuration: 1260.0];
+        outboundMessagesThroughput = [[UMThroughputCounter alloc]initWithResolutionInSeconds: 1.0 maxDuration: 1260.0];
+        inboundReportsThroughput = [[UMThroughputCounter alloc]initWithResolutionInSeconds: 1.0 maxDuration: 1260.0];
+        outboundReportsThroughput = [[UMThroughputCounter alloc]initWithResolutionInSeconds: 1.0 maxDuration: 1260.0];
         receivePollTimeoutMs = SMSC_CONNECTION_DEFAULT_RECEIVE_POLL_TIMEOUT_MS;
         transmitTimeout  =SMSC_CONNECTION_DEFAULT_TRANSMIT_TIMEOUT;
         keepAlive = SMSC_CONNECTION_DEFAULT_KEEPALIVE;
