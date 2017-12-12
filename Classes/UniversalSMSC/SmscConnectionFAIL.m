@@ -28,7 +28,7 @@
         [super setVersion: @"1.0"];
         [super setType: @"fail"];
         self.errorToReturn = NULL;
-        self.lastActivity =[NSDate date];
+        self.lastActivity =[NSDate new];
     }
     return self;
 }

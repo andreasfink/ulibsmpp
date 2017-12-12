@@ -159,7 +159,7 @@ const SmppErrorCodeListEntry SmppErrorCodeList[] =
         trnLock = [[NSLock alloc] init];
         smppMessageIdType = -1;
         tlvDefs = [[NSDictionary alloc] init];
-        self.lastActivity =[NSDate date];
+        self.lastActivity =[NSDate new];
     }
     return self;
 }
@@ -816,7 +816,7 @@ end:
 				incomingStatus = SMPP_STATUS_INCOMING_LISTENING;
 				break;
 			case SMPP_STATUS_INCOMING_BIND_RETRY_TIMER:
-				now = [NSDate date];
+				now = [NSDate new];
 				if([now compare:retryTime] == NSOrderedDescending)
 				{
 					retryTime = nil;
@@ -829,7 +829,7 @@ end:
 				break;
 				
 			case SMPP_STATUS_INCOMING_LISTEN_WAIT_TIMER:
-				now = [NSDate date];
+				now = [NSDate new];
 				if([now compare:retryTime] == NSOrderedDescending)
 				{
 					retryTime = nil;
@@ -1170,7 +1170,7 @@ end:
                 case SMPP_PDU_SUBMIT_SM:
                     time(&lastSubmitSmReceived);
                     [self handleIncomingSubmitSm: pdu];
-                    self.lastActivity =[NSDate date];
+                    self.lastActivity =[NSDate new];
                     break;
                 case SMPP_PDU_SUBMIT_SM_RESP:
                     time(&lastSubmitSmAckReceived);
@@ -1185,7 +1185,7 @@ end:
                 case SMPP_PDU_DELIVER_SM:
                     time(&lastDeliverSmReceived);
                     [self handleIncomingDeliverSm: pdu];
-                    self.lastActivity =[NSDate date];
+                    self.lastActivity =[NSDate new];
                     break;
                 case SMPP_PDU_DELIVER_SM_RESP:
                     time(&lastDeliverSmAckReceived);
@@ -2581,7 +2581,7 @@ length_error:
                 break;
                 
             case SMPP_STATUS_OUTGOING_CONNECT_RETRY_TIMER:
-				now = [NSDate date];
+				now = [NSDate new];
 				if([now compare:retryTime] == NSOrderedDescending)
 				{
 					retryTime = nil;
@@ -2659,7 +2659,7 @@ length_error:
             }
                 
             case SMPP_STATUS_OUTGOING_MAJOR_FAILURE_RETRY_TIMER:
-   				now = [NSDate date];
+   				now = [NSDate new];
 				if([now compare:retryTime] == NSOrderedDescending)
 				{
 					retryTime = nil;

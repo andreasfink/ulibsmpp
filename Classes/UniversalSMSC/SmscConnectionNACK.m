@@ -23,7 +23,7 @@
     {
         [super setVersion: @"1.0"];
         [super setType: @"nack"];
-        self.lastActivity =[NSDate date];
+        self.lastActivity =[NSDate new];
     }
     return self;
 }
