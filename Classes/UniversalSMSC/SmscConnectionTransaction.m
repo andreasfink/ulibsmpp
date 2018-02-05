@@ -57,7 +57,7 @@
 
 - (BOOL) isExpired
 {
-    if (( -[created timeIntervalSinceNow]) > timeout)
+    if (fabs([created timeIntervalSinceNow]) > timeout)
     {
         return YES;
     }

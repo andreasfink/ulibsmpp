@@ -2540,7 +2540,7 @@ length_error:
                     {
 					    retryTime = [[NSDate alloc]initWithTimeIntervalSinceNow:connectDelay];
                     }
-                    NSString *msg = [NSString stringWithFormat:@"restarting connection after %5.2f seconds\r\n", [retryTime timeIntervalSinceNow]];
+                    NSString *msg = [NSString stringWithFormat:@"restarting connection after %5.2f seconds\r\n",fabs([retryTime timeIntervalSinceNow])];
                     [logFeed majorError:0 withText:msg];
 					outgoingStatus = SMPP_STATUS_OUTGOING_CONNECT_RETRY_TIMER;
                     needSleep=YES;
