@@ -716,7 +716,7 @@ end:
 		switch(incomingStatus)
 		{
 			case SMPP_STATUS_INCOMING_OFF:
-				uc = [[UMSocket alloc] initWithType:UMSOCKET_TYPE_TCP4ONLY];
+                uc = [[UMSocket alloc] initWithType:UMSOCKET_TYPE_TCP4ONLY name:@"smpp-listener"];
 				[uc setLocalHost:localHost];
 				[uc setLocalPort:localPort];
 				incomingStatus = SMPP_STATUS_INCOMING_HAS_SOCKET;
@@ -2710,7 +2710,7 @@ length_error:
         {
             return -1;
         }
-        uc = [[UMSocket alloc] initWithType:UMSOCKET_TYPE_TCP4ONLY];
+        uc = [[UMSocket alloc] initWithType:UMSOCKET_TYPE_TCP4ONLY name:@"smpp-open-transmitter"];
         if (!uc)
         {
             NSString *msg = [NSString stringWithFormat:@"[SmscConnectionSMPP openTransmitter] [%@]: Couldn't connect to server (no socket, status %d).\r\n", name, outgoingStatus];
@@ -2769,7 +2769,7 @@ length_error:
         {
             return -1;
         }
-        uc = [[UMSocket alloc] initWithType:UMSOCKET_TYPE_TCP4ONLY];
+        uc = [[UMSocket alloc] initWithType:UMSOCKET_TYPE_TCP4ONLY name:@"smpp-open-transceiver"];
         [uc setRemoteHost:remoteHost];
         if(transmitPort == 0)
         {
@@ -2828,7 +2828,7 @@ length_error:
         if (!login || !password)
             return -1;
         
-        uc = [[UMSocket alloc] initWithType:UMSOCKET_TYPE_TCP4ONLY];
+        uc = [[UMSocket alloc] initWithType:UMSOCKET_TYPE_TCP4ONLY name:@"open-receiver"];
         [uc setRemoteHost:remoteHost];
         [uc setRequestedRemotePort:receivePort];
         sErr = [uc connect];
