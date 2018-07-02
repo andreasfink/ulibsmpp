@@ -39,6 +39,8 @@
 @synthesize tlv;
 @synthesize message_id;
 @synthesize replace_if_present_flag;
+@synthesize dest_addr_subunit;
+@synthesize source_addr_subunit;
 
 - (SmppPdu *)init
 {
@@ -1747,6 +1749,28 @@
             dest_subaddress = [self grabOctetStringWithLength:(int)opt_len];
             tlv[@"dest subaddress"] = dest_subaddress;
         }
+        else if (opt_tag == SMPP_TLV_SOURCE_ADDR_SUBUNIT)
+        {
+            if (opt_len < 1 || opt_len > 1 || cursor + opt_len > len)
+            {
+                [self setCursor:[self cursor] + (int)opt_len];
+                continue;
+            }
+            source_addr_subunit = [self grabInt:(int)opt_len];
+            tlv[@"source subunit"] = @(source_addr_subunit);
+        }
+
+        else if (opt_tag == SMPP_TLV_DEST_ADDR_SUBUNIT)
+        {
+            if (opt_len < 1 || opt_len > 1 || cursor + opt_len > len)
+            {
+                [self setCursor:[self cursor] + (int)opt_len];
+                continue;
+            }
+            dest_addr_subunit = [self grabInt:(int)opt_len];
+            tlv[@"dest subunit"] = @(dest_addr_subunit);
+        }
+
         else if (opt_tag == SMPP_TLV_LANGUAGE_INDICATOR)
         {
             if (opt_len > 1)
