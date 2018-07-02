@@ -1461,14 +1461,6 @@ end:
             [msg setTlvs:[pdu tlv]];
         }
 		
-		// TLV : SMPP_TLV_DEST_ADDR_SUBUNIT
-		NSNumber *k = [NSNumber numberWithUnsignedInteger:SMPP_TLV_DEST_ADDR_SUBUNIT];
-		NSData *data = [[pdu tlv] objectForKey:k];
-		NSInteger iCoding = 0;
-		[data getBytes: &iCoding length: sizeof(iCoding)];
-		[msg setPduCoding:iCoding];
-
-
         switch(pdu.dest_addr_subunit)
         {
             case 0x00: /* Unknown (default) */
