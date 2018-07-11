@@ -127,6 +127,8 @@ typedef enum UMRequestMaskValue
 - (UMReportMaskValue) reportMask;
 - (void) setPduDcs:(NSInteger)dcs;
 - (NSInteger) pduDcs;
+- (void) setMessageClass:(NSInteger)messageClass;
+- (NSInteger) messageClass;
 - (void) setPduCoding:(NSInteger)coding;
 - (NSInteger) pduCoding;
 - (void) setPduPid:(NSInteger)pid;

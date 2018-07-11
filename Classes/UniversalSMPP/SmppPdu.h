@@ -296,6 +296,8 @@ typedef unsigned long		SmppPduSequence;
 @property(readwrite,strong) NSMutableDictionary *tlv;
 @property(readwrite,strong) NSString            *message_id;
 @property(readwrite,assign) long                replace_if_present_flag;
+@property(readwrite,assign) long                dest_addr_subunit;
+@property(readwrite,assign) long                source_addr_subunit;
 
 - (void)setSequenceString:(NSString *)s;
 - (NSString *)sequenceString;

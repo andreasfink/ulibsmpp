@@ -1460,12 +1460,42 @@ end:
         {
             [msg setTlvs:[pdu tlv]];
         }
+		
+        switch(pdu.dest_addr_subunit)
+        {
+            case 0x00: /* Unknown (default) */
+                break;
+            case 0x01: /* MS Display */
+                msg.messageClass= MC_CLASS0; /* 3GPP TS 23.038 Class 0 = flash SMS */
+                break;
+            case 0x02: /* Mobile Equipment */
+                msg.messageClass=MC_CLASS1; /* 3GPP TS 23.038 Default meaning: ME-specific. */
+                break;
+            case 0x03: /* Smart Card 1 (expected to be SIM if a SIM exists in the MS) */
+                msg.messageClass= MC_CLASS2; /* 3GPP TS 23.038 (U)SIM specific message */
+                break;
+            case 0x04: /* External Unit 1 */
+                msg.messageClass= MC_CLASS3; /* default meaning: TE specific (see 3GPP TS 27.005 [8]) */
+                break;
+            default: /*  5 to 255 = reserved */
+                @throw([NSException exceptionWithName:@"ESME_ROPTPARNOTALLWD"
+                                               reason:NULL
+                                             userInfo:@{
+                                                        @"sysmsg" : @"ESME_ROPTPARNOTALLWD",
+                                                        @"func": @(__func__),
+                                                        @"err": @(ESME_ROPTPARNOTALLWD)
+                                                        }]);
+
+                break;
+        }
+
+
         if([user hasCredits] == NO)
         {
             @throw([NSException exceptionWithName:@"ESME_RMSGQFUL"
                                            reason:NULL
                                          userInfo:@{
-                                                    @"sysmsg" : @"ESME_RMSGQFUL(ut of credit)",
+                                                    @"sysmsg" : @"ESME_RMSGQFUL(out of credit)",
                                                     @"func": @(__func__),
                                                     @"obj":self,
                                                     @"code":@(ESME_RMSGQFUL)
