@@ -83,7 +83,7 @@ case "$host" in
 	    LDFLAGS="$LDFLAGS `/usr/local/bin/gnustep-config --base-libs --objc-libs`"
     else
 		CFLAGS="$CFLAGS `/usr/bin/gnustep-config --objc-flags | sed 's/-fobjc-exceptions/ /g'`"
-	    LDFLAGS="$LDFLAGS `/usr/bin/gnustep-config--base-libs --objc-libs`"
+	    LDFLAGS="$LDFLAGS `/usr/bin/gnustep-config --base-libs --objc-libs`"
     fi
 	CFLAGS="$CFLAGS `pkg-config  --cflags ${DEPENDENT_PKGCONFIGS}`"
 	LDFLAGS="$LDFLAGS `pkg-config --libs ${DEPENDENT_PKGCONFIGS}`"
@@ -145,7 +145,7 @@ AC_ARG_ENABLE(debug,
 ,
 [
 	echo Using Release target
-	CFLAGS="$CFLAGS -Os -D${CONFIG_DEFINE}=Release"
+	CFLAGS="$CFLAGS -O2 -D${CONFIG_DEFINE}=Release"
 	CONFIGURATION="-configuration Release"
 ])])
 
