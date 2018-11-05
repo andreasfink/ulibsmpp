@@ -1525,8 +1525,10 @@
 	int len;
     
     if(payload==NULL)
+	{
         return @"";
-    if(cursor >= [payload length])
+	}
+	if(cursor >= [payload length])
     {
         return @"";
     }
@@ -1534,11 +1536,12 @@
 	for(len=0;len<max;len++)
     {
 		if(in_string[len] == '\0')
+		{
 			break;
+		}
         ++cursor;
     }
     ++cursor;        /* \0 */
-    
 	s = [[NSString alloc] initWithBytes:in_string length:len encoding:enc];
 	return s;
 }

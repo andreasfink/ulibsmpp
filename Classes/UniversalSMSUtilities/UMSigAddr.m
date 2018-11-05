@@ -213,21 +213,13 @@ static int is_all_digits(NSString *str, int startpos);
 -(UMSigAddr *) initWithPackedAlpha: (NSData *)digits
 {	
 	
-	if( digits == nil )
+	if( digits.length)
 	{
 		ton = UMTON_ALPHANUMERIC;
 		npi = UMNPI_UNKNOWN;
 		[self setAddr:@""];
 		return self;
 	}
-	if( [digits length] == 0 )
-	{
-		ton = UMTON_ALPHANUMERIC;
-		npi = UMNPI_UNKNOWN;
-		[self setAddr:@""];
-		return self;
-	}
-	
 	ton = UMTON_ALPHANUMERIC;
 	npi = UMNPI_UNKNOWN;
 	[self setAddr: [digits stringFromGsm7withNibbleLengthPrefix]];
