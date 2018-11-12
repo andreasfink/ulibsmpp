@@ -5,7 +5,7 @@
 //  Created by Andreas Fink on 27.02.09.
 //  Copyright 2008-2014 Andreas Fink, Paradieshofstrasse 101, 4054 Basel, Switzerland
 //
-
+#if 0
 #import "NSData+HexFunctions.h"
 #import "NSString+HexFunctions.h"
 #import "GsmCharSet.h"
@@ -15,7 +15,7 @@
 
 @implementation NSData (DataHexFunctions)
 
-- (NSString *) hexString
+- (NSString *) smppHexString
 {
 	NSMutableString *result;
 	ssize_t i;
@@ -30,7 +30,7 @@
 	
 }
 
-- (NSString *) gsmHexString
+- (NSString *) smppGsmHexString
 {
 	NSMutableString *result;
 	ssize_t i;
@@ -44,7 +44,7 @@
 	return result;
 }
 
-+ (NSData *) unhexFromString:(NSString *)str
++ (NSData *) smppUnhexFromString:(NSString *)str
 {
 	NSMutableData *result;
 	ssize_t i;
@@ -65,7 +65,7 @@
 }
 
 
-- (NSData *) unhex
+- (NSData *) smppUnhex
 {
 	NSMutableData *r = NULL;
 	NSData *result = NULL;
@@ -90,7 +90,7 @@
 	return result;	
 }
 
-- (NSData *) hex
+- (NSData *) smppHex
 {
 	NSMutableData *r;
 	NSData *result;
@@ -112,7 +112,7 @@
 	return result;	
 }
 
--(NSString *) stringFromGsm8
+-(NSString *) smppStringFromGsm8
 {
 	ssize_t i;
 	ssize_t j;
@@ -181,7 +181,8 @@
 }
 
 
--(NSString *) stringFromGsm7withNibbleLengthPrefix
+
+-(NSString *) smppStringFromGsm7withNibbleLengthPrefix
 {
 	NSData				*d;
 	const unsigned char	*b;
@@ -193,16 +194,16 @@
 	b = [self bytes];
 	nibblelen = b[0];
 	d = [[NSData alloc]initWithBytesNoCopy:(void *)[self bytes]+1 length: [self length]-1 freeWhenDone:0];
-	s = [d stringFromGsm7:nibblelen];
+	s = [d smppStringFromGsm7:nibblelen];
 	return s;
 }
 
--(NSString *) stringFromGsm7:(int)nibblelen
+-(NSString *) smppStringFromGsm7:(int)nibblelen
 {
-	return [[self gsm7to8:nibblelen]stringFromGsm8];
+	return [[self smppGsm7to8:nibblelen]smppStringFromGsm8];
 }
 
-- (NSMutableData *)gsm7to8:(int)nibblelen
+- (NSMutableData *)smppGsm7to8:(int)nibblelen
 {
 	NSMutableData *result = NULL;
 	int inbyte = 0;
@@ -254,7 +255,7 @@
 	
 }
 
-- (NSMutableData *)gsm8to7: (int *)nibblelen;
+- (NSMutableData *)smppGsm8to7: (int *)nibblelen;
 {
 	NSMutableData *result = NULL;
     ssize_t len=0;
@@ -303,11 +304,11 @@
 	return result;
 }
 
-- (NSMutableData *) gsm8to7withNibbleLengthPrefix
+- (NSMutableData *) smppGsm8to7withNibbleLengthPrefix
 {
     int nibblelen=0;
     unsigned char c=0;
-    NSMutableData *m = [self gsm8to7:&nibblelen];
+    NSMutableData *m = [self smppGsm8to7:&nibblelen];
     c=nibblelen;
     NSMutableData *n = [[NSMutableData alloc]initWithBytes:&c length:1];
     [n appendData:m];
@@ -317,3 +318,4 @@
 
 	
 @end
+#endif

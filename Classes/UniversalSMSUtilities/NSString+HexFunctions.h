@@ -6,6 +6,7 @@
 //  Copyright 2008-2014 Andreas Fink, Paradieshofstrasse 101, 4054 Basel, Switzerland
 //
 
+#if 0
 #import <Foundation/Foundation.h>
 
 @interface NSString (SMSUtilitiesHexFunctions)
@@ -22,3 +23,4 @@
 - (NSString *) randomize;
 
 @end
+#endif

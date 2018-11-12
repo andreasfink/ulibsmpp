@@ -9,7 +9,7 @@
 #import "UMSigAddr.h"
 #import "NSString+HexFunctions.h"
 #import "NSData+HexFunctions.h"
-
+#import <ulibsms/ulibsms.h>
 
 static int is_all_digits(NSString *str, int startpos);
 

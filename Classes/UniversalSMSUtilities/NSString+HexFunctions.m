@@ -6,6 +6,7 @@
 //  Copyright 2008-2014 Andreas Fink, Paradieshofstrasse 101, 4054 Basel, Switzerland
 //
 
+#if 0
 #import "NSString+HexFunctions.h"
 #import "NSData+HexFunctions.h"
 
@@ -216,16 +217,20 @@
 	int nibblelen = 0;
 	unsigned char b;
 	NSMutableData *d;
-	d = [[ self gsm8 ] gsm8to7:&nibblelen ];
+	d = [[ self gsm8 ] smppGsm8to7:&nibblelen ];
 	b = nibblelen & 0xFF;
-
 	[ d replaceBytesInRange:NSMakeRange(0,0) withBytes:&b length:1 ];
+    if((b==11) && (d.length > 7))
+    {
+        return [[NSData dataWithBytes:d.bytes length:7] mutableCopy];
+    }
 	return d;
 }
 
+
 - (NSMutableData *)gsm7: (int *)nibblelen
 {
-	return [[ self gsm8 ] gsm8to7:nibblelen ];
+	return [[ self gsm8 ] smppGsm8to7:nibblelen ];
 }
 
 - (NSMutableData *)gsm16
@@ -300,3 +305,5 @@
 
 
 @end
+#endif
+
