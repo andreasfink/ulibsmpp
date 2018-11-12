@@ -305,9 +305,10 @@
 
 - (NSMutableData *) gsm8to7withNibbleLengthPrefix
 {
-    int nibblelen;
-    unsigned char c;
+    int nibblelen=0;
+    unsigned char c=0;
     NSMutableData *m = [self gsm8to7:&nibblelen];
+    c=nibblelen;
     NSMutableData *n = [[NSMutableData alloc]initWithBytes:&c length:1];
     [n appendData:m];
     return n;
