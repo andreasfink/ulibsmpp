@@ -257,16 +257,16 @@
 - (NSMutableData *)gsm8to7: (int *)nibblelen;
 {
 	NSMutableData *result = NULL;
-    ssize_t len;
-	ssize_t i;    
-    int numbits;
-	int value;
-	ssize_t	len2;
-	const unsigned char *bytes;
-	unsigned char b;
+    ssize_t len=0;
+	ssize_t i=0;
+    int numbits=0;
+	int value=0;
+	ssize_t	len2=0;
+	const unsigned char *bytes=NULL;
+	unsigned char b=0;
 	
 	len    = [self length];
-    result = [[NSMutableData alloc]initWithCapacity: len];
+    result = [[NSMutableData alloc]init];
 	bytes  = [self bytes];
 	
     len2 = (len * 7 + 3) / 4;
@@ -296,7 +296,10 @@
 		b = value & 0xFF;
 		[result appendBytes:&b	length:1];
 	}
-	[result appendBytes:&b	length:1];
+    if((*nibblelen!=11) || (b.length !=7)
+    {
+        [result appendBytes:&b	length:1];
+    }
 	return result;
 }
 
