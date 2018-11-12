@@ -3,7 +3,7 @@
 //  ulibsmpp
 //
 //  Created by Andreas Fink on 23.10.12.
-//  Copyright 2008-2014 Andreas Fink, Röschenzerstr. 27, 4058 Basel, Switzerland all rights reserved.
+//  Copyright 2008-2014 Andreas Fink, Paradieshofstrasse 101, 4054 Basel, Switzerland all rights reserved.
 //
 
 #import "NSString+UniversalSMPP.h"

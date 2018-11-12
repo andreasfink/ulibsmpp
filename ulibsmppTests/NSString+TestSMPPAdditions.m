@@ -3,7 +3,7 @@
 //  ulibsmpp
 //
 //  Created by Aarno Syvänen on 21.09.12.
-//  Copyright 2008-2014 Andreas Fink, Röschenzerstr. 27, 4058 Basel, Switzerland
+//  Copyright 2008-2014 Andreas Fink, Paradieshofstrasse 101, 4054 Basel, Switzerland
 //
 
 #import "NSString+TestSMPPAdditions.h"

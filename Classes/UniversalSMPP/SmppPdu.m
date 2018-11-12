@@ -3,7 +3,7 @@
 //  SMPP-SMPP
 //
 //  Created by Andreas Fink on 11.12.08.
-//  Copyright 2008-2014 Andreas Fink, Röschenzerstr. 27, 4058 Basel, Switzerland
+//  Copyright 2008-2014 Andreas Fink, Paradieshofstrasse 101, 4054 Basel, Switzerland
 //
 
 #import "SmppPdu.h"

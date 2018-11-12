@@ -3,7 +3,7 @@
 //  ulib
 //
 //  Created by Aarno Syvänen on 11.10.12.
-//  Copyright 2008-2014 Andreas Fink, Röschenzerstr. 27, 4058 Basel, Switzerland
+//  Copyright 2008-2014 Andreas Fink, Paradieshofstrasse 101, 4054 Basel, Switzerland
 //
 
 #import "NSMutableData+UMTestString.h"
