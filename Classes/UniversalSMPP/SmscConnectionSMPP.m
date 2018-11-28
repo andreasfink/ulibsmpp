@@ -381,7 +381,7 @@ const SmppErrorCodeListEntry SmppErrorCodeList[] =
 	if(err)
     {
         NSString *text = [NSString stringWithFormat:@"sendMutableData returned error (connection name %@)\r\n", name];
-		[logFeed majorError:err	withText:text];
+		[self.logFeed majorError:err	withText:text];
     }
     if(err==0)
     {
@@ -512,7 +512,7 @@ const SmppErrorCodeListEntry SmppErrorCodeList[] =
 	if(err!=0)
     {
         NSString *msg = [NSString stringWithFormat:@"[SmscConnectionSMPP activePhase] sendPduWithNewSeq returned error %d (general check), %@",err, outbound ? @"outbound" : @"inbound"];
-        [logFeed majorError:0 inSubsection:@"active phase" withText:msg];
+        [self.logFeed majorError:0 inSubsection:@"active phase" withText:msg];
         goto error;
     }
     /* now lets look at pending outgoing messages and delivery report depending on the corresponding state */
@@ -540,7 +540,7 @@ const SmppErrorCodeListEntry SmppErrorCodeList[] =
         else
         {
             NSString *msg = [NSString stringWithFormat:@"[SmscConnectionSMPP activePhase] sendPduWithNewSeq returned error %d when submitting message, %@",err, (outbound ? @"outbound" : @"inbound")];
-            [logFeed majorError:0 inSubsection:@"active phase" withText:msg];
+            [self.logFeed majorError:0 inSubsection:@"active phase" withText:msg];
             goto error;
         }
     }
@@ -568,7 +568,7 @@ const SmppErrorCodeListEntry SmppErrorCodeList[] =
         else
         {
             NSString *msg = [NSString stringWithFormat:@"[SmscConnectionSMPP activePhase] sendPduWithNewSeq returned error %d when delivering message %@",err, outbound ? @"outbound" : @"inbound"];
-            [logFeed majorError:0 inSubsection:@"active phase" withText:msg];
+            [self.logFeed majorError:0 inSubsection:@"active phase" withText:msg];
             goto error;
         }
    }
@@ -597,7 +597,7 @@ const SmppErrorCodeListEntry SmppErrorCodeList[] =
         else
         {
             NSString *msg = [NSString stringWithFormat:@"[SmscConnectionSMPP activePhase] sendPduWithNewSeq returned error %d when submitting report %@",err, outbound ? @"outbound" : @"inbound"];
-            [logFeed majorError:0 inSubsection:@"active phase" withText:msg];
+            [self.logFeed majorError:0 inSubsection:@"active phase" withText:msg];
             goto error;
         }
     }
@@ -629,7 +629,7 @@ const SmppErrorCodeListEntry SmppErrorCodeList[] =
         else
         {
             NSString *msg = [NSString stringWithFormat:@"[SmscConnectionSMPP activePhase] sendPduWithNewSeq returned error %d when delivering report %@",err, outbound ? @"outbound" : @"inbound"];
-            [logFeed majorError:0 inSubsection:@"active phase" withText:msg];
+            [self.logFeed majorError:0 inSubsection:@"active phase" withText:msg];
             goto error;
         }
     }
@@ -709,7 +709,7 @@ end:
 		receivePollTimeoutMs = SMSC_CONNECTION_DEFAULT_RECEIVE_POLL_TIMEOUT_MS; /* default to 20ms */
 	}
     
-    [logFeed info:0 withText:[NSString stringWithFormat:@"InboundListener for %@ on port %d\r\n",name,localPort]];
+    [self.logFeed info:0 withText:[NSString stringWithFormat:@"InboundListener for %@ on port %d\r\n",name,localPort]];
     [router registerListeningSmscConnection:self];
 	while (!endThisConnection)
 	{
@@ -726,7 +726,7 @@ end:
 				err = [uc bind];
 				if (![uc isBound] )
 				{
-					[logFeed majorError:err withText:@"bind failed\r\n"];
+					[self.logFeed majorError:err withText:@"bind failed\r\n"];
 					retryTime = [[NSDate alloc]initWithTimeIntervalSinceNow:bindDelay];
 					incomingStatus = SMPP_STATUS_INCOMING_BIND_RETRY_TIMER;
 				}
@@ -748,7 +748,7 @@ end:
 				err = [uc listen];
 				if (![uc isListening] )
 				{
-					[logFeed majorError:err withText:@"listen failed\r\n"];
+					[self.logFeed majorError:err withText:@"listen failed\r\n"];
 					retryTime = [[NSDate alloc]initWithTimeIntervalSinceNow:retryDelay];
 					retryDelay = retryDelay * 2;
 					if(retryDelay > 600)
@@ -759,7 +759,7 @@ end:
 				{
                     TRACK_FILE_ADD_COMMENT_FOR_FDES([uc sock],@"listening");
 					incomingStatus = SMPP_STATUS_INCOMING_LISTENING;
-                    [logFeed debug:0 withText:@"Listening...\r\n"];
+                    [self.logFeed debug:0 withText:@"Listening...\r\n"];
 				}
 				break;
 			case SMPP_STATUS_INCOMING_LISTENING:
@@ -795,15 +795,15 @@ end:
                             [e setIsListener: NO];
                             [e setIsInbound: YES];
                             [e setLastActivity:[NSDate date]];
-                            [e setLogFeed:logFeed];
-                            [logFeed debug:0 withText:[NSString stringWithFormat:@"accepting connection for %@ for %@ at sock %d\r\n",name,newUc,newUc.sock]];
+                            [e setLogFeed:self.logFeed];
+                            [self.logFeed debug:0 withText:[NSString stringWithFormat:@"accepting connection for %@ for %@ at sock %d\r\n",name,newUc,newUc.sock]];
                             [e runSelectorInBackground:@selector(inbound)];
 //                            [NSThread detachNewThreadSelector:@selector(inbound) toTarget:e withObject:nil];
                         }
                         else
                         {
                             TRACK_FILE_ADD_COMMENT_FOR_FDES([uc sock],@"failed whitelist");
-                            [logFeed debug:0 withText:[NSString stringWithFormat:@"connection from %@ rejected (not in whitelist)\r\n",newUc.connectedRemoteAddress]];
+                            [self.logFeed debug:0 withText:[NSString stringWithFormat:@"connection from %@ rejected (not in whitelist)\r\n",newUc.connectedRemoteAddress]];
                             [newUc close];
                             newUc=NULL;
                         }
@@ -845,7 +845,7 @@ end:
 		}
 	}
     
-    [logFeed info:0 withText:[NSString stringWithFormat:@"InboundListener for %@ on port %d shutting down\r\n",name,localPort]];
+    [self.logFeed info:0 withText:[NSString stringWithFormat:@"InboundListener for %@ on port %d shutting down\r\n",name,localPort]];
 	[router unregisterListeningSmscConnection:self];
 	[self stopIncomingReceiverThread];
 	[uc close];
@@ -900,7 +900,7 @@ end:
         
         if(runIncomingReceiverThread != SMPP_IRT_NOT_RUNNING)
         {
-            [logFeed debug:0 withText:@"we try to start receiver thread while its already running ?!?"];
+            [self.logFeed debug:0 withText:@"we try to start receiver thread while its already running ?!?"];
             [self stopIncomingReceiverThread];
         }
         
@@ -953,7 +953,7 @@ end:
         {
             receivePollTimeoutMs = SMSC_CONNECTION_DEFAULT_RECEIVE_POLL_TIMEOUT_MS; /* default to 500ms */
         }
-        [logFeed info:0 withText:@"[SmscConnectionSMPP incomingReceiverThread]: inbound receiver thread is starting\r\n"];
+        [self.logFeed info:0 withText:@"[SmscConnectionSMPP incomingReceiverThread]: inbound receiver thread is starting\r\n"];
         
         while ((!endThisConnection) && (runIncomingReceiverThread==SMPP_IRT_RUNNING))
         {
@@ -967,7 +967,7 @@ end:
                     if((sErr2== UMSocketError_no_data) || (sErr2==UMSocketError_connection_reset)) /* HUP */
                     {
                         NSString *msg = [NSString stringWithFormat:@"[SmscConnectionSMPP incomingReceiverThread]: EOF read"];
-                        [logFeed info:0 inSubsection:@"outbound receiver" withText:msg];
+                        [self.logFeed info:0 inSubsection:@"outbound receiver" withText:msg];
                         endThisConnection=YES;
                     }
                     else if(sErr2==UMSocketError_no_error)
@@ -977,7 +977,7 @@ end:
                     else if(sErr2!=UMSocketError_try_again)
                     {
                         NSString *msg = [NSString stringWithFormat:@"[SmscConnectionSMPP incomingReceiverThread]:socket error %d (%@) when reading a packet\r\n", sErr2, [UMSocket getSocketErrorString:sErr2]];
-                        [logFeed info:0 inSubsection:@"incoming receiver" withText:msg];
+                        [self.logFeed info:0 inSubsection:@"incoming receiver" withText:msg];
                         [self checkForPackets]; /* process whatever is left */
                         endThisConnection=YES;
                         break;
@@ -986,20 +986,20 @@ end:
                     {
                         [self checkForPackets]; /* process whatever is left */
                         NSString *msg = [NSString stringWithFormat:@"[SmscConnectionSMPP incomingReceiverThread]: POLLHUP received"];
-                        [logFeed info:0 inSubsection:@"outbound receiver" withText:msg];
+                        [self.logFeed info:0 inSubsection:@"outbound receiver" withText:msg];
                         endThisConnection=YES;
                     }
                 }
                 else if((sErr != UMSocketError_try_again) && (sErr !=UMSocketError_no_error) && (sErr != UMSocketError_no_data))
                 {
                     NSString *msg = [NSString stringWithFormat:@"[SmscConnectionSMPP incomingReceiverThread]: socket error %d (%@) when socket returns, will terminate thread\r\n", sErr, [UMSocket getSocketErrorString:sErr]];
-                    [logFeed majorError:0 inSubsection:@"init" withText:msg];
+                    [self.logFeed majorError:0 inSubsection:@"init" withText:msg];
                     endThisConnection=YES;
                     break;
                 }
             }
         }
-        [logFeed info:0 withText:@"[SmscConnectionSMPP incomingReceiverThread]: inbound receiver thread is terminating\r\n"];
+        [self.logFeed info:0 withText:@"[SmscConnectionSMPP incomingReceiverThread]: inbound receiver thread is terminating\r\n"];
         runIncomingReceiverThread = SMPP_IRT_TERMINATED;
     }
 }
@@ -1073,7 +1073,7 @@ end:
             {
                 long len = [[uc receiveBuffer] length];
                 NSString *msg = [NSString stringWithFormat:@"[SmscConnectionSMPP checkForPackets]: received packet with erroneous length (claimed %d, was %ld)\r\n", l, len];
-                [logFeed minorError:0 inSubsection:@"smpp" withText:msg];
+                [self.logFeed minorError:0 inSubsection:@"smpp" withText:msg];
                 break;
            }
             
@@ -1812,7 +1812,7 @@ end:
                     logFile.level = UMLOG_DEBUG;
                     [userLogHandler addLogDestination:logFile];
                     self.logFeed = [[UMLogFeed alloc]initWithHandler:userLogHandler section:@"incoming"];
-                    [logFeed debug:0 withText:@"startTracing"];
+                    [self.logFeed debug:0 withText:@"startTracing"];
                 }
             }
             
@@ -1901,7 +1901,7 @@ end:
     if ((err != ESME_ROK) && (err != ESME_RALYBND))
     {
         NSString *msg = [NSString stringWithFormat:@"SmscConnectionSMPP:handleIncomingBindReceiverResp: [%@]: SMSC rejected login to transmit, code 0x%08lx (%@) with <%@>.\r\n", name, (unsigned long )err, [SmscConnectionSMPP smppErrorToString:err], systemId];
-        [logFeed majorError:0 withText:msg];
+        [self.logFeed majorError:0 withText:msg];
         if(outgoingStatus != SMPP_STATUS_OUTGOING_MAJOR_FAILURE_RETRY_TIMER)
         {
             outgoingStatus =  SMPP_STATUS_OUTGOING_MAJOR_FAILURE;
@@ -1936,7 +1936,7 @@ end:
     if ((err != ESME_ROK) && (err != ESME_RALYBND))
     {
         NSString *msg = [NSString stringWithFormat:@"SmscConnectionSMPP:handleIncomingBindTransmitterResp: [%@]: SMSC rejected login to transmit, code 0x%08lx (%@) with <%@>.\r\n", name, (unsigned long )err, [SmscConnectionSMPP smppErrorToString:err], systemId];
-        [logFeed majorError:0 withText:msg];
+        [self.logFeed majorError:0 withText:msg];
         if(outgoingStatus != SMPP_STATUS_OUTGOING_MAJOR_FAILURE_RETRY_TIMER)
         {
             outgoingStatus =  SMPP_STATUS_OUTGOING_MAJOR_FAILURE;
@@ -1976,7 +1976,7 @@ end:
     if(autorestart==NO)
     {
         text = [NSString stringWithFormat:@"[SmscConnectionSMPP handleIncomingUnbind]: closing %@ due to incoming Unbind\r\n", name];
-        [logFeed info:0 withText:text];
+        [self.logFeed info:0 withText:text];
         endThisConnection = YES;
         endPermanently = YES;
 
@@ -1984,7 +1984,7 @@ end:
     else
     {
         text = [NSString stringWithFormat:@"[SmscConnectionSMPP handleIncomingUnbind]: restarting %@ due incoming unbind\r\n", name];
-        [logFeed info:0 withText:text];
+        [self.logFeed info:0 withText:text];
         endThisConnection = YES;
         endPermanently = NO;
     }
@@ -1997,7 +1997,7 @@ end:
 - (void) handleIncomingUnbindResp: (SmppPdu *)pdu
 {
     NSString *text = [NSString stringWithFormat:@"[SmscConnectionSMPP handleIncomingUnbindResp]: incoming Unbind response %@\r\n", name];
-    [logFeed info:0 withText:text];
+    [self.logFeed info:0 withText:text];
     [uc close];
     id delegate = terminatedDelegate;
     [delegate terminatedCallback:self];
@@ -2047,7 +2047,7 @@ end:
     if ((err != ESME_ROK) && (err != ESME_RALYBND))
     {
         NSString *msg = [NSString stringWithFormat:@"SmscConnectionSMPP:handleIncomingBindTransceiverResp: [%@]: SMSC rejected login (systemId: <%@>) to transmit, code 0x%08lx (%@).\r\n", name, systemId,(unsigned long )err, [SmscConnectionSMPP smppErrorToString:err]];
-        [logFeed majorError:0 withText:msg];
+        [self.logFeed majorError:0 withText:msg];
         if(outgoingStatus != SMPP_STATUS_OUTGOING_MAJOR_FAILURE_RETRY_TIMER)
         {
             outgoingStatus =  SMPP_STATUS_OUTGOING_MAJOR_FAILURE;
@@ -2202,7 +2202,7 @@ end:
             else
             {
                 messageState = SMS_REPORT_UNKNOWN;
-                [logFeed minorError:0 withText:[NSString stringWithFormat:@"Unknown message state %@",value]];
+                [self.logFeed minorError:0 withText:[NSString stringWithFormat:@"Unknown message state %@",value]];
             }
         }
         else if([tag isEqualToString:@"err"])
@@ -2466,7 +2466,7 @@ length_error:
 	[router registerIncomingSmscConnection:self];
 	
 	[self startIncomingReceiverThread];
-    [logFeed info:0 inSubsection:@"init" withText:@"[SmscConnectionSMPP inbound] starting\r\n"];
+    [self.logFeed info:0 inSubsection:@"init" withText:@"[SmscConnectionSMPP inbound] starting\r\n"];
     
     bindExpires = [[NSDate alloc]initWithTimeIntervalSinceNow:30]; /* we want to see authentication being passed within 30 seconds */
 
@@ -2514,7 +2514,7 @@ length_error:
 
 	uc = nil;
     NSString *msg = [NSString stringWithFormat:@"[SmscConnectionSMPP inbound] terminated (endThisConnection %d)\r\n", endThisConnection];
-    [logFeed info:0 inSubsection:@"shutdown" withText:msg];
+    [self.logFeed info:0 inSubsection:@"shutdown" withText:msg];
 }
 
 - (void) outgoingControlThread
@@ -2533,7 +2533,7 @@ length_error:
     
     ulib_set_thread_name([NSString stringWithFormat:@"[SmsConnectionSMPP outboundSender] %@",uc.description]);
 
-    [logFeed info:0 inSubsection:@"outbound sender" withText:@"[SmscConnectionSMPP outboundSender]: thread starting\r\n"];
+    [self.logFeed info:0 inSubsection:@"outbound sender" withText:@"[SmscConnectionSMPP outboundSender]: thread starting\r\n"];
 	
     retryTime = [[NSDate alloc]initWithTimeIntervalSinceNow:connectDelay];
 
@@ -2557,7 +2557,7 @@ length_error:
             NSString *oldstatusString = [SmscConnectionSMPP outgoingStatusToString:oldstatus];
             NSString *newstatusString = [SmscConnectionSMPP outgoingStatusToString:outgoingStatus];
             NSString *message = [NSString stringWithFormat:@"Status change: %@ -> %@", oldstatusString, newstatusString];
-            [logFeed info:0 inSubsection:@"control" withText:message];
+            [self.logFeed info:0 inSubsection:@"control" withText:message];
         }
         oldstatus = outgoingStatus;
 
@@ -2571,7 +2571,7 @@ length_error:
 					    retryTime = [[NSDate alloc]initWithTimeIntervalSinceNow:connectDelay];
                     }
                     NSString *msg = [NSString stringWithFormat:@"restarting connection after %5.2f seconds\r\n",fabs([retryTime timeIntervalSinceNow])];
-                    [logFeed majorError:0 withText:msg];
+                    [self.logFeed majorError:0 withText:msg];
 					outgoingStatus = SMPP_STATUS_OUTGOING_CONNECT_RETRY_TIMER;
                     needSleep=YES;
                 }
@@ -2592,7 +2592,7 @@ length_error:
                 
                     if (ret == -1)
                     {
-                        [logFeed majorError:0 withText:@"connect failed\r\n"];
+                        [self.logFeed majorError:0 withText:@"connect failed\r\n"];
                         if (!retryTime)
                         {
 					        retryTime = [[NSDate alloc]initWithTimeIntervalSinceNow:connectDelay];
@@ -2657,7 +2657,7 @@ length_error:
             case SMPP_STATUS_OUTGOING_MAJOR_FAILURE:
             {
                 NSString *text = [NSString stringWithFormat:@"[SmscConnectionSMPP outboundSender]: closing %@ due outgoing major failure\r\n", name];
-                [logFeed majorError:0 withText:text];
+                [self.logFeed majorError:0 withText:text];
                 [uc close];
                 id delegate = terminatedDelegate;
                 [delegate terminatedCallback:self];
@@ -2678,7 +2678,7 @@ length_error:
                     outboundState = SMPP_STATE_CLOSED;
                     
                     NSString *text = [NSString stringWithFormat:@"[SmscConnectionSMPP outboundSender]: restarting %@ due autorestart\r\n", name];
-                    [logFeed majorError:0 withText:text];
+                    [self.logFeed majorError:0 withText:text];
                     endThisConnection = YES;
                     endPermanently = NO;
                     outgoingStatus = SMPP_STATUS_OUTGOING_MAJOR_FAILURE_RETRY_TIMER;
@@ -2712,7 +2712,7 @@ length_error:
     }
 
     NSString *msg = [NSString stringWithFormat:@"[SmscConnectionSMPP outgoingControlThread]: terminating this connection permanently\r\n"];
-    [logFeed info:0 inSubsection:@"outgoingControlThread" withText:msg];
+    [self.logFeed info:0 inSubsection:@"outgoingControlThread" withText:msg];
     retryTime = nil;
     if(uc)
     {
@@ -2744,7 +2744,7 @@ length_error:
         if (!uc)
         {
             NSString *msg = [NSString stringWithFormat:@"[SmscConnectionSMPP openTransmitter] [%@]: Couldn't connect to server (no socket, status %d).\r\n", name, outgoingStatus];
-            [logFeed majorError:0 withText:msg];
+            [self.logFeed majorError:0 withText:msg];
             return -1;
         }
         
@@ -2756,7 +2756,7 @@ length_error:
         if (sErr != UMSocketError_no_error)
         {
             NSString *msg = [NSString stringWithFormat:@"[SmscConnectionSMPPopenTransmitter] (%@) Couldn't connect to server <%@:%ld> (error %d, status %d)\n", name, remoteHost, transmitPort, sErr, outgoingStatus];
-            [logFeed majorError:0 withText:msg];
+            [self.logFeed majorError:0 withText:msg];
             [uc close];
             id delegate = terminatedDelegate;
             [delegate terminatedCallback:self];
@@ -2776,7 +2776,7 @@ length_error:
         if (ret < 0)
         {
             NSString *msg = [NSString stringWithFormat:@"SMPP[%@]: Couldn't send bind_transmitter to server\n", name];
-            [logFeed majorError:0 withText:msg];
+            [self.logFeed majorError:0 withText:msg];
             [uc close];
             id delegate = terminatedDelegate;
             [delegate terminatedCallback:self];
@@ -2810,7 +2810,7 @@ length_error:
         if (sErr != UMSocketError_no_error)
         {
             NSString *msg = [NSString stringWithFormat:@"[SmscConnectionSMPP openTransceiver] (%@) Couldn't connect to server <%@:%ld>, error %d, status %d.\n", name, remoteHost, transmitPort, sErr, outgoingStatus];
-            [logFeed majorError:0 withText:msg];
+            [self.logFeed majorError:0 withText:msg];
             [uc close];
             id delegate = terminatedDelegate;
             [delegate terminatedCallback:self];
@@ -2836,7 +2836,7 @@ length_error:
         if (ret < 0)
         {
             NSString *msg = [NSString stringWithFormat:@"SMPP[%@]: Couldn't send bind_transceiver to server.\n", name];
-            [logFeed majorError:0 withText:msg];
+            [self.logFeed majorError:0 withText:msg];
             [uc close];
             id delegate = terminatedDelegate;
             [delegate terminatedCallback:self];
@@ -2865,7 +2865,7 @@ length_error:
         if (sErr != UMSocketError_no_error)
         {
             NSString *msg = [NSString stringWithFormat:@"[SmscConnectionSMPP openReceiver] (%@) Couldn't connect to server <%@:%ld> (error %d, status %d)\n", name, remoteHost, transmitPort, sErr, outgoingStatus];
-            [logFeed majorError:0 withText:msg];
+            [self.logFeed majorError:0 withText:msg];
             [uc close];
             id delegate = terminatedDelegate;
             [delegate terminatedCallback:self];
@@ -2890,7 +2890,7 @@ length_error:
         if (ret < 0)
         {
             NSString *msg = [NSString stringWithFormat:@"SMPP[%@]: Couldn't send bind_transceiver to server\n", name];
-            [logFeed majorError:0 withText:msg];
+            [self.logFeed majorError:0 withText:msg];
             [uc close];
             id delegate = terminatedDelegate;
             [delegate terminatedCallback:self];
@@ -3012,7 +3012,7 @@ length_error:
         }
         
         NSString *msg = [NSString stringWithFormat:@"SmscConnectionSMPP outgoingReceiverThread]: outbound receiver thread %@ is starting\r\n", name];
-        [logFeed info:0 withText:msg];
+        [self.logFeed info:0 withText:msg];
         
         runOutgoingReceiverThread = SMPP_ORT_RUNNING;
         
@@ -3044,13 +3044,13 @@ length_error:
                     else
                     {
                         NSString *msg = [NSString stringWithFormat:@"[SmscConnectionSMPP outgoingReceiverThread]: socket error %d when reading from socket\r\n", err];
-                        [logFeed info:0 inSubsection:@"outbound receiver" withText:msg];
+                        [self.logFeed info:0 inSubsection:@"outbound receiver" withText:msg];
                         endThisConnection = YES;
                     }
                     if(err==UMSocketError_has_data_and_hup)
                     {
                         NSString *msg = [NSString stringWithFormat:@"[SmscConnectionSMPP outgoingReceiverThread]: POLLHUP received"];
-                        [logFeed info:0 inSubsection:@"outbound receiver" withText:msg];
+                        [self.logFeed info:0 inSubsection:@"outbound receiver" withText:msg];
                         endThisConnection = YES;
                     }
                 }
@@ -3069,7 +3069,7 @@ length_error:
                 else
                 {
                     NSString *msg = [NSString stringWithFormat:@"[SmscConnectionSMPP outgoingReceiverThread]: socket error %d when socket returned\r\n", err];
-                    [logFeed majorError:0 inSubsection:@"init" withText:msg];
+                    [self.logFeed majorError:0 inSubsection:@"init" withText:msg];
                     endThisConnection = YES;
                     break;
                 }
@@ -3077,7 +3077,7 @@ length_error:
         }
         
         NSString *txt = [NSString stringWithFormat:@"[SmscConnectionSMPP outgoingReceiverThread]: outbound receiver thread ending(end %d, run status %d, \r\n", endPermanently, runOutgoingReceiverThread];
-        [logFeed info:0 withText:txt];
+        [self.logFeed info:0 withText:txt];
         
         runOutgoingReceiverThread = SMPP_ORT_TERMINATING;
         if(outgoingStatus != SMPP_STATUS_OUTGOING_MAJOR_FAILURE_RETRY_TIMER)
@@ -3088,7 +3088,7 @@ length_error:
         /*  if (autorestart==YES)
          {
          NSString *msg = [NSString stringWithFormat:@"[SmscConnectionSMPP outgoingReceiverThread]: outbound receiver thread (end %d, run status %d): restart requested\r\n", endPermanently, runOutgoingReceiverThread];
-         [logFeed info:0 withText:msg];
+         [self.logFeed info:0 withText:msg];
          stopped = YES;
          started = NO;
          }
@@ -3124,7 +3124,7 @@ length_error:
             else
             {
                 NSString *msg = [NSString stringWithFormat:@"[SmscConnectionSMPP checkForSendingKeepAlive] sendPduWithNewSeq returned error %d when submitting keep alive",err];
-                [logFeed majorError:0 inSubsection:@"active phase" withText:msg];
+                [self.logFeed majorError:0 inSubsection:@"active phase" withText:msg];
                 if(outgoingStatus != SMPP_STATUS_OUTGOING_MAJOR_FAILURE_RETRY_TIMER)
                 {
                     outgoingStatus =  SMPP_STATUS_OUTGOING_MAJOR_FAILURE;
@@ -3149,7 +3149,7 @@ length_error:
         [desc appendFormat:@"\terror:   0x%08lX %@\n", (unsigned long)pdu.err, errString];
         [desc appendFormat:@"\tseq:     0x%08lX (%ld)\n", (unsigned long)pdu.seq,(unsigned long)pdu.seq];
         [desc appendFormat:@"\tpayload: %@\n", pdu.payload];
-        [logFeed info:0 withText:desc];
+        [self.logFeed info:0 withText:desc];
     }
 }
 
@@ -3163,7 +3163,7 @@ length_error:
         [desc appendFormat:@"\terror:   0x%08lX %@\n", (unsigned long)pdu.err, [SmscConnectionSMPP smppErrorToString:pdu.err]];
         [desc appendFormat:@"\tseq:     0x%08lX (%ld)\n", (unsigned long)pdu.seq,(unsigned long)pdu.seq];
         [desc appendFormat:@"\tpayload: %@\n", pdu.payload];
-        [logFeed info:0 withText:desc];
+        [self.logFeed info:0 withText:desc];
     /* temporary */
     //    NSLog(@"%@",desc);
     }
