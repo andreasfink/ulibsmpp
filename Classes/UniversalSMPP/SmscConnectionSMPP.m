@@ -259,7 +259,8 @@ const SmppErrorCodeListEntry SmppErrorCodeList[] =
 						  @SMSC_CONNECTION_DEFAULT_RECEIVE_POLL_TIMEOUT_MS,		PREFS_CON_RXTIMEOUT,
 						  @SMSC_CONNECTION_DEFAULT_TRANSMIT_TIMEOUT,			PREFS_CON_TXTIMEOUT,
 						  @SMSC_CONNECTION_DEFAULT_KEEPALIVE,					PREFS_CON_KEEPALIVE,
-						  @SMSC_CONNECTION_DEFAULT_WINDOW_SIZE,					PREFS_CON_WINDOW,
+                          @SMSC_CONNECTION_DEFAULT_WINDOW_SIZE,                 PREFS_CON_WINDOW,
+                          @(0),                                                 PREFS_CON_TCP_MSS,
 						  @"tcp",																		PREFS_CON_SOCKTYPE,
 						  @"default-router",																PREFS_CON_ROUTER,
 						  @"someuser",																	PREFS_CON_LOGIN,
@@ -287,6 +288,7 @@ const SmppErrorCodeListEntry SmppErrorCodeList[] =
 						  @SMSC_CONNECTION_DEFAULT_TRANSMIT_TIMEOUT,			PREFS_CON_TXTIMEOUT,
 						  @SMSC_CONNECTION_DEFAULT_KEEPALIVE,					PREFS_CON_KEEPALIVE,
 						  @SMSC_CONNECTION_DEFAULT_WINDOW_SIZE,					PREFS_CON_WINDOW,
+                          @(0),                                                 PREFS_CON_TCP_MSS,
 						  @"tcp",																		PREFS_CON_SOCKTYPE,
 						  @"default-router",																PREFS_CON_ROUTER,
 						  @"someuser",																	PREFS_CON_LOGIN,
@@ -716,9 +718,10 @@ end:
 		switch(incomingStatus)
 		{
 			case SMPP_STATUS_INCOMING_OFF:
-                uc = [[UMSocket alloc] initWithType:UMSOCKET_TYPE_TCP4ONLY name:@"smpp-listener"];
+                uc = [[UMSocket alloc] initWithType:UMSOCKET_TYPE_TCP4ONLY name:@"smpp-listener"]; /* FIXME: really IPv4 only? */
 				[uc setLocalHost:localHost];
 				[uc setLocalPort:localPort];
+                uc.tcpMaxSegmentSize = _max_tcp_segment_size;
 				incomingStatus = SMPP_STATUS_INCOMING_HAS_SOCKET;
 				break;
 				
@@ -2747,7 +2750,8 @@ length_error:
             [self.logFeed majorError:0 withText:msg];
             return -1;
         }
-        
+        uc.tcpMaxSegmentSize = _max_tcp_segment_size;
+
         outgoingStatus = SMPP_STATUS_OUTGOING_HAS_SOCKET;
         
         [uc setRemoteHost:remoteHost];
@@ -2806,6 +2810,7 @@ length_error:
             transmitPort = remotePort;
         }
         [uc setRequestedRemotePort:transmitPort];
+        uc.tcpMaxSegmentSize = _max_tcp_segment_size;
         sErr = [uc connect];
         if (sErr != UMSocketError_no_error)
         {
@@ -2861,6 +2866,7 @@ length_error:
         uc = [[UMSocket alloc] initWithType:UMSOCKET_TYPE_TCP4ONLY name:@"open-receiver"];
         [uc setRemoteHost:remoteHost];
         [uc setRequestedRemotePort:receivePort];
+        uc.tcpMaxSegmentSize = _max_tcp_segment_size;
         sErr = [uc connect];
         if (sErr != UMSocketError_no_error)
         {

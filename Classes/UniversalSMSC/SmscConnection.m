@@ -444,6 +444,8 @@
 	dict[PREFS_CON_ROUTER] = EMPTYSTRINGFORNIL(routerName);
 	dict[PREFS_CON_LOGIN] = EMPTYSTRINGFORNIL(login);
 	dict[PREFS_CON_PASSWORD] = EMPTYSTRINGFORNIL(password);
+    dict[PREFS_CON_TCP_MSS] = @(_max_tcp_segment_size);
+
 	return dict;
 }
 
@@ -468,6 +470,7 @@
 	dict[PREFS_CON_ROUTER] = @"default-router";
 	dict[PREFS_CON_LOGIN] = @"";
 	dict[PREFS_CON_PASSWORD] = @"";
+    dict[PREFS_CON_TCP_MSS] = @(0);
 	return dict;
 }
 
@@ -492,6 +495,7 @@
 	dict[PREFS_CON_ROUTER] = @"default-router";
 	dict[PREFS_CON_LOGIN] = @"";
 	dict[PREFS_CON_PASSWORD] = @"";
+    dict[PREFS_CON_TCP_MSS] = @(0);
 	return dict;
 }
 
@@ -796,6 +800,7 @@
     [s appendFormat:@"login: %@<br>",login];
     [s appendFormat:@"isListener: %@<br>",isListener ? @"YES" : @"NO"];
     [s appendFormat:@"isInbound: %@<br>",isInbound ? @"YES" : @"NO"];
+    [s appendFormat:@"activeTcpSegmentSize: %d<br>",uc.activeTcpMaxSegmentSize ];
     return s;
 }
 

@@ -45,6 +45,7 @@
 #define	PREFS_CON_SMPP_ERRCODE      @"smpp-error-code"
 #define	PREFS_CON_DLR_ERRCODE       @"dlr-error-code"
 #define	PREFS_CON_INTERNAL_ERRCODE  @"internal-error-code"
+#define PREFS_CON_TCP_MSS       @"max-tcp-segment-size"
 
 /* preference names of listeners */
 
@@ -59,7 +60,6 @@
 #define	PREFS_LIS_WINDOW		@"window-size"
 #define	PREFS_LIS_SOCKTYPE		@"socket-type"
 #define	PREFS_LIS_ROUTER		@"router-name"
-
 enum SmppAlphaCoding;
 
 @interface SmscConnection : UMObject <SmscConnectionMessagePassingProtocol,SmscConnectionProtocol,SmscConnectionRouterUserProtocol>
@@ -110,7 +110,7 @@ enum SmppAlphaCoding;
     BOOL                started;
     NSMutableDictionary *options;
     NSString            *lastStatus;
-
+    int                 _max_tcp_segment_size;
     id<SmscConnectionUserProtocol>  user;
     UMThroughputCounter *inboundMessagesThroughput;
     UMThroughputCounter *outboundMessagesThroughput;
@@ -155,6 +155,7 @@ enum SmppAlphaCoding;
 @property(readonly,strong)      UMThroughputCounter *inboundReportsThroughput;
 @property(readonly,strong)      UMThroughputCounter *outboundReportsThroughput;
 @property(readwrite,strong)     NSString            *lastStatus;
+@property(readwrite,assign)     int                 max_tcp_segment_size;
 
 + (NSString *)uniqueMessageId;
 + (NSString *)uniqueMessageIdWithPrefix:(NSString *)prefix;
