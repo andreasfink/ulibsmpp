@@ -25,56 +25,29 @@ typedef enum DeliveryReportType
 } DeliveryReportType;
 
 @protocol SmscConnectionReportProtocol<NSObject>
-- (id)currentTransaction;
-- (void)setCurrentTransaction:(id)t;
-
-- (NSString *)userReference;
-- (void) setUserReference:(NSString *)i;
-
-- (NSString *)routerReference;
-- (void) setRouterReference:(NSString *)i;
-
-- (NSString *)providerReference;
-- (void) setProviderReference:(NSString *)i;
-
-- (UMSigAddr *)destination;
-- (void) setDestination:(UMSigAddr *)s;
-- (UMSigAddr *)source;
-- (void) setSource:(UMSigAddr *)s;
-- (NSString *)reportText;
-- (void) setReportText:(NSString *)s;
-- (DeliveryReportType)reportType;
-- (void) setReportType:(DeliveryReportType)i;
-- (SmscRouterError *)error;
-- (void) setError:(SmscRouterError *)err;
-- (int) priority;
-- (void) setPriority:(int)prio;
-- (id) originalSendingObject;
-- (void) setOriginalSendingObject:(id)o;
-- (NSString *)imsi;
-- (void) setImsi:(NSString *)imsi;
-- (NSString *)msc;
-- (void) setMsc:(NSString *)msc;
-- (NSString *)mcc;
-- (void) setMcc:(NSString *)mcc;
-- (NSString *)mnc;
-- (void) setMnc:(NSString *)mnc;
-- (int) responseCode;
-- (void) setResponseCode:(int)code;
-- (NSString *)responseCodeToString;
-
-- (id<SmscConnectionMessageProtocol>)reportToMsg;
-- (NSString *)reportTypeAsString;
-
+@property(readwrite,strong,atomic)  id      currentTransaction;
+@property(readwrite,strong,atomic)  NSString *userReference;
+@property(readwrite,strong,atomic)  NSString *routerReference;
+@property(readwrite,strong,atomic)  NSString *providerReference;
+@property(readwrite,strong,atomic)  UMSigAddr *destination;
+@property(readwrite,strong,atomic)  UMSigAddr *source;
+@property(readwrite,strong,atomic)  NSString *reportText;
+@property(readwrite,assign,atomic)  DeliveryReportType reportType;
+@property(readwrite,strong,atomic)  SmscRouterError *error;
+@property(readwrite,assign,atomic)  int             priority;
+@property(readwrite,strong,atomic)  id              originalSendingObject;
+@property(readwrite,strong,atomic)  NSString        *imsi;
+@property(readwrite,strong,atomic)  NSString        *msc;
+@property(readwrite,strong,atomic)  NSString        *mcc;
+@property(readwrite,strong,atomic)  NSString        *mnc;
+@property(readwrite,assign,atomic)  int             responseCode;
+@property(readwrite,strong,atomic)  id<SmscConnectionMessageProtocol>  reportToMsg;
+@property(readwrite,strong,atomic)  NSString        *reportTypeAsString;
 
 @optional
-- (NSDictionary *)tlvs;
-- (void)setTlvs:(NSDictionary *)tlvs;
 
-- (NSString *)hlrGt;
-- (void) setHlrGt:(NSString *)hlrGt;
-
-- (NSString *)provider;
-- (void) setProvider:(NSString *)provider;
+@property(readwrite,strong,atomic)  NSDictionary *tlvs;
+@property(readwrite,strong,atomic)  NSString *hlrGt;
+@property(readwrite,strong,atomic)  NSString *provider;
 
 @end
