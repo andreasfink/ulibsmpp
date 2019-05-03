@@ -978,7 +978,7 @@
 	{
 		NSString *ms;
 		NSString *reportText;
-        NSInteger type = [msg messageState];
+        NSInteger type = [msg messageStateCode];
 		switch(type)
 		{
 			case MESSAGE_STATE_ENROUTE:
@@ -1048,7 +1048,7 @@
         }
 		[pdu appendTLVStringNullTerminated:[msg routerReference] withTag:SMPP_TLV_RECEIPTED_MESSAGE_ID];
         [pdu appendTLVNetworkErrorCode:[msg networkErrorCode] networkType:SMPP_NETWORK_TYPE_GSM  withTag:SMPP_TLV_NETWORK_ERROR_CODE];
-		[pdu appendTLVByte: [SmppPdu messageState:[msg messageState]] withTag: SMPP_TLV_MESSAGE_STATE];
+		[pdu appendTLVByte: [SmppPdu messageState:[msg messageStateCode]] withTag: SMPP_TLV_MESSAGE_STATE];
 	}
 	/*
 	 ADDITIONAL TLV'S POSSIBLE HERE:

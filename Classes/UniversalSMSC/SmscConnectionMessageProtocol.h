@@ -158,8 +158,9 @@ typedef enum UMRequestMaskValue
 - (void) setSubmitErrCode:(NSInteger)err;
 - (int) networkErrorCode;
 - (void)setNetworkErrorCode:(int)c;
-- (int) messageState;
-- (void) setMessageState:(int)state;
+
+- (int) messageStateCode;
+- (void) setMessageStateCode:(int)state;
 
 - (void) setUserTransaction:(id)transaction;
 - (id) userTransaction;

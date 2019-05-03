@@ -1327,16 +1327,6 @@
 	dbNetworkErrorCode.integer = integer;
 }
 
-- (int)messageState
-{
-	return (int)dbMessageState.integer;
-}
-
-- (void)setMessageState:(int)integer
-{
-	dbMessageState.integer = integer;
-}
-
 
 - (int)priority
 {
