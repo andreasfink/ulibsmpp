@@ -80,6 +80,7 @@
 		A6793DB31934AACE0090FC94 /* UMSigAddr.h in Headers */ = {isa = PBXBuildFile; fileRef = A6DDD9581635FD4B002FA7CC /* UMSigAddr.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		A6793DB41934AAD20090FC94 /* TestUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = A6DDD95A1635FD4B002FA7CC /* TestUtils.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		A6793DB51934AAD50090FC94 /* UMPrefs.h in Headers */ = {isa = PBXBuildFile; fileRef = A6DDD95C1635FD4B002FA7CC /* UMPrefs.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		A6798B9F22BBBAD00019806C /* ulib.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A6798B9E22BBBAD00019806C /* ulib.framework */; };
 		A67D3DD41AF9E97D0090FC94 /* GSMErrorCode.h in Headers */ = {isa = PBXBuildFile; fileRef = A67D3DD21AF9E97D0090FC94 /* GSMErrorCode.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		A67D3DDC1AF9ECC10090FC94 /* DeliveryReportErrorCode.h in Headers */ = {isa = PBXBuildFile; fileRef = A67D3DDA1AF9ECC10090FC94 /* DeliveryReportErrorCode.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		A67EDBD21A19C407004A556B /* SmscConnectionFAIL.h in Headers */ = {isa = PBXBuildFile; fileRef = A67EDBD01A19C407004A556B /* SmscConnectionFAIL.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -90,7 +91,6 @@
 		A687AA6C1AFA22780090FC94 /* SmscRouterError.m in Sources */ = {isa = PBXBuildFile; fileRef = A687AA6A1AFA22780090FC94 /* SmscRouterError.m */; };
 		A69A53451AC986C20090FC94 /* SmscConnectionUserProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = A69A53441AC986C20090FC94 /* SmscConnectionUserProtocol.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		A69A53461AC987BE0090FC94 /* SmscConnectionRouterProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = A61B97F019347458008AD2D4 /* SmscConnectionRouterProtocol.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		A69BCEC4193425EE0055D138 /* ulib.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A69BCEC3193425EE0055D138 /* ulib.framework */; settings = {ATTRIBUTES = (Required, ); }; };
 		A6AFEAEC1A01698100D7F3C1 /* SmscConnection.h in Headers */ = {isa = PBXBuildFile; fileRef = A6DDD9381635FD4B002FA7CC /* SmscConnection.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		A6B98E4B18E59F6D0090FC94 /* SmppTlv.m in Sources */ = {isa = PBXBuildFile; fileRef = A6B98E4918E59F6D0090FC94 /* SmppTlv.m */; };
 		A6B98E5018E5A0D50090FC94 /* SmppMultiResult.m in Sources */ = {isa = PBXBuildFile; fileRef = A6B98E4E18E5A0D50090FC94 /* SmppMultiResult.m */; };
@@ -161,7 +161,6 @@
 		22DF11D81635376900900D01 /* smpp-server.conf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "smpp-server.conf"; path = "ulibsmppTests/smpp-server.conf"; sourceTree = SOURCE_ROOT; };
 		22DF11DA1635377500900D01 /* submit-test.conf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "submit-test.conf"; path = "ulibsmppTests/submit-test.conf"; sourceTree = SOURCE_ROOT; };
 		A6019BAF1AC15C3A00854472 /* VERSION */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = VERSION; sourceTree = "<group>"; };
-		A6190170164331AC0009EB77 /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
 		A61B97ED19347458008AD2D4 /* SmscConnectionMessageProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SmscConnectionMessageProtocol.h; sourceTree = "<group>"; };
 		A61B97EE19347458008AD2D4 /* SmscConnectionProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SmscConnectionProtocol.h; sourceTree = "<group>"; };
 		A61B97EF19347458008AD2D4 /* SmscConnectionReportProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SmscConnectionReportProtocol.h; sourceTree = "<group>"; };
@@ -180,6 +179,7 @@
 		A63051E11A16B8F700A466F4 /* SmscConnectionNULL.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SmscConnectionNULL.m; path = Classes/UniversalSMSC/SmscConnectionNULL.m; sourceTree = SOURCE_ROOT; };
 		A63051E41A16BD3800A466F4 /* SmscStandardReport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SmscStandardReport.h; sourceTree = "<group>"; };
 		A63051E51A16BD3800A466F4 /* SmscStandardReport.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SmscStandardReport.m; sourceTree = "<group>"; };
+		A6798B9E22BBBAD00019806C /* ulib.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ulib.framework; path = "/Library/Application Support/FinkTelecomServices/frameworks/ulib.framework"; sourceTree = "<absolute>"; };
 		A67D3DD21AF9E97D0090FC94 /* GSMErrorCode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GSMErrorCode.h; sourceTree = "<group>"; };
 		A67D3DDA1AF9ECC10090FC94 /* DeliveryReportErrorCode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DeliveryReportErrorCode.h; sourceTree = "<group>"; };
 		A67EDBD01A19C407004A556B /* SmscConnectionFAIL.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SmscConnectionFAIL.h; sourceTree = "<group>"; };
@@ -189,7 +189,6 @@
 		A687AA691AFA22780090FC94 /* SmscRouterError.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = SmscRouterError.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		A687AA6A1AFA22780090FC94 /* SmscRouterError.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SmscRouterError.m; sourceTree = "<group>"; };
 		A69A53441AC986C20090FC94 /* SmscConnectionUserProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SmscConnectionUserProtocol.h; sourceTree = "<group>"; };
-		A69BCEC3193425EE0055D138 /* ulib.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ulib.framework; path = /Library/Frameworks/ulib.framework; sourceTree = "<absolute>"; };
 		A6B98E4818E59F6D0090FC94 /* SmppTlv.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SmppTlv.h; sourceTree = "<group>"; };
 		A6B98E4918E59F6D0090FC94 /* SmppTlv.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SmppTlv.m; sourceTree = "<group>"; };
 		A6B98E4D18E5A0D50090FC94 /* SmppMultiResult.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SmppMultiResult.h; sourceTree = "<group>"; };
@@ -244,8 +243,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A6798B9F22BBBAD00019806C /* ulib.framework in Frameworks */,
 				A642ADB91AC9CEE500854472 /* Foundation.framework in Frameworks */,
-				A69BCEC4193425EE0055D138 /* ulib.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -290,8 +289,7 @@
 		22278AF4162D53D200633C39 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				A69BCEC3193425EE0055D138 /* ulib.framework */,
-				A6190170164331AC0009EB77 /* SenTestingKit.framework */,
+				A6798B9E22BBBAD00019806C /* ulib.framework */,
 				22278AFA162D53D200633C39 /* Foundation.framework */,
 			);
 			name = Frameworks;
@@ -763,7 +761,7 @@
 				DYLIB_CURRENT_VERSION = 1.5.1;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
-				FRAMEWORK_SEARCH_PATHS = /Library/Frameworks;
+				FRAMEWORK_SEARCH_PATHS = "\"/Library/Application Support/FinkTelecomServices/frameworks\"";
 				GCC_C_LANGUAGE_STANDARD = "compiler-default";
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
@@ -783,7 +781,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				GENERATE_PROFILING_CODE = YES;
 				INFOPLIST_FILE = SupportingFiles/Info.plist;
-				INSTALL_PATH = /Library/Frameworks/;
+				INSTALL_PATH = "/Library/Application Support/FinkTelecomServices/frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 10.8;
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_CFLAGS = "-DULIBSMPP_CONFIG=Debug";
@@ -828,7 +826,7 @@
 				DYLIB_COMPATIBILITY_VERSION = 1.5.1;
 				DYLIB_CURRENT_VERSION = 1.5.1;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				FRAMEWORK_SEARCH_PATHS = /Library/Frameworks;
+				FRAMEWORK_SEARCH_PATHS = "\"/Library/Application Support/FinkTelecomServices/frameworks\"";
 				GCC_C_LANGUAGE_STANDARD = "compiler-default";
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -844,7 +842,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				GENERATE_PROFILING_CODE = YES;
 				INFOPLIST_FILE = SupportingFiles/Info.plist;
-				INSTALL_PATH = /Library/Frameworks/;
+				INSTALL_PATH = "/Library/Application Support/FinkTelecomServices/frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 10.8;
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_CFLAGS = "-DULIBSMPP_CONFIG=Release";
@@ -862,6 +860,10 @@
 				CODE_SIGN_IDENTITY = "";
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = 2GSNWPNR77;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(LOCAL_LIBRARY_DIR)/Application\\ Support/FinkTelecomServices/frameworks",
+				);
 				MACOSX_DEPLOYMENT_TARGET = 10.8;
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = me.fink.ulibsmpp;
@@ -876,6 +878,10 @@
 				CODE_SIGN_IDENTITY = "";
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = 2GSNWPNR77;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(LOCAL_LIBRARY_DIR)/Application\\ Support/FinkTelecomServices/frameworks",
+				);
 				MACOSX_DEPLOYMENT_TARGET = 10.8;
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = me.fink.ulibsmpp;
