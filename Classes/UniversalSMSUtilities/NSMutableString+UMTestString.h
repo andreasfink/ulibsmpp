@@ -6,11 +6,10 @@
 //  Copyright 2008-2014 Andreas Fink, Paradieshofstrasse 101, 4054 Basel, Switzerland
 //
 
-#import <Foundation/Foundation.h>
+#import <ulib/ulib.h>
 
 @interface NSMutableString (UMTestString)
 
-- (void)stripBlanks;
 - (void)stripSpaces;
 - (void)stripQuotes;
 - (BOOL)blankAtBeginning:(int)start;
