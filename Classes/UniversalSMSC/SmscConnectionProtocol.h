@@ -16,7 +16,7 @@
 #import "SmscConnectionRouterUserProtocol.h"
 #import "SmscConnectionTransactionProtocol.h"
 
-/* this is what a object which wants to submit messages to the router should obey */
+/* this is what a object which wants to submit messages to the router should obey to */
 
 @protocol SmscConnectionSubmitterProtocol
 
