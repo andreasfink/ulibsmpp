@@ -98,13 +98,7 @@ typedef enum SMPP_TLV_Tag
     SMPP_TLV_VENDOR_SPECIFIC_MSU_COUNT_TCAP_HS_TX   = 0x1432,
     SMPP_TLV_VENDOR_SPECIFIC_MSU_COUNT_TCAP_HS_RX   = 0x1433,
     SMPP_TLV_VENDOR_SPECIFIC_COMMENT                = 0x1434,
-<<<<<<< HEAD
-
-
 }	SMPP_TLV_Tag;
-=======
- }	SMPP_TLV_Tag;
->>>>>>> 6a90ac1c2f71de85b8b2e34cab3cf467c34a24e1
 
 @interface SmppTlv: UMObject
 {
