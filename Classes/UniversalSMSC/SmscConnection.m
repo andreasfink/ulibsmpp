@@ -800,7 +800,7 @@
     [s appendFormat:@"login: %@<br>",login];
     [s appendFormat:@"isListener: %@<br>",isListener ? @"YES" : @"NO"];
     [s appendFormat:@"isInbound: %@<br>",isInbound ? @"YES" : @"NO"];
-    [s appendFormat:@"activeTcpSegmentSize: %d<br>",uc.activeTcpMaxSegmentSize ];
+    [s appendFormat:@"activeSegmentSize: %d<br>",uc.activeMaxSegmentSize ];
     return s;
 }
 

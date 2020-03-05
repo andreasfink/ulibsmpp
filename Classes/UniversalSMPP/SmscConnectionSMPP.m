@@ -721,7 +721,7 @@ end:
                 uc = [[UMSocket alloc] initWithType:UMSOCKET_TYPE_TCP4ONLY name:@"smpp-listener"]; /* FIXME: really IPv4 only? */
 				[uc setLocalHost:localHost];
 				[uc setLocalPort:localPort];
-                uc.configuredTcpMaxSegmentSize = _max_tcp_segment_size;
+                uc.configuredMaxSegmentSize = _max_tcp_segment_size;
 				incomingStatus = SMPP_STATUS_INCOMING_HAS_SOCKET;
 				break;
 				
@@ -2750,7 +2750,7 @@ length_error:
             [self.logFeed majorError:0 withText:msg];
             return -1;
         }
-        uc.configuredTcpMaxSegmentSize = _max_tcp_segment_size;
+        uc.configuredMaxSegmentSize = _max_tcp_segment_size;
 
         outgoingStatus = SMPP_STATUS_OUTGOING_HAS_SOCKET;
         
@@ -2810,7 +2810,7 @@ length_error:
             transmitPort = remotePort;
         }
         [uc setRequestedRemotePort:transmitPort];
-        uc.configuredTcpMaxSegmentSize = _max_tcp_segment_size;
+        uc.configuredMaxSegmentSize = _max_tcp_segment_size;
         sErr = [uc connect];
         if (sErr != UMSocketError_no_error)
         {
@@ -2866,7 +2866,7 @@ length_error:
         uc = [[UMSocket alloc] initWithType:UMSOCKET_TYPE_TCP4ONLY name:@"open-receiver"];
         [uc setRemoteHost:remoteHost];
         [uc setRequestedRemotePort:receivePort];
-        uc.configuredTcpMaxSegmentSize = _max_tcp_segment_size;
+        uc.configuredMaxSegmentSize = _max_tcp_segment_size;
         sErr = [uc connect];
         if (sErr != UMSocketError_no_error)
         {
