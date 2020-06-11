@@ -1036,7 +1036,7 @@ end:
         
         do
         {
-            memset(header,0xF0,16);
+            memset(header,0xF0,sizeof(header));
             if([[uc receiveBuffer] length] < 16)
             {
                 break;
