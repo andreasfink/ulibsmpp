@@ -100,6 +100,7 @@ typedef enum SMPP_TLV_Tag
     SMPP_TLV_VENDOR_SPECIFIC_COMMENT                = 0x1434,
     SMPP_TLV_VENDOR_SPECIFIC_VAS_ESME               = 0x1435,
     SMPP_TLV_VENDOR_SPECIFIC_VAS_IP                 = 0x1436,
+    SMPP_TLV_VENDOR_SPECIFIC_EXTENSION_DATA         = 0x1437,
 }	SMPP_TLV_Tag;
 
 @interface SmppTlv: UMObject
