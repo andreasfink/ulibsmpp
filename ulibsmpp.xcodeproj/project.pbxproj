@@ -784,7 +784,7 @@
 				GENERATE_PROFILING_CODE = YES;
 				INFOPLIST_FILE = SupportingFiles/Info.plist;
 				INSTALL_PATH = "/Library/Application Support/FinkTelecomServices/frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				MACOSX_DEPLOYMENT_TARGET = 10.14;
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_CFLAGS = "-DULIBSMPP_CONFIG=Debug";
 				PRODUCT_NAME = ulibsmpp;
@@ -845,7 +845,7 @@
 				GENERATE_PROFILING_CODE = YES;
 				INFOPLIST_FILE = SupportingFiles/Info.plist;
 				INSTALL_PATH = "/Library/Application Support/FinkTelecomServices/frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				MACOSX_DEPLOYMENT_TARGET = 10.14;
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_CFLAGS = "-DULIBSMPP_CONFIG=Release";
 				PRODUCT_NAME = ulibsmpp;
