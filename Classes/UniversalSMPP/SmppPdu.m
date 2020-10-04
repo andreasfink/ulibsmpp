@@ -237,10 +237,25 @@
 	[self appendByte: ((i & 0x000000FF) >> 0)];
 }
 
++(NSDateFormatter *)smppDateFormatter
+{
+    static NSDateFormatter *_smppDateFormatter;
+       
+    if(_smppDateFormatter==NULL)
+    {
+        NSTimeZone *tz = [NSTimeZone timeZoneWithName:@"UTC"];
+        NSDateFormatter *sf= [[NSDateFormatter alloc]init];
+        NSLocale *usLocale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
+        [sf setLocale:usLocale];
+        [sf setDateFormat:@"%y%m%d%H%M%S000+"];
+        [sf setTimeZone:tz];
+        _smppDateFormatter = sf;
+    }
+    return _smppDateFormatter;
+}
+
 - (void) appendDate:(NSDate *) date
 {
-	NSCalendarDate *cd;
-    
 	if (!date)
     {
 		[self appendByte: 0];
@@ -252,7 +267,8 @@
     }
 	else
 	{
-		cd = [date dateWithCalendarFormat:@"%y%m%d%H%M%S000+" timeZone: [NSTimeZone timeZoneForSecondsFromGMT:0]];
+        NSDateFormatter *df = [SmppPdu smppDateFormatter];
+        NSString *cd = [df stringFromDate:date];
 		[self appendNSStringMax: [cd description] maxLength: 17];
 	}
 }
