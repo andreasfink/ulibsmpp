@@ -68,11 +68,11 @@
         deliverReportQueue      = [[PriorityQueue alloc] init];
         ackNackQueue            = [[PriorityQueue alloc] init];
 #else
-        submitMessageQueue      = [[UMQueue alloc] init];
-        submitReportQueue       = [[UMQueue alloc] init];
-        deliverMessageQueue     = [[UMQueue alloc] init];
-        deliverReportQueue      = [[UMQueue alloc] init];
-        ackNackQueue            = [[UMQueue alloc] init];
+        submitMessageQueue      = [[UMQueueSingle alloc] init];
+        submitReportQueue       = [[UMQueueSingle alloc] init];
+        deliverMessageQueue     = [[UMQueueSingle alloc] init];
+        deliverReportQueue      = [[UMQueueSingle alloc] init];
+        ackNackQueue            = [[UMQueueSingle alloc] init];
 #endif
         inboundMessagesThroughput = [[UMThroughputCounter alloc]initWithResolutionInSeconds: 1.0 maxDuration: 1260.0];
         outboundMessagesThroughput = [[UMThroughputCounter alloc]initWithResolutionInSeconds: 1.0 maxDuration: 1260.0];

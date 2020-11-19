@@ -76,11 +76,11 @@ enum SmppAlphaCoding;
 	PriorityQueue		*deliverReportQueue;
 	PriorityQueue		*ackNackQueue;
 #else
-    UMQueue             *submitMessageQueue;
-    UMQueue             *submitReportQueue;
-    UMQueue             *deliverMessageQueue;
-    UMQueue             *deliverReportQueue;
-    UMQueue             *ackNackQueue;
+    UMQueueSingle             *submitMessageQueue;
+    UMQueueSingle             *submitReportQueue;
+    UMQueueSingle             *deliverMessageQueue;
+    UMQueueSingle             *deliverReportQueue;
+    UMQueueSingle             *ackNackQueue;
 #endif
     
 	UMSynchronizedDictionary *outgoingTransactions;
