@@ -307,12 +307,15 @@ const SmppErrorCodeListEntry SmppErrorCodeList[] =
 {
     [sendLock lock];
 	lastSeq++;
-	lastSeq %= 0xFFFFFF;
+	lastSeq %= 0x7FFFFFFF;
+    if(lastSeq == 0)
+    {
+        lastSeq = 1;
+    }
 	[pdu setSeq:lastSeq];
 	int ret = [self _sendPdu:pdu];
     [sendLock unlock];
     return ret;
-
 }
 
 - (UMSocketError) sendPdu:(SmppPdu *)pdu

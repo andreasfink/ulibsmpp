@@ -85,7 +85,7 @@ typedef enum SMPPConnectionMode
 {
 	NSLock				*sendLock;
 	NSLock				*trnLock;
-	int					lastSeq;
+	uint32_t			lastSeq;
 //	EmiUcpPendingTransaction slots[EMI2_MAX_TRN];
 	SmppIncomingReceiverThreadStatus runIncomingReceiverThread;
     SmppOutgoingReceiverThreadStatus runOutgoingReceiverThread;
