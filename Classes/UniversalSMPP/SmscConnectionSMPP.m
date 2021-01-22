@@ -336,7 +336,7 @@ const SmppErrorCodeListEntry SmppErrorCodeList[] =
     [sendLock unlock];
     return ret;
 }
-	
+
 - (UMSocketError) sendPdu:(SmppPdu *)pdu asResponseTo:(SmppPdu *)pdu1
 {
 	return [self sendPdu:pdu withSeq:[pdu1 seq]];
