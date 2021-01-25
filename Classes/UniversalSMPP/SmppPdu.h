@@ -440,4 +440,6 @@ typedef unsigned long		SmppPduSequence;
 
 + (NSString *)pduTypeToString:(SmppPduType)type;
 
++ (NSDate *)smppTimestampFromString:(NSString *)str;
+
 @end

@@ -1278,8 +1278,6 @@ end:
     NSData *udh = nil;
     int udhLen;
     int dataLen;
-//	NSString *defferredDelivery = nil;
-//	NSString *validityPeriod = nil;
     SmscConnectionTransaction *transaction;
     NSString *username;
 //    int err;
@@ -1386,9 +1384,13 @@ end:
         [msg setPduPid:  (int) [pdu grabInt8]];
         [msg setPriority: (int) [pdu grabInt8]];
 
-        /*defferredDelivery	= */    [pdu grabStringWithEncoding:NSISOLatin1StringEncoding	maxLength:255];
-        /*validityPeriod = */       [pdu grabStringWithEncoding:NSISOLatin1StringEncoding	maxLength:255];
+        NSString *defferredDeliveryString = [pdu grabStringWithEncoding:NSISOLatin1StringEncoding maxLength:255];
+        NSDate *defferredDelivery = [SmppPdu smppTimestampFromString:defferredDeliveryString];
+        [msg setDeferred:defferredDelivery];
 
+        NSString *validityPeriodString   = [pdu grabStringWithEncoding:NSISOLatin1StringEncoding maxLength:255];
+        NSDate *validityPeriod = [SmppPdu smppTimestampFromString:validityPeriodString];
+        [msg setValidity:validityPeriod];
         UMRequestMaskValue dlrMask = (UMRequestMaskValue)[pdu grabInt8];
         UMReportMaskValue requestMask = 0;
         if(dlrMask & REQUEST_MASK_SUCCESS_OR_FAIL)
@@ -4118,4 +4120,5 @@ length_error:
         self.alphanumericOriginatorCoding = SMPP_ALPHA_7BIT_GSM;
     }
 }
+
 @end

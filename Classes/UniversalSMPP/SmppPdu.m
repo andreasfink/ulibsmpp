@@ -2281,4 +2281,73 @@
     sscanf([s UTF8String],"%08lx",&ul);
     [self setSeq:ul];
 }
+
++ (NSDate *)smppTimestampFromString:(NSString *)str
+{
+    @autoreleasepool
+    {
+        const char *ts = str.UTF8String;
+        int microsec = 0;
+        time_t theTime;
+        
+        if(strlen(ts) != 16)
+        {
+            return NULL;
+        }
+        int Y = 0;
+        int M = 0;
+        int D = 0;
+        int h = 0;
+        int m = 0;
+        int s = 0;
+        int t = 0;
+        int n = 0;
+        char p = 0;
+
+        sscanf(ts,"%02d%02d%02d%02d%02d%02d%01d%02d%1c",&Y,&M,&D,&h,&m,&s,&t,&n,&p);
+        
+        struct tm   trec;
+        trec.tm_year = 100 + Y;
+        trec.tm_mon = M - 1;
+        trec.tm_mday = D;
+        trec.tm_hour = h;
+        trec.tm_min = m;
+        trec.tm_sec = s;
+        if(p == '-')
+        {
+            trec.tm_gmtoff = -(15 * 60 * n);
+            theTime = timegm(&trec);
+        }
+        else if (p == '+')
+        {
+            trec.tm_gmtoff = -(15 * 60 * n);
+            microsec = t * 100000;
+            theTime = timegm(&trec);
+        }
+        else if (p == 'R')
+        {
+            /* relative timestamp */
+            theTime = timegm(&trec);
+            time_t now;
+            struct tm nowTm;
+            time(&now);
+            gmtime_r(&now,&nowTm);
+            trec.tm_gmtoff = 0;
+            trec.tm_year   = trec.tm_year - 100  + nowTm.tm_year;
+            trec.tm_mon    = trec.tm_mon +  1 + nowTm.tm_mon;
+            trec.tm_mday   = trec.tm_mday + nowTm.tm_mday;
+            trec.tm_hour   = trec.tm_hour + nowTm.tm_hour;
+            trec.tm_min    = trec.tm_min + nowTm.tm_min;
+            trec.tm_sec    = trec.tm_sec + nowTm.tm_sec;
+            theTime = timegm(&trec);
+        }
+        else
+        {
+            return NULL;
+        }
+        return [NSDate dateWithTimeIntervalSince1970:theTime];
+    }
+}
+
+
 @end
