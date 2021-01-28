@@ -186,8 +186,8 @@ typedef enum UMRequestMaskValue
 - (NSString *)opc2;
 - (NSString *)dpc1;
 - (NSString *)dpc2;
-- (NSString *)userflags;
-- (void)setUserflags:(NSString *)flags;
+- (NSInteger)userFlags;
+- (void)setUserFlags:(NSInteger)flags;
 - (NSString *)msc;
 - (void)setMsc:(NSString *)msc;
 - (NSString *)hlr;

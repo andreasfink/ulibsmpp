@@ -1223,7 +1223,7 @@ extern TestDelegate *global_appDelegate;
             message.smsc1 = @"+111";
             message.smsc2 = [global_appDelegate smsc2ForDestination:message.toString mcc:message.mcc mnc:message.mnc];
             message.smsc3 = [global_appDelegate smsc3ForDestination:message.toString mcc:message.mcc mnc:message.mnc];
-            message.userflags = @"16"; /* USERFLAG_USE_SECONDARY_HLR */
+            message.userFlags = @"16"; /* USERFLAG_USE_SECONDARY_HLR */
         }
     }
     

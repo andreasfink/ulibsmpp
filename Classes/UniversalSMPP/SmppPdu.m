@@ -688,7 +688,7 @@
     }
     if(options[@"set_userflags"] || options[@"messagemover"])
     {
-        if([msg respondsToSelector:@selector(userflags)])
+        if([msg respondsToSelector:@selector(userFlags)])
         {
             NSString *userflags = [msg userFlags];
             if(userflags)
