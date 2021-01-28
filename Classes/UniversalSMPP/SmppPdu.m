@@ -690,7 +690,7 @@
     {
         if([msg respondsToSelector:@selector(userflags)])
         {
-            NSString *userflags = [msg userflags];
+            NSString *userflags = [msg userFlags];
             if(userflags)
             {
                 [pdu appendTLVString:userflags withTag:SMPP_TLV_VENDOR_SPECIFIC_USERFLAGS];
