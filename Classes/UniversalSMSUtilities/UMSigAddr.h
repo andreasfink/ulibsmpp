@@ -15,24 +15,24 @@ typedef	enum UMTonType
 	UMTON_INTERNATIONAL	 	= 1,
 	UMTON_NATIONAL 			= 2,
 	UMTON_NETWORK_SPECIFIC	= 3,
-	UMTON_SUBSCRIBER 			= 4,
+	UMTON_SUBSCRIBER        = 4,
 	UMTON_ALPHANUMERIC 		= 5,
-	UMTON_ABBREVIATED			= 6,
+	UMTON_ABBREVIATED       = 6,
 	UMTON_RESERVED 			= 7,
-    UMTON_POINTCODE           = 103,
-    UMTON_EMPTY               = 104,
+    UMTON_POINTCODE         = 103,
+    UMTON_EMPTY             = 104,
 } UMTonType;
 
 typedef enum UMNpiType
 {
-	UMNPI_UNKNOWN				= 0,
+	UMNPI_UNKNOWN           = 0,
     UMNPI_ISDN_E164			= 1,
     UMNPI_GENERIC			= 2,
 	UMNPI_DATA_X121			= 3,
-	UMNPI_TELEX 				= 4,
+	UMNPI_TELEX             = 4,
 	UMNPI_NATIONAL			= 8,
-	UMNPI_PRIVATE				= 9,
-	UMNPI_ERMES 				= 10,
+	UMNPI_PRIVATE           = 9,
+	UMNPI_ERMES             = 10,
 	UMNPI_RESERVED 			= 15,
 } UMNpiType;
 
