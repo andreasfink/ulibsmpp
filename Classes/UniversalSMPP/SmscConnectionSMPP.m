@@ -802,6 +802,9 @@ end:
                             [e setIsInbound: YES];
                             [e setLastActivity:[NSDate date]];
                             [e setLogFeed:self.logFeed];
+                            e.max_tcp_segment_size = _max_tcp_segment_size;
+                            e.uc.configuredMaxSegmentSize = _max_tcp_segment_size;
+
                             [self.logFeed debug:0 withText:[NSString stringWithFormat:@"accepting connection for %@ for %@ at sock %d\r\n",name,newUc,newUc.sock]];
                             [e runSelectorInBackground:@selector(inbound)];
 //                            [NSThread detachNewThreadSelector:@selector(inbound) toTarget:e withObject:nil];

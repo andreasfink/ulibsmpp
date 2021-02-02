@@ -840,4 +840,15 @@
     return @"";
 }
 
+
+- (int)max_tcp_segment_size
+{
+    return _max_tcp_segment_size;
+}
+
+- (void) setMax_tcp_segment_size:(int)max
+{
+    _max_tcp_segment_size = max;
+    uc.configuredMaxSegmentSize = max;
+}
 @end
