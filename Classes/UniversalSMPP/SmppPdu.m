@@ -1858,8 +1858,9 @@
             {
                 if(t.type==SMPP_TLV_NULLTERMINATED)
                 {
-                    NSData *data = [self grabOctetStringWithLength:(int)opt_len];
-                    NSString *stringValue =[NSString stringWithFormat:@"%s",[data bytes]];
+                    NSMutableData *data = [[self grabOctetStringWithLength:(int)opt_len] mutableCopy];
+                    [data appendByte:0]; /* failsafe */
+                    NSString *stringValue =[NSString stringWithFormat:@"%s",(const char *)[data bytes]];
                     tlv[t.name] = stringValue;
                 }
                 else if(t.type==SMPP_TLV_INTEGER)
