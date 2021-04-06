@@ -136,6 +136,7 @@ typedef enum SMPP_ESM_Class
 	SMPP_PDU_ESM_CLASS_SUBMIT_UDH_INDICATOR           	= 0x00000040,
 	SMPP_PDU_ESM_CLASS_SUBMIT_RPI                     	= 0x00000080,
 	SMPP_PDU_ESM_CLASS_SUBMIT_UDH_AND_RPI             	= 0x000000C0,
+    
 	SMPP_PDU_ESM_CLASS_DELIVER_DEFAULT_TYPE           	= 0x00000000,
 	SMPP_PDU_ESM_CLASS_DELIVER_SMSC_DELIVER_ACK       	= 0x00000004,
 	SMPP_PDU_ESM_CLASS_DELIVER_SME_DELIVER_ACK        	= 0x00000008,
@@ -144,6 +145,7 @@ typedef enum SMPP_ESM_Class
 	SMPP_PDU_ESM_CLASS_DELIVER_UDH_INDICATOR          	= 0x00000040,
 	SMPP_PDU_ESM_CLASS_DELIVER_RPI                    	= 0x00000080,
 	SMPP_PDU_ESM_CLASS_DELIVER_UDH_AND_RPI            	= 0x000000C0,
+    
 } SMPP_ESM_Class;
 
 /******************************************************************************
