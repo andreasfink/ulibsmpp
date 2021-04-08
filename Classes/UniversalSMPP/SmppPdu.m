@@ -573,9 +573,7 @@
 		[pdu appendBytes:[data bytes] length:len];
 	}
     
-    //	if([msg msgid])
-    //		[pdu appendTLVString:[msg msgid] withTag:SMPP_TLV_USER_MESSAGE_REFERENCE];
-	if(use_message_payload)
+    if(use_message_payload)
     {
 		[pdu appendTLVData:data withTag:SMPP_TLV_MESSAGE_PAYLOAD];
     }
