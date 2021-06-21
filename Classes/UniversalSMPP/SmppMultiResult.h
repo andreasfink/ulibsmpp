@@ -14,7 +14,7 @@
 @interface SmppMultiResult : UMObject
 {
 	UMSigAddr				*dst;
-	SmppErrorCode		err;
+	SmppErrorCode		    err;
 }
 @property(readwrite,strong)	UMSigAddr				*dst;
 @property(readwrite,assign)	SmppErrorCode		err;
