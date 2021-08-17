@@ -5,7 +5,7 @@ dnl  * ====================================================================
 dnl  */ 
 
 dnl initialization
-AC_PREREQ([2.71])
+AC_PREREQ([2.69])
 AC_INIT([ulibsmpp],[1.5.2],[andreas@fink.org])
 
 dnl generic parameters
