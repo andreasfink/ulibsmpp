@@ -83,55 +83,55 @@ typedef enum SMPPConnectionMode
 
 @interface SmscConnectionSMPP : SmscConnection <SmscConnectionProtocol,SmscConnectionRouterUserProtocol>
 {
-	NSLock				*sendLock;
-	NSLock				*trnLock;
-	uint32_t			lastSeq;
+	NSLock				*_sendLock;
+	NSLock				*_trnLock;
+	uint32_t			_lastSeq;
 //	EmiUcpPendingTransaction slots[EMI2_MAX_TRN];
-	SmppIncomingReceiverThreadStatus runIncomingReceiverThread;
-    SmppOutgoingReceiverThreadStatus runOutgoingReceiverThread;
-	SmppIncomingStatus	incomingStatus;
-    SmppOutgoingStatus  outgoingStatus;
-	SmppState			inboundState;
-    SmppState           outboundState;
-    NSString		    *cid;
-    NSString            *altAddrCharset;
-    NSString            *altCharset;
-    long                receivePort;
-    long                transmitPort;
-    SMPPConnectionMode  transmissionMode;
-    NSString            *systemType;
-    NSInteger		    bindAddrTon;
-	NSInteger		    bindAddrNpi;
-    NSString            *addressRange;
-    int                 smppMessageIdType;
-    time_t              lastKeepAliveSent;
-    time_t              lastKeepAliveResponseReceived;
-    time_t              lastKeepAliveReceived;
-    time_t              lastDataPacketSent;
-    time_t              lastDataPacketReceived;
+	SmppIncomingReceiverThreadStatus _runIncomingReceiverThread;
+    SmppOutgoingReceiverThreadStatus _runOutgoingReceiverThread;
+	SmppIncomingStatus	_incomingStatus;
+    SmppOutgoingStatus  _outgoingStatus;
+	SmppState			_inboundState;
+    SmppState           _outboundState;
+    NSString		    *_cid;
+    NSString            *_altAddrCharset;
+    NSString            *_altCharset;
+    long                _receivePort;
+    long                _transmitPort;
+    SMPPConnectionMode  _transmissionMode;
+    NSString            *_systemType;
+    NSInteger		    _bindAddrTon;
+	NSInteger		    _bindAddrNpi;
+    NSString            *_addressRange;
+    int                 _smppMessageIdType;
+    time_t              _lastKeepAliveSent;
+    time_t              _lastKeepAliveResponseReceived;
+    time_t              _lastKeepAliveReceived;
+    time_t              _lastDataPacketSent;
+    time_t              _lastDataPacketReceived;
     
-    time_t              lastSubmitSmSent;
-    time_t              lastSubmitSmReceived;
-    time_t              lastSubmitSmAckSent;
-    time_t              lastSubmitSmAckReceived;
+    time_t              _lastSubmitSmSent;
+    time_t              _lastSubmitSmReceived;
+    time_t              _lastSubmitSmAckSent;
+    time_t              _lastSubmitSmAckReceived;
 
-    time_t              lastDeliverSmSent;
-    time_t              lastDeliverSmReceived;
-    time_t              lastDeliverSmAckSent;
-    time_t              lastDeliverSmAckReceived;
+    time_t              _lastDeliverSmSent;
+    time_t              _lastDeliverSmReceived;
+    time_t              _lastDeliverSmAckSent;
+    time_t              _lastDeliverSmAckReceived;
 
-    NSString            *debugLastLocation;
-    NSString            *debugLastLastLocation;
-    NSDictionary        *tlvDefs;
-    NSString            *advertizeName;
-    NSDate              *bindExpires;
-    BOOL                usesHexMessageIdInSubmitSmResp;
-    BOOL                usesHexMessageIdInDlrText;
-    BOOL                registered;
+    NSString            *_debugLastLocation;
+    NSString            *_debugLastLastLocation;
+    NSDictionary        *_tlvDefs;
+    NSString            *_advertizeName;
+    NSDate              *_bindExpires;
+    BOOL                _usesHexMessageIdInSubmitSmResp;
+    BOOL                _usesHexMessageIdInDlrText;
+    BOOL                _registered;
     
-    SmppAlphaCoding     alphanumericOriginatorCoding;
-    int                 outstandingKeepalives;
-    __weak id<SmppTerminationCallback>   terminatedDelegate; /* we call this with [obj terminatedCallback:self] */
+    SmppAlphaCoding     _alphanumericOriginatorCoding;
+    int                 _outstandingKeepalives;
+    __weak id<SmppTerminationCallback>   _terminatedDelegate; /* we call this with [obj terminatedCallback:self] */
 	/*
      @property(readwrite,retain)     UMLogFeed *packetLogFeed;
      @property(readwrite,retain)     UMLogFeed *comLogFeed;

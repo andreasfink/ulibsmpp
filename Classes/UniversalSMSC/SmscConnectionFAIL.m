@@ -33,7 +33,7 @@
     return self;
 }
 
-- (NSString *)type
+- (NSString *)_type
 {
     return @"fail";
 }
@@ -57,7 +57,7 @@
 
 - (int) setConfig: (NSDictionary *) dict
 {
-    errorToReturn = [router createError];
+    errorToReturn = [_router createError];
     if(errorToReturn==NULL)
     {
         errorToReturn = [[SmscRouterError alloc]init];
@@ -195,7 +195,7 @@
     @autoreleasepool
     {
         [self setIsInbound:NO];
-        [router registerOutgoingSmscConnection:self];
+        [_router registerOutgoingSmscConnection:self];
     }
 }
 
@@ -228,7 +228,7 @@
                          synchronous:NO];
 
     sleep(1); /* TODO: well NULL is only good for debugging anyway */
-    report = [router createReport];
+    report = [_router createReport];
     
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
     [formatter setDateFormat:@"yyyyMMddHHmmss"];
@@ -240,7 +240,7 @@
     report.reportType               = SMS_REPORT_UNDELIVERABLE;
     if(errorToReturn == NULL)
     {
-        errorToReturn = [router createError];
+        errorToReturn = [_router createError];
         [errorToReturn setSmppErrorCode:ESME_RSYSERR];
     }
     report.error                    = errorToReturn;
@@ -291,7 +291,7 @@
     [sendingObject deliverMessageSent:msg
                             forObject:self
                           synchronous:!sync];
-    report = [router createReport];
+    report = [_router createReport];
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
     [formatter setDateFormat:@"yyyyMMddHHmmss"];
     NSString *reportText = [NSString stringWithFormat:@"id:%@ sub:001 dlvrd:001 submit date:%@ done date:%@ stat:DELIVRD err:000",

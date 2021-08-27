@@ -16,51 +16,13 @@
 
 @implementation SmscConnection
 
-@synthesize	name;
-@synthesize	type;
-@synthesize	version;
-@synthesize	routerName;
-@synthesize	uc;
-@synthesize user;
-@synthesize	router;
-@synthesize	localHost;
-@synthesize	localPort;
-@synthesize	remoteHost;
-@synthesize	remotePort;
-@synthesize	shortId;
-@synthesize	lastActivity;
-@synthesize receivePollTimeoutMs;
-@synthesize transmitTimeout;
-@synthesize keepAlive;
-@synthesize windowSize;
-@synthesize isListener;
-@synthesize isInbound;
-//@synthesize	submitMessageQueue;
-//@synthesize	submitReportQueue;
-//@synthesize	deliverMessageQueue;
-//@synthesize	deliverReportQueue;
-//@synthesize	ackNackQueue;
-@synthesize	login;
-@synthesize	password;
-@synthesize autorestart;
-@synthesize stopped;
-@synthesize started;
-@synthesize inboundMessagesThroughput;
-@synthesize outboundMessagesThroughput;
-@synthesize inboundReportsThroughput;
-@synthesize outboundReportsThroughput;
-@synthesize lastStatus;
-//@synthesize packetLogFeed;
-//@synthesize comLogFeed;
-
-
 - (SmscConnection *)init
 {
     self = [super init];
 	if(self)
     {
-        outgoingTransactions    = [[UMSynchronizedDictionary alloc] init];
-        incomingTransactions    = [[UMSynchronizedDictionary alloc] init];
+        _outgoingTransactions    = [[UMSynchronizedDictionary alloc] init];
+        _incomingTransactions    = [[UMSynchronizedDictionary alloc] init];
 #ifdef USE_SMPP_PRIORITY_QUEUES
         submitMessageQueue      = [[PriorityQueue alloc] init];
         submitReportQueue       = [[PriorityQueue alloc] init];
@@ -68,26 +30,26 @@
         deliverReportQueue      = [[PriorityQueue alloc] init];
         ackNackQueue            = [[PriorityQueue alloc] init];
 #else
-        submitMessageQueue      = [[UMQueueSingle alloc] init];
-        submitReportQueue       = [[UMQueueSingle alloc] init];
-        deliverMessageQueue     = [[UMQueueSingle alloc] init];
-        deliverReportQueue      = [[UMQueueSingle alloc] init];
-        ackNackQueue            = [[UMQueueSingle alloc] init];
+        _submitMessageQueue      = [[UMQueueSingle alloc] init];
+        _submitReportQueue       = [[UMQueueSingle alloc] init];
+        _deliverMessageQueue     = [[UMQueueSingle alloc] init];
+        _deliverReportQueue      = [[UMQueueSingle alloc] init];
+        _ackNackQueue            = [[UMQueueSingle alloc] init];
 #endif
-        inboundMessagesThroughput = [[UMThroughputCounter alloc]initWithResolutionInSeconds: 1.0 maxDuration: 1260.0];
-        outboundMessagesThroughput = [[UMThroughputCounter alloc]initWithResolutionInSeconds: 1.0 maxDuration: 1260.0];
-        inboundReportsThroughput = [[UMThroughputCounter alloc]initWithResolutionInSeconds: 1.0 maxDuration: 1260.0];
-        outboundReportsThroughput = [[UMThroughputCounter alloc]initWithResolutionInSeconds: 1.0 maxDuration: 1260.0];
-        receivePollTimeoutMs = SMSC_CONNECTION_DEFAULT_RECEIVE_POLL_TIMEOUT_MS;
-        transmitTimeout  =SMSC_CONNECTION_DEFAULT_TRANSMIT_TIMEOUT;
-        keepAlive = SMSC_CONNECTION_DEFAULT_KEEPALIVE;
-        windowSize = SMSC_CONNECTION_DEFAULT_WINDOW_SIZE;
-        stopped = NO;
-        started = NO;
-        autorestart = YES;
-        endPermanently=NO;
-        endThisConnection=NO;
-        options = [[NSMutableDictionary alloc]init];
+        _inboundMessagesThroughput = [[UMThroughputCounter alloc]initWithResolutionInSeconds: 1.0 maxDuration: 1260.0];
+        _outboundMessagesThroughput = [[UMThroughputCounter alloc]initWithResolutionInSeconds: 1.0 maxDuration: 1260.0];
+        _inboundReportsThroughput = [[UMThroughputCounter alloc]initWithResolutionInSeconds: 1.0 maxDuration: 1260.0];
+        _outboundReportsThroughput = [[UMThroughputCounter alloc]initWithResolutionInSeconds: 1.0 maxDuration: 1260.0];
+        _receivePollTimeoutMs = SMSC_CONNECTION_DEFAULT_RECEIVE_POLL_TIMEOUT_MS;
+        _transmitTimeout  =SMSC_CONNECTION_DEFAULT_TRANSMIT_TIMEOUT;
+        _keepAlive = SMSC_CONNECTION_DEFAULT_KEEPALIVE;
+        _windowSize = SMSC_CONNECTION_DEFAULT_WINDOW_SIZE;
+        _stopped = NO;
+        _started = NO;
+        _autorestart = YES;
+        _endPermanently=NO;
+        _endThisConnection=NO;
+        _options = [[NSMutableDictionary alloc]init];
     }
 	return self;
 }
@@ -124,9 +86,9 @@
 #ifdef USE_SMPP_PRIORITY_QUEUES
     [submitMessageQueue  addToQueue:msg priority:[msg priority]];
 #else
-    [submitMessageQueue  append:msg];
+    [_submitMessageQueue  append:msg];
 #endif
-    [txSleeper wakeUp];
+    [_txSleeper wakeUp];
 }
 
 /* deliverMessage: router->inbound RX connection */
@@ -136,14 +98,14 @@
 {
     if(![self isInbound])
     {
-        NSLog(@"Sending deliverMessage on outbound connection %@!", name);
+        NSLog(@"Sending deliverMessage on outbound connection %@!", _name);
     }
 #ifdef USE_SMPP_PRIORITY_QUEUES
     [deliverMessageQueue   addToQueue:msg priority:[msg priority]];
 #else
-    [deliverMessageQueue append:msg];
+    [_deliverMessageQueue append:msg];
 #endif
-    [txSleeper wakeUp];
+    [_txSleeper wakeUp];
 }
 
 /* deliver_sm to proxy for testing purposes*/
@@ -152,9 +114,9 @@
 #ifdef USE_SMPP_PRIORITY_QUEUES
     [deliverMessageQueue   addToQueue:msg priority:[msg priority]];
 #else
-    [deliverMessageQueue append:msg];
+    [_deliverMessageQueue append:msg];
 #endif
-    [txSleeper wakeUp];
+    [_txSleeper wakeUp];
 }
 
 
@@ -171,9 +133,9 @@
 #ifdef USE_SMPP_PRIORITY_QUEUES
     [submitReportQueue  addToQueue:report priority:[report priority]];
 #else
-    [submitReportQueue append:report];
+    [_submitReportQueue append:report];
 #endif
-    [txSleeper wakeUp];
+    [_txSleeper wakeUp];
 }
 
 /* deliverReport: router->inbound RX connection */
@@ -189,9 +151,9 @@
 #ifdef USE_SMPP_PRIORITY_QUEUES
     [deliverReportQueue addToQueue:report priority:[report priority]];
 #else
-    [deliverReportQueue append:report];
+    [_deliverReportQueue append:report];
 #endif
-    [txSleeper wakeUp];
+    [_txSleeper wakeUp];
 }
 
 /* submitMessageSent: router->inbound TX connection */
@@ -207,7 +169,7 @@
 #ifdef USE_SMPP_PRIORITY_QUEUES
         [ackNackQueue addToQueue:transaction priority:msg.priority];
 #else
-        [ackNackQueue append:transaction];
+        [_ackNackQueue append:transaction];
 #endif
     }
 }
@@ -229,7 +191,7 @@
 #ifdef USE_SMPP_PRIORITY_QUEUES
         [ackNackQueue addToQueue:transaction priority:msg.priority];
 #else
-        [ackNackQueue append:transaction];
+        [_ackNackQueue append:transaction];
 #endif
     }
 }
@@ -246,7 +208,7 @@
 #ifdef USE_SMPP_PRIORITY_QUEUES
         [ackNackQueue addToQueue:transaction priority:rep.priority];
 #else
-        [ackNackQueue append:transaction];
+        [_ackNackQueue append:transaction];
 #endif
 
     }
@@ -265,7 +227,7 @@
 #ifdef USE_SMPP_PRIORITY_QUEUES
         [ackNackQueue addToQueue:transaction priority:rep.priority];
 #else
-        [ackNackQueue append:transaction];
+        [_ackNackQueue append:transaction];
 #endif
     }
 }
@@ -282,7 +244,7 @@
 #ifdef USE_SMPP_PRIORITY_QUEUES
         [ackNackQueue addToQueue:transaction priority:msg.priority];
 #else
-        [ackNackQueue append:transaction];
+        [_ackNackQueue append:transaction];
 #endif
     }
 }
@@ -300,7 +262,7 @@
 #ifdef USE_SMPP_PRIORITY_QUEUES
         [ackNackQueue addToQueue:transaction priority:msg.priority];
 #else
-        [ackNackQueue append:transaction];
+        [_ackNackQueue append:transaction];
 #endif
 
     }
@@ -319,7 +281,7 @@
 #ifdef USE_SMPP_PRIORITY_QUEUES
         [ackNackQueue addToQueue:transaction priority:rep.priority];
 #else
-        [ackNackQueue append:transaction];
+        [_ackNackQueue append:transaction];
 #endif
     }
 }
@@ -337,7 +299,7 @@
 #ifdef USE_SMPP_PRIORITY_QUEUES
         [ackNackQueue addToQueue:transaction priority:rep.priority];
 #else
-        [ackNackQueue append:transaction];
+        [_ackNackQueue append:transaction];
 #endif
     }
 }
@@ -346,15 +308,15 @@
 
 - (void) registerMessageRouter:(id<SmscConnectionRouterProtocol>) r
 {
-	if ( r != router)
+	if ( r != _router)
 	{
-		router = r;
+		_router = r;
 	}
 }
 
 - (void) unregisterMessageRouter:(id<SmscConnectionRouterProtocol>) r
 {
-	if ( r == router)
+	if ( r == _router)
 	{
         r = NULL;
 	}
@@ -364,7 +326,7 @@
 
 - (BOOL) isOutbound
 {
-    return !isInbound;
+    return !_isInbound;
 }
 
 - (BOOL)  isConnected
@@ -381,12 +343,12 @@
 
 - (NSString *) getName
 {
-	return [NSString stringWithString:name];
+	return [NSString stringWithString:_name];
 }
 
 - (NSString *) getType
 {
-	return [NSString stringWithString:type];
+	return [NSString stringWithString:_type];
 }
 
 #pragma mark Thread Handling
@@ -428,22 +390,22 @@
 	NSMutableDictionary *dict;
 	
 	dict = [[NSMutableDictionary alloc] init];
-	dict[PREFS_CON_NAME] = EMPTYSTRINGFORNIL(name);
-	dict[PREFS_CON_PROTO] = EMPTYSTRINGFORNIL(type);
-	dict[PREFS_CON_VERSION] = EMPTYSTRINGFORNIL(version);
-	dict[PREFS_CON_LHOST] = EMPTYSTRINGFORNIL([[uc localHost]name]);
-	dict[PREFS_CON_LPORT] = [NSNumber numberWithInt:[uc requestedLocalPort]];
-	dict[PREFS_CON_RHOST] = EMPTYSTRINGFORNIL([[uc remoteHost]name]);
-	dict[PREFS_CON_RPORT] = [NSNumber numberWithInt:[uc requestedRemotePort]];
-	dict[PREFS_CON_RXTIMEOUT] = @(receivePollTimeoutMs);
-	dict[PREFS_CON_TXTIMEOUT] = @(transmitTimeout);
-	dict[PREFS_CON_KEEPALIVE] = @(keepAlive);
-	dict[PREFS_CON_WINDOW] = @(windowSize);
-	dict[PREFS_CON_SHORT_ID] = EMPTYSTRINGFORNIL([shortId asString]);
-	dict[PREFS_CON_SOCKTYPE] = EMPTYSTRINGFORNIL([UMSocket socketTypeDescription:[uc type]]);
-	dict[PREFS_CON_ROUTER] = EMPTYSTRINGFORNIL(routerName);
-	dict[PREFS_CON_LOGIN] = EMPTYSTRINGFORNIL(login);
-	dict[PREFS_CON_PASSWORD] = EMPTYSTRINGFORNIL(password);
+	dict[PREFS_CON_NAME] = EMPTYSTRINGFORNIL(_name);
+	dict[PREFS_CON_PROTO] = EMPTYSTRINGFORNIL(_type);
+	dict[PREFS_CON_VERSION] = EMPTYSTRINGFORNIL(_version);
+	dict[PREFS_CON_LHOST] = EMPTYSTRINGFORNIL([[_uc localHost]name]);
+	dict[PREFS_CON_LPORT] = [NSNumber numberWithInt:[_uc requestedLocalPort]];
+	dict[PREFS_CON_RHOST] = EMPTYSTRINGFORNIL([[_uc remoteHost]name]);
+	dict[PREFS_CON_RPORT] = [NSNumber numberWithInt:[_uc requestedRemotePort]];
+	dict[PREFS_CON_RXTIMEOUT] = @(_receivePollTimeoutMs);
+	dict[PREFS_CON_TXTIMEOUT] = @(_transmitTimeout);
+	dict[PREFS_CON_KEEPALIVE] = @(_keepAlive);
+	dict[PREFS_CON_WINDOW] = @(_windowSize);
+	dict[PREFS_CON_SHORT_ID] = EMPTYSTRINGFORNIL([_shortId asString]);
+	dict[PREFS_CON_SOCKTYPE] = EMPTYSTRINGFORNIL([UMSocket socketTypeDescription:[_uc type]]);
+	dict[PREFS_CON_ROUTER] = EMPTYSTRINGFORNIL(_routerName);
+	dict[PREFS_CON_LOGIN] = EMPTYSTRINGFORNIL(_login);
+	dict[PREFS_CON_PASSWORD] = EMPTYSTRINGFORNIL(_password);
     dict[PREFS_CON_TCP_MSS] = @(_max_tcp_segment_size);
 
 	return dict;
@@ -506,13 +468,13 @@
 
 - (id) findIncomingTransaction:(NSString *)trn
 {
-    SmscConnectionTransaction *transaction = incomingTransactions[trn];
+    SmscConnectionTransaction *transaction = _incomingTransactions[trn];
     return transaction;
 }
 
 - (id) findOutgoingTransaction:(NSString *)trn
 {
-    SmscConnectionTransaction *transaction = outgoingTransactions[trn];
+    SmscConnectionTransaction *transaction = _outgoingTransactions[trn];
     return transaction;
 }
 
@@ -547,12 +509,12 @@
     NSString *key;
     NSArray *allKeys;
     
-    @synchronized(outgoingTransactions)
+    @synchronized(_outgoingTransactions)
     {
-        allKeys = [outgoingTransactions allKeys];
+        allKeys = [_outgoingTransactions allKeys];
         for(key in allKeys)
         {
-            transaction = outgoingTransactions[key];
+            transaction = _outgoingTransactions[key];
             if([transaction._message isEqual:msg])
             {
                 return transaction;
@@ -568,12 +530,12 @@
     NSString *key;
     NSArray *allKeys;
     
-    @synchronized(incomingTransactions)
+    @synchronized(_incomingTransactions)
     {
-        allKeys = [incomingTransactions allKeys];
+        allKeys = [_incomingTransactions allKeys];
         for(key in allKeys)
         {
-            transaction = incomingTransactions[key];
+            transaction = _incomingTransactions[key];
             if([[transaction report]isEqual:rep])
             {
                 break;
@@ -594,12 +556,12 @@
     NSArray *allKeys;
     
 
-    @synchronized(outgoingTransactions)
+    @synchronized(_outgoingTransactions)
     {
-        allKeys = [outgoingTransactions allKeys];
+        allKeys = [_outgoingTransactions allKeys];
         for(key in allKeys)
         {
-            transaction = outgoingTransactions[key];
+            transaction = _outgoingTransactions[key];
             if(transaction)
             {
                 if([[transaction report] isEqual:rep])
@@ -624,16 +586,16 @@
 - (void) addOutgoingTransaction:(SmscConnectionTransaction *)transaction
 {
 	[transaction setIncoming:0];
-    @synchronized(outgoingTransactions)
+    @synchronized(_outgoingTransactions)
     {
-        outgoingTransactions[transaction.sequenceNumber] = transaction;
+        _outgoingTransactions[transaction.sequenceNumber] = transaction;
     }
 }
 
 - (void) addIncomingTransaction:(SmscConnectionTransaction * )transaction
 {
 	[transaction setIncoming:1];
-    incomingTransactions[transaction.sequenceNumber] = transaction;
+    _incomingTransactions[transaction.sequenceNumber] = transaction;
 }
 
 - (void) removeIncomingTransaction:(SmscConnectionTransaction *)transaction
@@ -641,7 +603,7 @@
     id key = transaction.sequenceNumber;
     if(key)
     {
-        [incomingTransactions removeObjectForKey:key];
+        [_incomingTransactions removeObjectForKey:key];
     }
 }
 
@@ -650,9 +612,9 @@
     id key = transaction.sequenceNumber;
     if(key)
     {
-        @synchronized(outgoingTransactions)
+        @synchronized(_outgoingTransactions)
         {
-            [outgoingTransactions removeObjectForKey:key];
+            [_outgoingTransactions removeObjectForKey:key];
         }
     }
 }
@@ -668,7 +630,7 @@
 // why dont we know the priority here?
 // like:  [ackNackQueue addToQueue:transaction priority:rep.priority];
 #else
-    [ackNackQueue append:transaction];
+    [_ackNackQueue append:transaction];
 #endif
 }
 
@@ -682,7 +644,7 @@
     // why dont we know the priority here?
     // like:  [ackNackQueue addToQueue:transaction priority:rep.priority];
 #else
-    [ackNackQueue append:transaction];
+    [_ackNackQueue append:transaction];
 #endif
 }
 
@@ -695,7 +657,7 @@
     // why dont we know the priority here?
     // like:  [ackNackQueue addToQueue:transaction priority:rep.priority];
 #else
-    [ackNackQueue append:transaction];
+    [_ackNackQueue append:transaction];
 #endif
 
 }
@@ -709,13 +671,13 @@
     // why dont we know the priority here?
     // like:  [ackNackQueue addToQueue:transaction priority:rep.priority];
 #else
-    [ackNackQueue append:transaction];
+    [_ackNackQueue append:transaction];
 #endif
 }
 
 - (void) timeoutIncomingTransaction:(id)transaction
 {
-    SmscRouterError *err = [router createError];
+    SmscRouterError *err = [_router createError];
     if(err==NULL)
     {
         err = [[SmscRouterError alloc]init];
@@ -727,7 +689,7 @@
 
 - (void) timeoutOutgoingTransaction:(id)transaction
 {
-    SmscRouterError *err = [router createError];
+    SmscRouterError *err = [_router createError];
     if(err==NULL)
     {
         err = [[SmscRouterError alloc]init];
@@ -742,7 +704,7 @@
 	SmscConnectionTransaction *transaction;
     NSString *transactionKey;
 
-    NSArray *allKeys = [incomingTransactions allKeys];
+    NSArray *allKeys = [_incomingTransactions allKeys];
 	for(transactionKey in allKeys)
 	{
         transaction = [self findIncomingTransaction:transactionKey];
@@ -752,7 +714,7 @@
 		}
 	}
 
-    allKeys = [outgoingTransactions allKeys];
+    allKeys = [_outgoingTransactions allKeys];
 	for(transactionKey in allKeys)
 	{
         transaction = [self findOutgoingTransaction:transactionKey];
@@ -775,39 +737,39 @@
 
 -(NSString *)connectionName
 {
-    return routerName;
+    return _routerName;
 }
 
 - (NSString *)htmlStatus
 {
     NSMutableString *s = [[NSMutableString alloc]init];
-    [s appendFormat:@"Connection: %@<br>",name];
-    [s appendFormat:@"Type: %@<br>",type];
-    [s appendFormat:@"Version: %@<br>",version];
-    [s appendFormat:@"RouterName: %@<br>",routerName];
-    [s appendFormat:@"socket: %@<br>",uc];
-    [s appendFormat:@"submitMessageQueue: %d entries<br>",(int)[submitMessageQueue count]];
-    [s appendFormat:@"submitReportQueue: %d entries<br>",(int)[submitReportQueue count]];
-    [s appendFormat:@"deliverMessageQueue: %d entries<br>",(int)[deliverMessageQueue count]];
-    [s appendFormat:@"deliverReportQueue: %d entries<br>",(int)[deliverReportQueue count]];
-    [s appendFormat:@"ackNackQueue: %d entries<br>",(int)[ackNackQueue count]];
-    [s appendFormat:@"outgoingTransactions: %d entries<br>",(int)[outgoingTransactions count]];
-    [s appendFormat:@"incomingTransactions: %d entries<br>",(int)[incomingTransactions count]];
-    [s appendFormat:@"shortId: %@<br>",[shortId asString]];
-    [s appendFormat:@"endThisConnection: %d<br>",endThisConnection];
-    [s appendFormat:@"endPermanently: %d<br>",endPermanently];
-    [s appendFormat:@"lastActivity: %@<br>",lastActivity];
-    [s appendFormat:@"login: %@<br>",login];
-    [s appendFormat:@"isListener: %@<br>",isListener ? @"YES" : @"NO"];
-    [s appendFormat:@"isInbound: %@<br>",isInbound ? @"YES" : @"NO"];
-    [s appendFormat:@"activeSegmentSize: %d<br>",uc.activeMaxSegmentSize ];
+    [s appendFormat:@"Connection: %@<br>",_name];
+    [s appendFormat:@"Type: %@<br>",_type];
+    [s appendFormat:@"Version: %@<br>",_version];
+    [s appendFormat:@"RouterName: %@<br>",_routerName];
+    [s appendFormat:@"socket: %@<br>",_uc];
+    [s appendFormat:@"submitMessageQueue: %d entries<br>",(int)[_submitMessageQueue count]];
+    [s appendFormat:@"submitReportQueue: %d entries<br>",(int)[_submitReportQueue count]];
+    [s appendFormat:@"deliverMessageQueue: %d entries<br>",(int)[_deliverMessageQueue count]];
+    [s appendFormat:@"deliverReportQueue: %d entries<br>",(int)[_deliverReportQueue count]];
+    [s appendFormat:@"ackNackQueue: %d entries<br>",(int)[_ackNackQueue count]];
+    [s appendFormat:@"outgoingTransactions: %d entries<br>",(int)[_outgoingTransactions count]];
+    [s appendFormat:@"incomingTransactions: %d entries<br>",(int)[_incomingTransactions count]];
+    [s appendFormat:@"shortId: %@<br>",[_shortId asString]];
+    [s appendFormat:@"endThisConnection: %d<br>",_endThisConnection];
+    [s appendFormat:@"endPermanently: %d<br>",_endPermanently];
+    [s appendFormat:@"lastActivity: %@<br>",_lastActivity];
+    [s appendFormat:@"login: %@<br>",_login];
+    [s appendFormat:@"isListener: %@<br>",_isListener ? @"YES" : @"NO"];
+    [s appendFormat:@"isInbound: %@<br>",_isInbound ? @"YES" : @"NO"];
+    [s appendFormat:@"activeSegmentSize: %d<br>",_uc.activeMaxSegmentSize ];
     return s;
 }
 
 
 - (BOOL)hasOption:(NSString *)n
 {
-    id result = options[n];
+    id result = _options[n];
     if(result)
     {
         return YES;
@@ -817,17 +779,17 @@
 
 - (void)setOption:(NSString *)n
 {
-    options[n] = n;
+    _options[n] = n;
 }
 
 - (void)clearOption:(NSString *)n
 {
-    [options removeObjectForKey:n];
+    [_options removeObjectForKey:n];
 }
 
 - (void)clearAllOptions
 {
-    options=[[NSMutableDictionary alloc]init];
+    _options=[[NSMutableDictionary alloc]init];
 }
 
 - (NSString *)connectedFrom
@@ -849,6 +811,6 @@
 - (void) setMax_tcp_segment_size:(int)max
 {
     _max_tcp_segment_size = max;
-    uc.configuredMaxSegmentSize = max;
+    _uc.configuredMaxSegmentSize = max;
 }
 @end

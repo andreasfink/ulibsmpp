@@ -28,7 +28,7 @@
     return self;
 }
 
-- (NSString *)type
+- (NSString *)_type
 {
     return @"nack";
 }
@@ -106,7 +106,7 @@
     @autoreleasepool
     {
         [self setIsInbound:NO];
-        [router registerOutgoingSmscConnection:self];
+        [_router registerOutgoingSmscConnection:self];
     }
 }
 
@@ -115,7 +115,7 @@
              forObject:(id)sendingObject
            synchronous:(BOOL)sync
 {
-    SmscRouterError *err = [router createError];
+    SmscRouterError *err = [_router createError];
     if(err==NULL)
     {
         err = [[SmscRouterError alloc]init];
@@ -131,7 +131,7 @@
             forObject:(id)sendingObject
           synchronous:(BOOL)sync
 {
-    SmscRouterError *err = [router createError];
+    SmscRouterError *err = [_router createError];
     if(err==NULL)
     {
         err = [[SmscRouterError alloc]init];
@@ -162,7 +162,7 @@
               forObject:(id)sendingObject
             synchronous:(BOOL)sync
 {
-    SmscRouterError *err = [router createError];
+    SmscRouterError *err = [_router createError];
     if(err==NULL)
     {
         err = [[SmscRouterError alloc]init];
@@ -178,7 +178,7 @@
 - (void) deliverReport:(id<SmscConnectionReportProtocol>)report
              forObject:(id)sendingObject
 {
-    SmscRouterError *err = [router createError];
+    SmscRouterError *err = [_router createError];
     if(err==NULL)
     {
         err = [[SmscRouterError alloc]init];

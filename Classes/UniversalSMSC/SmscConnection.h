@@ -64,58 +64,58 @@ enum SmppAlphaCoding;
 
 @interface SmscConnection : UMObject <SmscConnectionMessagePassingProtocol,SmscConnectionProtocol,SmscConnectionRouterUserProtocol>
 {
-	NSString			*name;
-	NSString			*type;
-	NSString			*version;
-	NSString			*routerName;
-	UMSocket			*uc;
+	NSString			*_name;
+	NSString			*_type;
+	NSString			*_version;
+	NSString			*_routerName;
+	UMSocket			*_uc;
 #ifdef  USE_SMPP_PRIORITY_QUEUES
-	PriorityQueue		*submitMessageQueue;
-	PriorityQueue		*submitReportQueue;
-	PriorityQueue		*deliverMessageQueue;
-	PriorityQueue		*deliverReportQueue;
-	PriorityQueue		*ackNackQueue;
+	PriorityQueue		*_submitMessageQueue;
+	PriorityQueue		*_submitReportQueue;
+	PriorityQueue		*_deliverMessageQueue;
+	PriorityQueue		*_deliverReportQueue;
+	PriorityQueue		*_ackNackQueue;
 #else
-    UMQueueSingle             *submitMessageQueue;
-    UMQueueSingle             *submitReportQueue;
-    UMQueueSingle             *deliverMessageQueue;
-    UMQueueSingle             *deliverReportQueue;
-    UMQueueSingle             *ackNackQueue;
+    UMQueueSingle             *_submitMessageQueue;
+    UMQueueSingle             *_submitReportQueue;
+    UMQueueSingle             *_deliverMessageQueue;
+    UMQueueSingle             *_deliverReportQueue;
+    UMQueueSingle             *_ackNackQueue;
 #endif
     
-	UMSynchronizedDictionary *outgoingTransactions;
-	UMSynchronizedDictionary *incomingTransactions;
-    id<SmscConnectionRouterProtocol> __weak router;
-	UMHost				*localHost;
-	int					localPort;
-	UMHost				*remoteHost;
-	int					remotePort;
-	UMSigAddr			*shortId;
-	BOOL				endThisConnection;					/* Internal signal to shut down the inbound or outbound connection. It might autoreconnect on outbound */
-    BOOL				endPermanently;					    /* Internal signal to shut down the connection permanently */
-	NSDate				*lastActivity;				/* the last time something was sent over the main SMSC connection */
-	UMSleeper			*rxSleeper;
-	UMSleeper			*txSleeper;
-    UMSleeper           *cxSleeper;
-	int					receivePollTimeoutMs;		/* poll timer for receive. in miliseconds */
-	int					transmitTimeout;			/* poll timer for transmit. in miliseconds */
-	int					keepAlive;
-	BOOL				isListener;
-	BOOL				isInbound;
-	int					windowSize;
-	NSString			*login;
-	NSString			*password;
-    BOOL                autorestart;
-    BOOL                stopped;
-    BOOL                started;
-    NSMutableDictionary *options;
-    NSString            *lastStatus;
+	UMSynchronizedDictionary *_outgoingTransactions;
+	UMSynchronizedDictionary *_incomingTransactions;
+    id<SmscConnectionRouterProtocol> __weak _router;
+	UMHost				*_localHost;
+	int					_localPort;
+	UMHost				*_remoteHost;
+	int					_remotePort;
+	UMSigAddr			*_shortId;
+	BOOL				_endThisConnection;					/* Internal signal to shut down the inbound or outbound connection. It might autoreconnect on outbound */
+    BOOL				_endPermanently;					    /* Internal signal to shut down the connection permanently */
+	NSDate				*_lastActivity;				/* the last time something was sent over the main SMSC connection */
+	UMSleeper			*_rxSleeper;
+	UMSleeper			*_txSleeper;
+    UMSleeper           *_cxSleeper;
+	int					_receivePollTimeoutMs;		/* poll timer for receive. in miliseconds */
+	int					_transmitTimeout;			/* poll timer for transmit. in miliseconds */
+	int					_keepAlive;
+	BOOL				_isListener;
+	BOOL				_isInbound;
+	int					_windowSize;
+	NSString			*_login;
+	NSString			*_password;
+    BOOL                _autorestart;
+    BOOL                _stopped;
+    BOOL                _started;
+    NSMutableDictionary *_options;
+    NSString            *_lastStatus;
     int                 _max_tcp_segment_size;
-    id<SmscConnectionUserProtocol>  user;
-    UMThroughputCounter *inboundMessagesThroughput;
-    UMThroughputCounter *outboundMessagesThroughput;
-    UMThroughputCounter *inboundReportsThroughput;
-    UMThroughputCounter *outboundReportsThroughput;
+    id<SmscConnectionUserProtocol>  _user;
+    UMThroughputCounter *_inboundMessagesThroughput;
+    UMThroughputCounter *_outboundMessagesThroughput;
+    UMThroughputCounter *_inboundReportsThroughput;
+    UMThroughputCounter *_outboundReportsThroughput;
     
 //    UMLogFeed           *packetLogFeed;
 //    UMLogFeed           *comLogFeed;
@@ -166,10 +166,6 @@ enum SmppAlphaCoding;
 - (BOOL) isOutbound;
 - (NSString *) getName;
 - (NSString *) getType;
-- (void) setRemoteHost: (UMHost *) host;
-- (void) setRemotePort: (int) port;
-- (void) setLocalHost:  (UMHost *) host;
-- (void) setLocalPort:  (int) port;
 - (void)startListener;
 - (void)stopListener;
 - (void)startOutgoing;

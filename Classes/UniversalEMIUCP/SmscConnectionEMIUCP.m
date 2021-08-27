@@ -28,7 +28,7 @@
     return self;
 }
 
-- (NSString *)type
+- (NSString *)_type
 {
     return @"emiucp";
 }
@@ -105,9 +105,9 @@
     /* first, register self to sms router */
     @autoreleasepool
     {
-        ulib_set_thread_name([NSString stringWithFormat:@"[SmscConnectionSMPP outbound] %@",uc.description]);
-        [self setIsInbound:NO];
-        [router registerOutgoingSmscConnection:self];
+        ulib_set_thread_name([NSString stringWithFormat:@"[SmscConnectionSMPP outbound] %@",_uc.description]);
+        self.isInbound=NO;
+        [_router registerOutgoingSmscConnection:self];
     }
 }
 
@@ -123,7 +123,7 @@
                          synchronous:!sync];
     
     sleep(1); /* TODO: well NULL is only good for debugging anyway */
-    report = [router createReport];
+    report = [_router createReport];
     
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
     [formatter setDateFormat:@"yyyyMMddHHmmss"];
@@ -178,7 +178,7 @@
     [sendingObject deliverMessageSent:msg
                             forObject:self
                           synchronous:!sync];
-    report = [router createReport];
+    report = [_router createReport];
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
     [formatter setDateFormat:@"yyyyMMddHHmmss"];
     NSString *reportText = [NSString stringWithFormat:@"id:%@ sub:001 dlvrd:001 submit date:%@ done date:%@ stat:DELIVRD err:0",

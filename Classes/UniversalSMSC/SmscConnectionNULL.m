@@ -26,7 +26,7 @@
     return self;
 }
 
-- (NSString *)type
+- (NSString *)_type
 {
     return @"null";
 }
@@ -103,8 +103,8 @@
     /* first, register self to sms router */
     @autoreleasepool
     {
-        [self setIsInbound:NO];
-        [router registerOutgoingSmscConnection:self];
+        self.isInbound = NO;
+        [_router registerOutgoingSmscConnection:self];
     }
 }
 
@@ -120,7 +120,7 @@
                          synchronous:!sync];
 
     sleep(1); /* TODO: well NULL is only good for debugging anyway */
-    report = [router createReport];
+    report = [_router createReport];
     
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
     [formatter setDateFormat:@"yyyyMMddHHmmss"];
@@ -177,7 +177,7 @@
     [sendingObject deliverMessageSent:msg
                             forObject:self
                           synchronous:NO];
-    report = [router createReport];
+    report = [_router createReport];
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
     [formatter setDateFormat:@"yyyyMMddHHmmss"];
     NSString *reportText = [NSString stringWithFormat:@"id:%@ sub:001 dlvrd:001 submit date:%@ done date:%@ stat:DELIVRD err:0",
