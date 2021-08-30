@@ -13,6 +13,7 @@
 #import "SmscConnectionProtocol.h"
 #import "SmscConnectionRouterProtocol.h"
 #import "SmscConnectionMessagePassingProtocol.h"
+#import "SmscConnectionReadyProtocol.h"
 @class SmscConnectionTransaction;
 
 #define	SMSC_CONNECTION_DEFAULT_RECEIVE_POLL_TIMEOUT_MS		2000	/* poll timer for receive. in milliseconds */
@@ -86,7 +87,8 @@ enum SmppAlphaCoding;
 	UMSynchronizedDictionary *_outgoingTransactions;
 	UMSynchronizedDictionary *_incomingTransactions;
     id<SmscConnectionRouterProtocol> __weak _router;
-	UMHost				*_localHost;
+    id<SmscConnectionReadyProtocol>         _readyForServiceDelegate;
+    UMHost				*_localHost;
 	int					_localPort;
 	UMHost				*_remoteHost;
 	int					_remotePort;
@@ -156,6 +158,7 @@ enum SmppAlphaCoding;
 @property(readonly,strong)      UMThroughputCounter *outboundReportsThroughput;
 @property(readwrite,strong)     NSString            *lastStatus;
 @property(readwrite,assign)     int                 max_tcp_segment_size;
+@property(readonly,strong)      id<SmscConnectionReadyProtocol> readyForServiceDelegate;
 
 + (NSString *)uniqueMessageId;
 + (NSString *)uniqueMessageIdWithPrefix:(NSString *)prefix;

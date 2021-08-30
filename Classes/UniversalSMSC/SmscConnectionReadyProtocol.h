@@ -7,10 +7,9 @@
 
 #import <ulib/ulib.h>
 
-NS_ASSUME_NONNULL_BEGIN
+@class SmscConnection;
 
-@interface SmscConnectionReadyProtocol : UMObject
-
+@protocol SmscConnectionReadyProtocol<NSObject>
+- (void)readyForMessages:(BOOL)isReady connection:(SmscConnection *)con;
 @end
 
-NS_ASSUME_NONNULL_END

@@ -92,6 +92,7 @@
 		A69A53451AC986C20090FC94 /* SmscConnectionUserProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = A69A53441AC986C20090FC94 /* SmscConnectionUserProtocol.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		A69A53461AC987BE0090FC94 /* SmscConnectionRouterProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = A61B97F019347458008AD2D4 /* SmscConnectionRouterProtocol.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		A6AFEAEC1A01698100D7F3C1 /* SmscConnection.h in Headers */ = {isa = PBXBuildFile; fileRef = A6DDD9381635FD4B002FA7CC /* SmscConnection.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		A6B6BD6B26D8EFB800DDE922 /* SmscConnectionReadyProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = A6B6BD6926D8EFB800DDE922 /* SmscConnectionReadyProtocol.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		A6B98E4B18E59F6D0090FC94 /* SmppTlv.m in Sources */ = {isa = PBXBuildFile; fileRef = A6B98E4918E59F6D0090FC94 /* SmppTlv.m */; };
 		A6B98E5018E5A0D50090FC94 /* SmppMultiResult.m in Sources */ = {isa = PBXBuildFile; fileRef = A6B98E4E18E5A0D50090FC94 /* SmppMultiResult.m */; };
 		A6C173B81AB36E2D0090FC94 /* SmppErrorCode.h in Headers */ = {isa = PBXBuildFile; fileRef = A6B98E5218E5A15B0090FC94 /* SmppErrorCode.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -189,6 +190,7 @@
 		A687AA691AFA22780090FC94 /* SmscRouterError.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = SmscRouterError.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		A687AA6A1AFA22780090FC94 /* SmscRouterError.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SmscRouterError.m; sourceTree = "<group>"; };
 		A69A53441AC986C20090FC94 /* SmscConnectionUserProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SmscConnectionUserProtocol.h; sourceTree = "<group>"; };
+		A6B6BD6926D8EFB800DDE922 /* SmscConnectionReadyProtocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SmscConnectionReadyProtocol.h; sourceTree = "<group>"; };
 		A6B98E4818E59F6D0090FC94 /* SmppTlv.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SmppTlv.h; sourceTree = "<group>"; };
 		A6B98E4918E59F6D0090FC94 /* SmppTlv.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SmppTlv.m; sourceTree = "<group>"; };
 		A6B98E4D18E5A0D50090FC94 /* SmppMultiResult.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SmppMultiResult.h; sourceTree = "<group>"; };
@@ -400,6 +402,7 @@
 				A67EDBD11A19C407004A556B /* SmscConnectionFAIL.m */,
 				A62D13FD1AC3D01D00854472 /* SmscConnectionMessagePassingProtocol.h */,
 				A61B97ED19347458008AD2D4 /* SmscConnectionMessageProtocol.h */,
+				A6B6BD6926D8EFB800DDE922 /* SmscConnectionReadyProtocol.h */,
 				A67EDBD41A19C83D004A556B /* SmscConnectionNACK.h */,
 				A67EDBD51A19C83D004A556B /* SmscConnectionNACK.m */,
 				A63051E01A16B8F700A466F4 /* SmscConnectionNULL.h */,
@@ -485,6 +488,7 @@
 				A6793DA71934AA780090FC94 /* UniversalSMSC.h in Headers */,
 				A6793D9D1934AA4C0090FC94 /* SmscConnectionMessageProtocol.h in Headers */,
 				A6793D9E1934AA4F0090FC94 /* SmscConnectionProtocol.h in Headers */,
+				A6B6BD6B26D8EFB800DDE922 /* SmscConnectionReadyProtocol.h in Headers */,
 				A6793D9F1934AA520090FC94 /* SmscConnectionReportProtocol.h in Headers */,
 				A6793DA21934AA5A0090FC94 /* SmscConnectionTransactionProtocol.h in Headers */,
 				A6793DA91934AAAD0090FC94 /* UniversalSMSUtilities.h in Headers */,

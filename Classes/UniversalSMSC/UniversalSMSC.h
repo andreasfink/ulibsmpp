@@ -32,3 +32,4 @@
 #import "DeliveryReportErrorCode.h"
 #import "GSMErrorCode.h"
 #import "SmscRouterError.h"
+#import "SmscConnectionReadyProtocol.h"
