@@ -1958,6 +1958,7 @@ end:
     [self sendPdu: pdu2 asResponseTo:pdu];
     NSString *text;
     
+    [_readyForServiceDelegate readyForMessages:NO connection:self];
     [_uc close];
     _uc = NULL;
     _endThisConnection = YES;
@@ -1988,6 +1989,7 @@ end:
 {
     NSString *text = [NSString stringWithFormat:@"[SmscConnectionSMPP handleIncomingUnbindResp]: incoming Unbind response %@\r\n", _name];
     [self.logFeed info:0 withText:text];
+    [_readyForServiceDelegate readyForMessages:NO connection:self];
     [_uc close];
     [_terminatedDelegate terminatedCallback:self];
 
@@ -2473,6 +2475,7 @@ length_error:
                         _bindExpires = NULL;
                         _lastStatus = @"timeout waiting for bind";
                         SmppPdu *pdu = [SmppPdu OutgoingGenericNack:ESME_RBINDFAIL];
+                        [_readyForServiceDelegate readyForMessages:NO connection:self];
                         [self sendPduWithNewSeq:pdu];
                         _incomingStatus = SMPP_STATUS_INCOMING_MAJOR_FAILURE;
                         sleep(1); /* we wait one second before the connection closes */
@@ -2495,6 +2498,7 @@ length_error:
 				
 		}
 	}
+    [_readyForServiceDelegate readyForMessages:NO connection:self];
     [self stopIncomingReceiverThread];
     [_router unregisterIncomingSmscConnection:self];
 	[_uc close];
@@ -2646,6 +2650,7 @@ length_error:
             {
                 NSString *text = [NSString stringWithFormat:@"[SmscConnectionSMPP outboundSender]: closing %@ due outgoing major failure\r\n", _name];
                 [self.logFeed majorError:0 withText:text];
+                [_readyForServiceDelegate readyForMessages:NO connection:self];
                 [_uc close];
                 [_terminatedDelegate terminatedCallback:self];
                 _uc = NULL;
@@ -2701,6 +2706,7 @@ length_error:
     NSString *msg = [NSString stringWithFormat:@"[SmscConnectionSMPP outgoingControlThread]: terminating this connection permanently\r\n"];
     [self.logFeed info:0 inSubsection:@"outgoingControlThread" withText:msg];
     retryTime = nil;
+    [_readyForServiceDelegate readyForMessages:NO connection:self];
     if(_uc)
     {
         [_uc close];
