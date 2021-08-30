@@ -12,12 +12,13 @@
 #import "SmppPdu.h"
 
 #define	SMSC_DEFAULT_SMPP_PORT	5002
-#define MIN_SMPP_PDU_LEN    (4*4)
+#define MIN_SMPP_PDU_LEN        (4*4)
 /* old value was (1024). We need more because message_payload can be up to 64K octets*/
-#define MAX_SMPP_PDU_LEN    (7424)
+// not used anywhere
+//#define MAX_SMPP_PDU_LEN        (7424)
 /*Socket Errors are a separate class */
-#define WRONG_SMPP_SIZE      -100
-#define SMPP_VERSION        0x34
+#define WRONG_SMPP_SIZE         -100
+#define SMPP_VERSION            0x34
 
 /* Preferences for SMPP clients */
 #define	PREFS_CON_TRANSMIT_PORT			@"port"
