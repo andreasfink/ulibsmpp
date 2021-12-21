@@ -805,15 +805,19 @@ end:
 				break;
 			case SMPP_STATUS_INCOMING_BIND_RETRY_TIMER:
 				now = [NSDate new];
-				if([now compare:retryTime] == NSOrderedDescending)
-				{
-					retryTime = nil;
-					_incomingStatus = SMPP_STATUS_INCOMING_OFF;
-				}
-				else
-				{
-					[_txSleeper sleep:100000]; /* check again in 100ms */
-				}
+                if(retryTime == NULL)
+                {
+                    retryTime = [NSDate dateWithTimeIntervalSinceNow:30];
+                }
+                if([now compare:retryTime] == NSOrderedDescending)
+                {
+                    retryTime = nil;
+                    _incomingStatus = SMPP_STATUS_INCOMING_OFF;
+                }
+                else
+                {
+                    [_txSleeper sleep:100000]; /* check again in 100ms */
+                }
 				break;
 				
 			case SMPP_STATUS_INCOMING_LISTEN_WAIT_TIMER:
