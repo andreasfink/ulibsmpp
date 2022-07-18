@@ -14,3 +14,4 @@
 #import "UMSigAddr.h"
 #import "UMPrefs.h"
 #import "PriorityQueue.h"
+#import "UMSigAddrWithHistory.h"

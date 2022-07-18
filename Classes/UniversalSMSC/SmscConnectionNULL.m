@@ -127,7 +127,7 @@
     NSString *reportText = [NSString stringWithFormat:@"id:%@ sub:001 dlvrd:001 submit date:%@ done date:%@ stat:DELIVRD err:0",
                             msg.routerReference,
                             msg.submitDate ?    [formatter stringFromDate:msg.submitDate]:[formatter stringFromDate:[NSDate date]],
-                            msg.attemptedDate ? [formatter stringFromDate:msg.attemptedDate]:[formatter stringFromDate:[NSDate date]]];
+                            msg.messageAttemptedTimestamp ? [formatter stringFromDate:msg.messageAttemptedTimestamp]:[formatter stringFromDate:[NSDate date]]];
     report.reportType               = SMS_REPORT_DELIVERED;
     report.error                    = NULL;
     report.routerReference          = msg.routerReference;
@@ -183,7 +183,7 @@
     NSString *reportText = [NSString stringWithFormat:@"id:%@ sub:001 dlvrd:001 submit date:%@ done date:%@ stat:DELIVRD err:0",
                             msg.routerReference,
                             msg.submitDate ?    [formatter stringFromDate:msg.submitDate]:[formatter stringFromDate:[NSDate date]],
-                            msg.attemptedDate ? [formatter stringFromDate:msg.attemptedDate]:[formatter stringFromDate:[NSDate date]]];
+                            msg.messageAttemptedTimestamp ? [formatter stringFromDate:msg.messageAttemptedTimestamp]:[formatter stringFromDate:[NSDate date]]];
     report.reportType               = SMS_REPORT_DELIVERED;
     report.error                    = NULL;
     report.routerReference          = msg.routerReference;

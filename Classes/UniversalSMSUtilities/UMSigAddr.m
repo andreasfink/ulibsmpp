@@ -19,8 +19,6 @@ static int is_all_digits(NSString *str, int startpos);
 @synthesize		addr;
 @synthesize     debugString;
 
-
-
 - (UMSigAddr *) initWithString: (NSString *)digits
 {
     self=[super init];
@@ -28,40 +26,40 @@ static int is_all_digits(NSString *str, int startpos);
     {	
         if(digits == nil)
         {
-            self.addr = @"";
-            ton = 0;
-            npi = 0;
+            _addr = @"";
+            _ton = 0;
+            _npi = 0;
         }
         else if([digits length] < 2)
         {
-            self.addr = @"";
-            ton = 0;
-            npi = 0;
+            _addr = @"";
+            _ton = 0;
+            _npi = 0;
         }
         else if ([digits compare:@"+" options:NSLiteralSearch range:NSMakeRange(0,1)] == NSOrderedSame )
         {
-            self.addr = [digits substringFromIndex:1];
-            ton = UMTON_INTERNATIONAL;
-            npi = UMNPI_ISDN_E164;
+            _addr = [digits substringFromIndex:1];
+            _ton = UMTON_INTERNATIONAL;
+            _npi = UMNPI_ISDN_E164;
         }
         
         else if(([digits length] >= 2) && ( [digits compare:@"00" options:NSLiteralSearch  range:NSMakeRange(0,2)] == NSOrderedSame ))
         {
-            self.addr = [digits substringFromIndex:2];
-            ton = UMTON_INTERNATIONAL;
-            npi = UMNPI_ISDN_E164;
+            _addr = [digits substringFromIndex:2];
+            _ton = UMTON_INTERNATIONAL;
+            _npi = UMNPI_ISDN_E164;
         }
         else if ( [digits compare:@"0" options:NSLiteralSearch range:NSMakeRange(0,1)] == NSOrderedSame )
         {
-            self.addr = [digits substringFromIndex:1];
-            ton = UMTON_NATIONAL;
-            npi = UMNPI_ISDN_E164;
+            _addr = [digits substringFromIndex:1];
+            _ton = UMTON_NATIONAL;
+            _npi = UMNPI_ISDN_E164;
         }
         else if ([digits isEqualToString:@":EMPTY:"])
         {
-            addr = @":EMPTY:";
-            ton = UMTON_EMPTY;
-            npi = UMNPI_UNKNOWN;
+            _addr = @":EMPTY:";
+            _ton = UMTON_EMPTY;
+            _npi = UMNPI_UNKNOWN;
         }
         else if ([digits compare:@":" options:NSLiteralSearch range:NSMakeRange(0,1)] == NSOrderedSame )
         {
@@ -94,9 +92,9 @@ static int is_all_digits(NSString *str, int startpos);
             }
             if(colon_index < 3)
             {
-                addr = @":EMPTY:";
-                ton = UMTON_EMPTY;
-                npi = UMNPI_UNKNOWN;
+                _addr = @":EMPTY:";
+                _ton = UMTON_EMPTY;
+                _npi = UMNPI_UNKNOWN;
                return self;
             }
             numstr[colon_pos[1]]='\0';
@@ -105,12 +103,12 @@ static int is_all_digits(NSString *str, int startpos);
             anpi = atoi(&numstr[colon_pos[1]+1]);
             strncpy(number,&numstr[colon_pos[2]+1],(sizeof(number)-1));
             
-            ton = aton % 8;
-            npi = anpi % 16;
+            _ton = aton % 8;
+            _npi = anpi % 16;
             size_t len = strlen(number);
-            if(ton==UMTON_ALPHANUMERIC)
+            if(_ton==UMTON_ALPHANUMERIC)
             {
-                self.addr = [[NSString alloc] initWithBytes:number length:len encoding:(NSUTF8StringEncoding)];
+                _addr = [[NSString alloc] initWithBytes:number length:len encoding:(NSUTF8StringEncoding)];
 
             }
             else
@@ -165,22 +163,22 @@ static int is_all_digits(NSString *str, int startpos);
                     }
                 }
                 number[j] = '\0';
-                self.addr = @(number);
+                _addr = @(number);
             }
         }
         else
         {
             if(is_all_digits(digits, 0)==0)
             {
-                ton = UMTON_ALPHANUMERIC;
-                npi = UMNPI_UNKNOWN;
-                self.addr = [[[digits gsm8]gsm8to7withNibbleLengthPrefix]hexString];
+                _ton = UMTON_ALPHANUMERIC;
+                _npi = UMNPI_UNKNOWN;
+                _addr = [[[digits gsm8]gsm8to7withNibbleLengthPrefix]hexString];
             }
             else
             {
-                ton = UMTON_INTERNATIONAL;
-                npi = UMNPI_ISDN_E164;
-                self.addr = digits;
+                _ton = UMTON_INTERNATIONAL;
+                _npi = UMNPI_ISDN_E164;
+                _addr = digits;
             }
         }
     }
@@ -191,22 +189,22 @@ static int is_all_digits(NSString *str, int startpos);
 {
 	if ([digits characterAtIndex:0] == '+') 
 	{
-		[self setAddr: [digits substringFromIndex:1]];
+		_addr = [digits substringFromIndex:1];
 	}
 	else
 	{
-		[self setAddr:digits];
+		_addr = digits;
 	}
-	ton = UMTON_INTERNATIONAL;
-	npi = UMNPI_ISDN_E164;
+	_ton = UMTON_INTERNATIONAL;
+	_npi = UMNPI_ISDN_E164;
 	return self;
 }
 
 -(UMSigAddr *) initWithAlpha: (NSString *)digits
 {	
-	[self setAddr:digits];
-	ton = UMTON_ALPHANUMERIC;
-	npi = UMNPI_UNKNOWN;
+    _addr = digits;
+	_ton = UMTON_ALPHANUMERIC;
+	_npi = UMNPI_UNKNOWN;
 	return self;
 }
 
@@ -215,14 +213,14 @@ static int is_all_digits(NSString *str, int startpos);
 	
 	if( digits.length)
 	{
-		ton = UMTON_ALPHANUMERIC;
-		npi = UMNPI_UNKNOWN;
-		[self setAddr:@""];
+		_ton = UMTON_ALPHANUMERIC;
+		_npi = UMNPI_UNKNOWN;
+		_addr = @"";
 		return self;
 	}
-	ton = UMTON_ALPHANUMERIC;
-	npi = UMNPI_UNKNOWN;
-	[self setAddr: [digits stringFromGsm7withNibbleLengthPrefix]];
+	_ton = UMTON_ALPHANUMERIC;
+	_npi = UMNPI_UNKNOWN;
+	_addr = [digits stringFromGsm7withNibbleLengthPrefix];
 	return self;
 }
 
@@ -233,57 +231,66 @@ static int is_all_digits(NSString *str, int startpos);
 
 - (NSData *)asPackedAlpha
 {
-	return [addr gsm7WithNibbleLenPrefix];
+	return [_addr gsm7WithNibbleLenPrefix];
 }
 
 - (NSString *)asString:(int)formatType	/* 0 = no prefix, 1 = with + for international/0 for national, 2 = with 00 for international /0 for national */
 {
-	if(addr==nil)
+	if(_addr==nil)
+    {
 		return @"";
-	switch(ton)
+    }
+    switch(_ton)
 	{
 		case UMTON_UNKNOWN:
-            return [NSString stringWithFormat:@"%@", addr];
+            return [NSString stringWithFormat:@"%@", _addr];
             break;
 		case UMTON_INTERNATIONAL:
 			switch(formatType)
 		{
 			case 2:
-				return [NSString stringWithFormat:@"00%@", addr];
+				return [NSString stringWithFormat:@"00%@", _addr];
 			case 1:
-				return [NSString stringWithFormat:@"+%@", addr];
+				return [NSString stringWithFormat:@"+%@", _addr];
 			case 0:
 			default:
-				return [NSString stringWithString: addr];
+				return [NSString stringWithString: _addr];
 		}
 			break;
 		case UMTON_NATIONAL:
 			switch(formatType)
 		{
 			case 2:
-				return [NSString stringWithFormat:@"0%@" ,addr];
+				return [NSString stringWithFormat:@"0%@" ,_addr];
 			case 1:
-				return [NSString stringWithFormat:@"0%@" ,addr];
+				return [NSString stringWithFormat:@"0%@" ,_addr];
 			case 0:
 			default:
-				return [NSString stringWithString:addr];
+				return [NSString stringWithString:_addr];
 		}
             break;
             
 		default:
-            return [NSString stringWithFormat:@":%d:%d:%@" ,ton,npi,addr];
-//			return [NSString stringWithString:addr];
+            return [NSString stringWithFormat:@":%d:%d:%@" ,_ton,_npi,_addr];
 			break;
 	}
+}
+
+- (UMSigAddr *) copyWithZone:(NSZone *)zone
+{
+    UMSigAddr *a = [[UMSigAddr alloc]initWithSigAddr:self];
+    return a;
 }
 
 - (UMSigAddr *) initWithSigAddr: (UMSigAddr *)original
 {
     if((self=[super init]))
     {
-        ton = [original ton];
-        npi = [original npi];
-        addr = [[NSString alloc] initWithString: [original addr]];
+        _ton = original.ton;
+        _npi = original.npi;
+        _pointcode  = original.pointcode;
+        _addr = original.addr;
+        _debugString = original.debugString;
     }
 	return self;
 }
@@ -305,18 +312,120 @@ static int is_all_digits(NSString *str, int startpos);
 {
 	UMSigAddr *s;
 	s = [[UMSigAddr alloc] init];
-	[s setTon:ton];
-	[s setNpi:npi];
-	[s setAddr: [addr randomize]];
+	[s setTon:_ton];
+	[s setNpi:_npi];
+	[s setAddr: [_addr randomize]];
 	return s;
 }
 
 - (NSString *)description
 {
     NSMutableString *desc = [[NSMutableString alloc]init];
-    [desc appendFormat:@"SigAddr { TON=%d, NPI=%d, ADDR=%@} =%@",ton,npi,addr,[self asString:1]];
+    [desc appendFormat:@"SigAddr { TON=%d, NPI=%d, ADDR=%@} =%@",_ton,_npi,_addr,[self asString:1]];
     return desc;
 }
+
+
+- (void) processBeforeEncode
+{
+    [super processBeforeEncode];
+    [_asn1_tag setTagIsConstructed];
+    _asn1_list = [[NSMutableArray alloc]init];
+
+    UMASN1Integer *i = [[UMASN1Integer alloc]initWithValue:_ton];
+    i.asn1_tag.tagNumber = 1;
+    i.asn1_tag.tagClass = UMASN1Class_ContextSpecific;
+    [_asn1_list addObject:i];
+
+    i = [[UMASN1Integer alloc]initWithValue:_npi];
+    i.asn1_tag.tagNumber = 2;
+    i.asn1_tag.tagClass = UMASN1Class_ContextSpecific;
+    [_asn1_list addObject:i];
+
+    if(_pointcode)
+    {
+        UMASN1Integer *i = [[UMASN1Integer alloc]initWithValue:_pointcode.intValue];
+        i.asn1_tag.tagNumber = 3;
+        i.asn1_tag.tagClass = UMASN1Class_ContextSpecific;
+        [_asn1_list addObject:i];
+    }
+    if(_addr)
+    {
+        UMASN1UTF8String* i = [[UMASN1UTF8String alloc]initWithValue:_addr];
+        i.asn1_tag.tagNumber = 4;
+        i.asn1_tag.tagClass = UMASN1Class_ContextSpecific;
+        [_asn1_list addObject:i];
+    }
+    if(_debugString)
+    {
+        UMASN1UTF8String *i = [[UMASN1UTF8String alloc]initWithValue:_debugString];
+        i.asn1_tag.tagNumber = 101;
+        i.asn1_tag.tagClass = UMASN1Class_ContextSpecific;
+        [_asn1_list addObject:i];
+    }
+}
+
+- (UMSigAddr *) processAfterDecodeWithContext:(id)context
+{
+    int p=0;
+    UMASN1Object *o = [self getObjectAtPosition:p++];
+    while(o)
+    {
+        if((o) && (o.asn1_tag.tagNumber == 1) && (o.asn1_tag.tagClass == UMASN1Class_ContextSpecific))
+        {
+            UMASN1Integer *i1 = [[UMASN1Integer alloc]initWithASN1Object:o context:context];
+            _ton = (UMTonType)i1.value;
+            o = [self getObjectAtPosition:p++];
+        }
+        else if((o) && (o.asn1_tag.tagNumber == 2) && (o.asn1_tag.tagClass == UMASN1Class_ContextSpecific))
+        {
+            UMASN1Integer *i1 = [[UMASN1Integer alloc]initWithASN1Object:o context:context];
+            _npi = (UMNpiType) i1.value;
+            o = [self getObjectAtPosition:p++];
+        }
+        else if((o) && (o.asn1_tag.tagNumber == 3) && (o.asn1_tag.tagClass == UMASN1Class_ContextSpecific))
+        {
+            UMASN1Integer *i1 = [[UMASN1Integer alloc]initWithASN1Object:o context:context];
+            _pointcode = @((int)i1.value);
+            o = [self getObjectAtPosition:p++];
+        }
+        if((o) && (o.asn1_tag.tagNumber == 4) && (o.asn1_tag.tagClass == UMASN1Class_ContextSpecific))
+        {
+            UMASN1UTF8String *u1 = [[UMASN1UTF8String alloc]initWithASN1Object:o context:context];
+            _addr = u1.stringValue;
+            o = [self getObjectAtPosition:p++];
+        }
+        if((o) && (o.asn1_tag.tagNumber == 101) && (o.asn1_tag.tagClass == UMASN1Class_ContextSpecific))
+        {
+            UMASN1UTF8String *u1 = [[UMASN1UTF8String alloc]initWithASN1Object:o context:context];
+            _debugString = u1.stringValue;
+            o = [self getObjectAtPosition:p++];
+        }
+
+    }
+    return self;
+}
+
+- (NSString *) objectName
+{
+    return @"SigAddr";
+}
+- (id) objectValue
+{
+    UMSynchronizedSortedDictionary *dict = [[UMSynchronizedSortedDictionary alloc]init];
+    dict[@"ton"] = @(_ton);
+    dict[@"npi"] = @(_npi);
+    if(_pointcode)
+    {
+        dict[@"_pointcode"] = _pointcode;
+    }
+    if(_addr)
+    {
+        dict[@"add"] = _addr;
+    }
+    return dict;
+}
+
 
 @end
 
@@ -347,5 +456,6 @@ static int is_all_digits(NSString *str, int startpos)
 	}
 	return 1;
 }
+
 
 

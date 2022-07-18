@@ -106,11 +106,11 @@ typedef enum UMRequestMaskValue
 - (void) setProviderReference:(NSString *)msgid;
 - (NSString *)providerReference;
 
-- (int)dbStatusFlags;
-- (void)setDbStatusFlags:(int)flags;
+//- (int)dbStatusFlags;
+//- (void)setDbStatusFlags:(int)flags;
 - (NSString *)type;
 - (NSString *)method;
-- (NSString *)addr;
+//- (NSString *)addr;
 - (NSString *)inboundMethod;
 - (void) setInboundMethod:(NSString *)method;
 - (NSString *)inboundType;
@@ -142,7 +142,7 @@ typedef enum UMRequestMaskValue
 - (void) setPduContent:(NSData *)content;
 - (NSData *)pduContent;
 - (NSData *)pduContentIncludingUdh;
-- (NSDate *)attemptedDate;
+- (NSDate *)messageAttemptedTimestamp;
 - (NSDate *)submitDate;
 - (NSDate *)submitAckTime;
 - (void) setSubmitAckTime:(NSDate *)d;

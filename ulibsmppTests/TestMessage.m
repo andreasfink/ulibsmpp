@@ -225,8 +225,6 @@
         return FALSE;
     if (dbAddr &&  ![msg dbAddr])
         return FALSE;
-    if (![self.addr isEqualToString:msg.addr])
-        return FALSE;
     if (!dbInboundType && [msg dbInboundType])
         return FALSE;
     if (dbInboundType &&  ![msg dbInboundType])
@@ -303,7 +301,7 @@
         return FALSE;
     if (dbAttemptedDate &&  ![msg dbAttemptedDate])
         return FALSE;
-    if (![self.attemptedDate isEqualToDate:msg.attemptedDate])
+    if (![self.messageAttemptedTimestamp isEqualToDate:msg.messageAttemptedTimestamp])
         return FALSE;
     if (!dbValidity && [msg dbValidity])
         return FALSE;
@@ -1403,7 +1401,7 @@
 	dbSubmitErrTime.date = d;
 }
 
-- (NSDate *)attemptedDate
+- (NSDate *)messageAttemptedTimestamp
 {
 	return dbAttemptedDate.date;
 }

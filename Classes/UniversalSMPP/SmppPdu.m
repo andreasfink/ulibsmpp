@@ -1028,7 +1028,7 @@
 		reportText = [NSString stringWithFormat:@"id:%@ sub:001 dlvrd:001 submit date:%@ done date:%@ stat:%@ err:%d text:Report",
 					  [msg routerReference],
 					  [msg submitDate] ? [formatter stringFromDate:[msg submitDate]]:[formatter stringFromDate:[NSDate date]],
-					  [msg attemptedDate] ? [formatter stringFromDate:[msg attemptedDate]]:[formatter stringFromDate:[NSDate date]],
+					  [msg messageAttemptedTimestamp] ? [formatter stringFromDate:[msg messageAttemptedTimestamp]]:[formatter stringFromDate:[NSDate date]],
 					  ms,
 					  [msg networkErrorCode]];
 		data = [reportText dataUsingEncoding:NSISOLatin1StringEncoding allowLossyConversion:YES];

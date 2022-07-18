@@ -87,6 +87,9 @@
 		A67EDBD31A19C407004A556B /* SmscConnectionFAIL.m in Sources */ = {isa = PBXBuildFile; fileRef = A67EDBD11A19C407004A556B /* SmscConnectionFAIL.m */; };
 		A67EDBD61A19C83D004A556B /* SmscConnectionNACK.h in Headers */ = {isa = PBXBuildFile; fileRef = A67EDBD41A19C83D004A556B /* SmscConnectionNACK.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		A67EDBD71A19C83D004A556B /* SmscConnectionNACK.m in Sources */ = {isa = PBXBuildFile; fileRef = A67EDBD51A19C83D004A556B /* SmscConnectionNACK.m */; };
+		A68348C2288530C2003351AF /* UMSigAddrWithHistory.h in Headers */ = {isa = PBXBuildFile; fileRef = A68348C0288530C2003351AF /* UMSigAddrWithHistory.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		A68348C3288530C2003351AF /* UMSigAddrWithHistory.m in Sources */ = {isa = PBXBuildFile; fileRef = A68348C1288530C2003351AF /* UMSigAddrWithHistory.m */; };
+		A68348C528854CF3003351AF /* ulibasn1.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A68348C428854CF3003351AF /* ulibasn1.framework */; };
 		A687AA6B1AFA22780090FC94 /* SmscRouterError.h in Headers */ = {isa = PBXBuildFile; fileRef = A687AA691AFA22780090FC94 /* SmscRouterError.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		A687AA6C1AFA22780090FC94 /* SmscRouterError.m in Sources */ = {isa = PBXBuildFile; fileRef = A687AA6A1AFA22780090FC94 /* SmscRouterError.m */; };
 		A69A53451AC986C20090FC94 /* SmscConnectionUserProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = A69A53441AC986C20090FC94 /* SmscConnectionUserProtocol.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -187,6 +190,9 @@
 		A67EDBD11A19C407004A556B /* SmscConnectionFAIL.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SmscConnectionFAIL.m; sourceTree = "<group>"; };
 		A67EDBD41A19C83D004A556B /* SmscConnectionNACK.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SmscConnectionNACK.h; sourceTree = "<group>"; };
 		A67EDBD51A19C83D004A556B /* SmscConnectionNACK.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SmscConnectionNACK.m; sourceTree = "<group>"; };
+		A68348C0288530C2003351AF /* UMSigAddrWithHistory.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UMSigAddrWithHistory.h; sourceTree = "<group>"; };
+		A68348C1288530C2003351AF /* UMSigAddrWithHistory.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = UMSigAddrWithHistory.m; sourceTree = "<group>"; };
+		A68348C428854CF3003351AF /* ulibasn1.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ulibasn1.framework; path = "/Library/Application Support/FinkTelecomServices/frameworks/ulibasn1.framework"; sourceTree = "<absolute>"; };
 		A687AA691AFA22780090FC94 /* SmscRouterError.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = SmscRouterError.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		A687AA6A1AFA22780090FC94 /* SmscRouterError.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SmscRouterError.m; sourceTree = "<group>"; };
 		A69A53441AC986C20090FC94 /* SmscConnectionUserProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SmscConnectionUserProtocol.h; sourceTree = "<group>"; };
@@ -247,6 +253,7 @@
 			files = (
 				A6798B9F22BBBAD00019806C /* ulib.framework in Frameworks */,
 				A642ADB91AC9CEE500854472 /* Foundation.framework in Frameworks */,
+				A68348C528854CF3003351AF /* ulibasn1.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -292,6 +299,7 @@
 			isa = PBXGroup;
 			children = (
 				A6798B9E22BBBAD00019806C /* ulib.framework */,
+				A68348C428854CF3003351AF /* ulibasn1.framework */,
 				22278AFA162D53D200633C39 /* Foundation.framework */,
 			);
 			name = Frameworks;
@@ -447,6 +455,8 @@
 				A6DDD9571635FD4B002FA7CC /* PriorityQueue.m */,
 				A6DDD9581635FD4B002FA7CC /* UMSigAddr.h */,
 				A6DDD9591635FD4B002FA7CC /* UMSigAddr.m */,
+				A68348C0288530C2003351AF /* UMSigAddrWithHistory.h */,
+				A68348C1288530C2003351AF /* UMSigAddrWithHistory.m */,
 				A6DDD95A1635FD4B002FA7CC /* TestUtils.h */,
 				A6DDD95B1635FD4B002FA7CC /* TestUtils.m */,
 				A6DDD95C1635FD4B002FA7CC /* UMPrefs.h */,
@@ -494,6 +504,7 @@
 				A6793DA91934AAAD0090FC94 /* UniversalSMSUtilities.h in Headers */,
 				A6793DAB1934AAB30090FC94 /* GsmCharSet.h in Headers */,
 				A6793DAD1934AABA0090FC94 /* NSData+HexFunctions.h in Headers */,
+				A68348C2288530C2003351AF /* UMSigAddrWithHistory.h in Headers */,
 				A67D3DD41AF9E97D0090FC94 /* GSMErrorCode.h in Headers */,
 				A6793DAE1934AABE0090FC94 /* NSString+HexFunctions.h in Headers */,
 				A6793DAF1934AAC10090FC94 /* NSMutableData+UMTestString.h in Headers */,
@@ -642,6 +653,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				A6DDD9611635FD4B002FA7CC /* SmppPdu.m in Sources */,
+				A68348C3288530C2003351AF /* UMSigAddrWithHistory.m in Sources */,
 				A67EDBD71A19C83D004A556B /* SmscConnectionNACK.m in Sources */,
 				A627EB441B0A57A600854472 /* SmscConnectionTransaction.m in Sources */,
 				A6B98E4B18E59F6D0090FC94 /* SmppTlv.m in Sources */,
@@ -870,6 +882,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(LOCAL_LIBRARY_DIR)/Application\\ Support/FinkTelecomServices/frameworks",
+					"$(LOCAL_LIBRARY_DIR)/Application\\ Support/FinkTelecomServices/frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 11.0;
 				MARKETING_VERSION = 1.16.3;
@@ -889,6 +902,7 @@
 				DEVELOPMENT_TEAM = 2GSNWPNR77;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
+					"$(LOCAL_LIBRARY_DIR)/Application\\ Support/FinkTelecomServices/frameworks",
 					"$(LOCAL_LIBRARY_DIR)/Application\\ Support/FinkTelecomServices/frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 11.0;

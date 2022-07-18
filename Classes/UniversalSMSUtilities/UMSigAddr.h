@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import <ulib/ulib.h>
+#import <ulibasn1/ulibasn1.h>
 
 typedef	enum UMTonType
 {
@@ -46,17 +46,18 @@ typedef	enum UMNaiType
 	UMNAI_INTERNATIONAL 	= 4,
 } UMNaiType;
 
-@interface UMSigAddr : UMObject
+@interface UMSigAddr : UMASN1Sequence
 {
-	UMTonType		ton;
-	UMNpiType		npi;
-    int             pointcode;
-	NSString	    *addr;
-    NSString	    *debugString;
+	UMTonType		_ton;
+	UMNpiType		_npi;
+    NSNumber        *_pointcode;
+	NSString	    *_addr;
+    NSString	    *_debugString;
 }
 
 @property (readwrite,assign)	UMTonType		ton;
 @property (readwrite,assign)	UMNpiType		npi;
+@property (readwrite,strong)    NSNumber        *pointcode;
 @property (readwrite,strong)	NSString        *addr;
 @property (readwrite,strong)	NSString        *debugString;
 
