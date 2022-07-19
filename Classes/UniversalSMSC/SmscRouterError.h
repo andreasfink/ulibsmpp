@@ -7,11 +7,19 @@
 //
 
 #import <ulib/ulib.h>
+#import <ulibasn1/ulibasn1.h>
 #import "GSMErrorCode.h"
 //#import "SmscConnectionErrorCode.h"
 #import "SmppErrorCode.h"
 #import "DeliveryReportErrorCode.h"
 
+typedef enum UMSmscRouterErrorTag
+{
+    UMSmscRouterErrorTag_dlrError   = 1,
+    UMSmscRouterErrorTag_smppError  = 2,
+    UMSmscRouterErrorTag_gsmError   = 3,
+    UMSmscRouterErrorTag_internalError = 4,
+} UMSmscRouterErrorTag;
 
 typedef int SmscRouterInternalError;
 
@@ -37,16 +45,13 @@ typedef int SmscRouterInternalError;
 __attribute__((__objc_exception__))
 #endif
 
-@interface SmscRouterError : UMObject
+@interface SmscRouterError : UMASN1Sequence
 {
-    int                     errorTypes; /*bitfield */
-    
-    DeliveryReportErrorCode dlrErr;
-    SmppErrorCode           smppErr;
-    GSMErrorCode            gsmErr;
-//    SmscConnectionErrorCode smscErr;
-    SmscRouterInternalError internalErr;
-    
+    int                         _errorTypes; /*bitfield */
+    DeliveryReportErrorCode     _dlrErr;
+    SmppErrorCode               _smppErr;
+    GSMErrorCode                _gsmErr;
+    SmscRouterInternalError     _internalErr;
 }
 
 -(int) errorTypes;

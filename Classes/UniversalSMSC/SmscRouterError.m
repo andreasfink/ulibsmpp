@@ -12,7 +12,7 @@
 
 -(int)errorTypes
 {
-    return errorTypes;
+    return _errorTypes;
 }
 
 - (SmscRouterError *)init
@@ -20,7 +20,7 @@
     self = [super init];
     if(self)
     {
-        errorTypes = SmscRouterError_TypeNONE;
+        _errorTypes = SmscRouterError_TypeNONE;
     }
     return self;
 }
@@ -99,8 +99,8 @@
 
 - (void)setGsmErrorCode:(GSMErrorCode)e usingOptions:(NSDictionary *)options
 {
-    gsmErr = e;
-    errorTypes = errorTypes | SmscRouterError_TypeGSM;
+    _gsmErr = e;
+    _errorTypes = _errorTypes | SmscRouterError_TypeGSM;
     [self convertGsmToInternal:options];
 }
 
@@ -113,8 +113,8 @@
 - (void)setDeliveryReportErrorCode:(DeliveryReportErrorCode)e
                       usingOptions:(NSDictionary *)options
 {
-    dlrErr = e;
-    errorTypes = errorTypes | SmscRouterError_TypeDLR;
+    _dlrErr = e;
+    _errorTypes = _errorTypes | SmscRouterError_TypeDLR;
     [self convertDlrToInternal:options];
 
 }
@@ -127,12 +127,10 @@
 - (void)setSmppErrorCode:(SmppErrorCode)e
             usingOptions:(NSDictionary *)options
 {
-    smppErr = e;
-    errorTypes = errorTypes | SmscRouterError_TypeSMPP;
+    _smppErr = e;
+    _errorTypes = _errorTypes | SmscRouterError_TypeSMPP;
     [self convertSmppToInternal:options];
-
 }
-
 
 - (void)setInternalErrorCode:(SmscRouterInternalError)e
 {
@@ -141,8 +139,8 @@
 
 - (void)setInternalErrorCode:(SmscRouterInternalError)e usingOptions:(NSDictionary *)options
 {
-    internalErr = e;
-    errorTypes = errorTypes | SmscRouterError_TypeINTERNAL;
+    _internalErr = e;
+    _errorTypes = _errorTypes | SmscRouterError_TypeINTERNAL;
 }
 
 /*************************************/
@@ -154,12 +152,12 @@
 
 -(GSMErrorCode)gsmErrorUsingOptions:(NSDictionary *)options
 {
-    if(errorTypes & SmscRouterError_TypeGSM)
+    if(_errorTypes & SmscRouterError_TypeGSM)
     {
-        return gsmErr;
+        return _gsmErr;
     }
     [self convertInternalToGsm:options];
-    return gsmErr;
+    return _gsmErr;
 }
 
 
@@ -170,12 +168,12 @@
 
 -(DeliveryReportErrorCode)dlrErrorUsingOptions:(NSDictionary *)options
 {
-    if(errorTypes & SmscRouterError_TypeDLR)
+    if(_errorTypes & SmscRouterError_TypeDLR)
     {
-        return dlrErr;
+        return _dlrErr;
     }
     [self convertInternalToDlr:options];
-    return dlrErr;
+    return _dlrErr;
 }
 
 -(SmppErrorCode)smppError
@@ -185,12 +183,12 @@
 
 -(SmppErrorCode)smppErrorUsingOptions:(NSDictionary *)options
 {
-    if(errorTypes & SmscRouterError_TypeSMPP)
+    if(_errorTypes & SmscRouterError_TypeSMPP)
     {
-        return smppErr;
+        return _smppErr;
     }
     [self convertInternalToSmpp:options];
-    return smppErr;
+    return _smppErr;
 }
 
 
@@ -201,9 +199,9 @@
 
 - (SmscRouterInternalError)internalErrorUsingOptions:(NSDictionary *)options
 {
-    if(errorTypes & SmscRouterError_TypeINTERNAL)
+    if(_errorTypes & SmscRouterError_TypeINTERNAL)
     {
-        return internalErr;
+        return _internalErr;
     }
     /* we should do some conversion here */
     return SmscRouterError_UNDEFINED;
@@ -214,24 +212,24 @@
 {
     NSMutableDictionary *dict = [[NSMutableDictionary alloc]init];
     
-    if(errorTypes & SmscRouterError_TypeINTERNAL)
+    if(_errorTypes & SmscRouterError_TypeINTERNAL)
     {
-        dict[@"INTERNAL"] = @{  @"err" : @(internalErr), @"text":[self descriptionInternalError] };
+        dict[@"INTERNAL"] = @{  @"err" : @(_internalErr), @"text":[self descriptionInternalError] };
     }
-    if(errorTypes & SmscRouterError_TypeGSM)
+    if(_errorTypes & SmscRouterError_TypeGSM)
     {
-        dict[@"GSM"] = @{@"err" : @(gsmErr), @"text" : [self descriptionGsmError] };
+        dict[@"GSM"] = @{@"err" : @(_gsmErr), @"text" : [self descriptionGsmError] };
     }
-    if(errorTypes & SmscRouterError_TypeSMPP)
+    if(_errorTypes & SmscRouterError_TypeSMPP)
     {
-        dict[@"SMPP"] = @{@"err" : @(smppErr), @"text" : [self descriptionSmppError] };
+        dict[@"SMPP"] = @{@"err" : @(_smppErr), @"text" : [self descriptionSmppError] };
     }
     return [dict jsonString];
 }
 
 - (NSString *)descriptionSmppError
 {
-    switch(smppErr)
+    switch(_smppErr)
     {
         case ESME_ROK:
             return @"ROK";
@@ -548,13 +546,13 @@
         case ESME_VENDOR_SPECIFIC_THIS_OUTGOING_CONNECTION_UNAVAILABLE:
             return @"THIS_OUTGOING_CONNECTION_UNAVAILABLE";
         default:
-            return [NSString stringWithFormat:@"ESME_UNKNOWN_0x%lux",(unsigned long)smppErr];
+            return [NSString stringWithFormat:@"ESME_UNKNOWN_0x%lux",(unsigned long)_smppErr];
     }
 }
 
 - (NSString *)descriptionGsmError
 {
-    switch(gsmErr)
+    switch(_gsmErr)
     {
             
         case GSM_ERROR_NONE:
@@ -656,7 +654,7 @@
         case GSM_ERROR_USSD_BUSY:
             return @"USSD_BUSY";
         default:
-            return [NSString stringWithFormat:@"GSM_ERR_%d",gsmErr];
+            return [NSString stringWithFormat:@"GSM_ERR_%d",_gsmErr];
     }
 }
 
@@ -668,11 +666,11 @@
 - (id)copyWithZone:(NSZone *)zone
 {
     SmscRouterError *n  = [[SmscRouterError alloc]init];
-    n->errorTypes    = errorTypes;
-    n->dlrErr        = dlrErr;
-    n->smppErr       = smppErr;
-    n->gsmErr        = gsmErr;
-    n->internalErr   = internalErr;
+    n->_errorTypes    = _errorTypes;
+    n->_dlrErr        = _dlrErr;
+    n->_smppErr       = _smppErr;
+    n->_gsmErr        = _gsmErr;
+    n->_internalErr   = _internalErr;
     return n;
 }
 
@@ -713,6 +711,79 @@
 - (BOOL)allowUpdatingStats
 {
     return YES;
+}
+
+
+- (SmscRouterError *) processAfterDecodeWithContext:(id)context
+{
+    int p=0;
+    UMASN1Object *o = [self getObjectAtPosition:p++];
+    _errorTypes = SmscRouterError_TypeNONE;
+    do
+    {
+        if( (o) && (o.asn1_tag.tagNumber == UMSmscRouterErrorTag_dlrError) && (o.asn1_tag.tagClass == UMASN1Class_ContextSpecific))
+        {
+            UMASN1Integer *asn1_int = [[UMASN1Integer alloc] initWithASN1Object:o context:context];
+            _dlrErr = (int)asn1_int.value;
+            _errorTypes |= SmscRouterError_TypeDLR;
+        }
+        else if( (o) && (o.asn1_tag.tagNumber == UMSmscRouterErrorTag_smppError) && (o.asn1_tag.tagClass == UMASN1Class_ContextSpecific))
+        {
+            UMASN1Integer *asn1_int = [[UMASN1Integer alloc] initWithASN1Object:o context:context];
+            _smppErr = (int)asn1_int.value;
+            _errorTypes |= SmscRouterError_TypeSMPP;
+        }
+        else if( (o) && (o.asn1_tag.tagNumber == UMSmscRouterErrorTag_gsmError) && (o.asn1_tag.tagClass == UMASN1Class_ContextSpecific))
+        {
+            UMASN1Integer *asn1_int = [[UMASN1Integer alloc] initWithASN1Object:o context:context];
+            _gsmErr = (int)asn1_int.value;
+            _errorTypes |= SmscRouterError_TypeGSM;
+        }
+        else if( (o) && (o.asn1_tag.tagNumber == UMSmscRouterErrorTag_internalError) && (o.asn1_tag.tagClass == UMASN1Class_ContextSpecific))
+        {
+            UMASN1Integer *asn1_int = [[UMASN1Integer alloc] initWithASN1Object:o context:context];
+            _internalErr = (int)asn1_int.value;
+            _errorTypes |= SmscRouterError_TypeINTERNAL;
+        }
+        o = [self getObjectAtPosition:p++];
+    }
+    while(o);
+    return self;
+}
+
+- (void)processBeforeEncode
+{
+    [super processBeforeEncode];
+    _asn1_list = [[NSMutableArray alloc]init];
+    if(_errorTypes & SmscRouterError_TypeDLR)
+    {
+        UMASN1Integer *asn1_int = [[UMASN1Integer alloc]initWithValue:_dlrErr];
+        asn1_int.asn1_tag.tagNumber = UMSmscRouterErrorTag_dlrError;
+        asn1_int.asn1_tag.tagClass = UMASN1Class_ContextSpecific;
+        [_asn1_list addObject:asn1_int];
+    }
+    if(_errorTypes & SmscRouterError_TypeSMPP)
+    {
+        UMASN1Integer *asn1_int = [[UMASN1Integer alloc]initWithValue:_smppErr];
+        asn1_int.asn1_tag.tagNumber = UMSmscRouterErrorTag_smppError;
+        asn1_int.asn1_tag.tagClass = UMASN1Class_ContextSpecific;
+        [_asn1_list addObject:asn1_int];
+    }
+
+    if(_errorTypes & SmscRouterError_TypeGSM)
+    {
+        UMASN1Integer *asn1_int = [[UMASN1Integer alloc]initWithValue:_gsmErr];
+        asn1_int.asn1_tag.tagNumber = UMSmscRouterErrorTag_gsmError;
+        asn1_int.asn1_tag.tagClass = UMASN1Class_ContextSpecific;
+        [_asn1_list addObject:asn1_int];
+    }
+    if(_errorTypes & SmscRouterError_TypeINTERNAL)
+    {
+        UMASN1Integer *asn1_int = [[UMASN1Integer alloc]initWithValue:_internalErr];
+        asn1_int.asn1_tag.tagNumber = UMSmscRouterErrorTag_internalError;
+        asn1_int.asn1_tag.tagClass = UMASN1Class_ContextSpecific;
+        [_asn1_list addObject:asn1_int];
+    }
 }
 
 @end
