@@ -12,8 +12,6 @@
 #import "SmscConnectionSMPP.h"
 
 
-
-
 @implementation SmppPdu
 @synthesize pdulen;
 @synthesize	type;
