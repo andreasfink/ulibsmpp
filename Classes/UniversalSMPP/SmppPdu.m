@@ -512,32 +512,32 @@
 	NSUInteger len;
 	int use_message_payload;
 	
-	if ([msg pduUdhi])
+	if(msg.udhIndicator)
     {
 		esmclass |= SMPP_PDU_ESM_CLASS_SUBMIT_UDH_INDICATOR;
     }
-	if( [msg pduRp])
+	if(msg.replyPath)
     {
 		esmclass |= SMPP_PDU_ESM_CLASS_SUBMIT_RPI;
     }
 	pdu = [[SmppPdu alloc] initWithType:SMPP_PDU_SUBMIT_SM err:ESME_ROK];
     
 	[pdu appendNSStringMax:servicetype maxLength: 6];
-	[pdu appendInt8: [[msg from] ton]];
-	[pdu appendInt8:  [[msg from] npi]];
-	[pdu appendNSStringMax: [[msg from] addr]  maxLength:21];
+	[pdu appendInt8:msg.source.ton];
+	[pdu appendInt8:msg.source.npi];
+	[pdu appendNSStringMax:msg.source.addr  maxLength:21];
     
-	[pdu appendInt8: [[msg to] ton]];
-	[pdu appendInt8:  [[msg to] npi]];
-	[pdu appendNSStringMax: [[msg to] addr]  maxLength:21];
+	[pdu appendInt8:msg.destination.ton];
+	[pdu appendInt8:msg.destination.npi];
+    [pdu appendNSStringMax:msg.destination.addr  maxLength:21];
 	[pdu appendInt8:  esmclass]; //5.2.12
-	[pdu appendInt8:  [msg pduPid]]; //5.2.13
-	[pdu appendInt8:  [msg priority]]; //5.2.13
-	[pdu appendDate:  [msg deferred]]; //scheduled time
-	[pdu appendDate:  [msg validity]];
+	[pdu appendInt8: msg.pduPid]; //5.2.13
+	[pdu appendInt8: msg.messagePriority]; //5.2.13
+	[pdu appendDate: msg.deferred]; //scheduled time
+	[pdu appendDate: msg.validity];
     //[pdu appendInt8:  [msg reportMask] ? 1 : 0];
     
-    UMReportMaskValue reportMask = [msg reportMask];
+    UMReportMaskValue reportMask = msg.deliveryReportMask;
     UMRequestMaskValue requestMask = 0;
     if (reportMask & (UMDLR_MASK_SUCCESS | UMDLR_MASK_FAIL))
     {
@@ -806,27 +806,27 @@
 	pdu = [[SmppPdu alloc] initWithType:SMPP_PDU_SUBMIT_SM_MULTI err:ESME_ROK];
     
 	esmclass = SMPP_PDU_ESM_CLASS_SUBMIT_STORE_AND_FORWARD_MODE;
-	if ( [msg pduUdhi] )
+	if (msg.udhIndicator )
 		esmclass |= SMPP_PDU_ESM_CLASS_SUBMIT_UDH_INDICATOR;
-	if( [msg pduRp] )
+	if(msg.replyPath)
 		esmclass |= SMPP_PDU_ESM_CLASS_SUBMIT_RPI;
 	
 	
     [pdu appendNSStringMax:@"" maxLength: 6]; // service type default
-	[pdu appendInt8: [[msg from] ton]];
-	[pdu appendInt8:  [[msg from] npi]];
-	[pdu appendNSStringMax: [[msg from] addr]  maxLength:21];
+	[pdu appendInt8: msg.source.ton];
+	[pdu appendInt8: msg.source.npi];
+	[pdu appendNSStringMax:msg.source.addr  maxLength:21];
 	[pdu appendInt8: 1]; /* number of destination addresses */
 	[pdu appendInt8: 2]; /* 2 = distribution list name, 1 = SME destination */
 	[pdu appendNSStringMax: distributionListName   maxLength:21];
 	[pdu appendInt8:  esmclass]; //5.2.12
-	[pdu appendInt8:  [msg pduPid]]; //5.2.13
-	[pdu appendInt8:  [msg priority]]; //5.2.13
-	[pdu appendDate:  [msg deferred]]; //scheduled time
-	[pdu appendDate:  [msg validity]];
-	[pdu appendInt8:  [msg reportMask] ? 1 : 0];
-	[pdu appendInt8:  [msg replaceIfPresentFlag]];
-	[pdu appendInt8:  [msg pduDcs]];
+	[pdu appendInt8:  msg.pduPid]; //5.2.13
+	[pdu appendInt8:  msg.messagePriority]; //5.2.13
+	[pdu appendDate:  msg.deferred]; //scheduled time
+	[pdu appendDate:  msg.validity];
+	[pdu appendInt8:  msg.deliveryReportMask ? 1 : 0];
+	[pdu appendInt8:  msg.replaceIfPresentFlag];
+	[pdu appendInt8:  msg.pduDcs];
 	[pdu appendInt8:  0];	/* predefined message text */
 	data = [msg pduContentIncludingUdh];
 	
@@ -949,11 +949,11 @@
     {
         we_are_delivery_report = 0;
     }
-	if ( [msg pduUdhi])
+	if (msg.udhIndicator)
     {
 		esmclass |= SMPP_PDU_ESM_CLASS_SUBMIT_UDH_INDICATOR;
     }
-    if( [msg pduRp])
+    if(msg.replyPath)
     {
 		esmclass |= SMPP_PDU_ESM_CLASS_SUBMIT_RPI;
     }
@@ -962,30 +962,31 @@
 	[pdu appendNSStringMax:servicetype maxLength: 6];
 	if(we_are_delivery_report)
 	{ /* the generator of the deliver report is in charge of swappign sender/receiver */
-		[pdu appendInt8: [[msg from] ton]];
-        [pdu appendInt8:  [[msg from] npi]];
-        [pdu appendNSStringMax: [[msg from] addr]  maxLength:21];
-        [pdu appendInt8: [[msg to] ton]];
-        [pdu appendInt8:  [[msg to] npi]];
-        [pdu appendNSStringMax: [[msg to] addr]  maxLength:21];
+		[pdu appendInt8: msg.source.ton];
+        [pdu appendInt8: msg.source.npi];
+        [pdu appendNSStringMax: msg.source.addr  maxLength:21];
+        [pdu appendInt8:  msg.destination.ton];
+        [pdu appendInt8:  msg.destination.npi];
+        [pdu appendNSStringMax: msg.destination.addr  maxLength:21];
     }
 	else
 	{
-		[pdu appendInt8: [[msg from] ton]];
-		[pdu appendInt8:  [[msg from] npi]];
-		[pdu appendNSStringMax: [[msg from] addr]  maxLength:21];
-		[pdu appendInt8: [[msg to] ton]];
-		[pdu appendInt8:  [[msg to] npi]];
-		[pdu appendNSStringMax: [[msg to] addr]  maxLength:21];
-	}
+        [pdu appendInt8: msg.source.ton];
+        [pdu appendInt8: msg.source.npi];
+        [pdu appendNSStringMax: msg.source.addr  maxLength:21];
+        [pdu appendInt8:  msg.destination.ton];
+        [pdu appendInt8:  msg.destination.npi];
+        [pdu appendNSStringMax: msg.destination.addr  maxLength:21];
+    }
+    
 	[pdu appendInt8:  esmclass];
-	[pdu appendInt8:  [msg pduPid]];
-	[pdu appendInt8:  [msg priority]];
-	[pdu appendDate:  [msg deferred]];
-	[pdu appendDate:  [msg validity]];
-	[pdu appendInt8:  [msg reportMask] ? 1 : 0];
-	[pdu appendInt8:  [msg replaceIfPresentFlag]];
-	[pdu appendInt8:  [msg pduDcs]];
+	[pdu appendInt8:  msg.pduPid];
+	[pdu appendInt8:  msg.messagePriority];
+	[pdu appendDate:  msg.deferred];
+	[pdu appendDate:  msg.validity];
+	[pdu appendInt8:  msg.deliveryReportMask ? 1 : 0];
+	[pdu appendInt8:  msg.replaceIfPresentFlag];
+	[pdu appendInt8:  msg.pduDcs];
 	[pdu appendInt8:  0];	/* predefined message text must be NULL for deliver SM */
 	if(we_are_delivery_report)
 	{
@@ -1024,9 +1025,9 @@
         [formatter setDateFormat:@"yyyyMMddHHmmss"];
         
 		reportText = [NSString stringWithFormat:@"id:%@ sub:001 dlvrd:001 submit date:%@ done date:%@ stat:%@ err:%d text:Report",
-					  [msg routerReference],
-					  [msg submitDate] ? [formatter stringFromDate:[msg submitDate]]:[formatter stringFromDate:[NSDate date]],
-					  [msg messageAttemptedTimestamp] ? [formatter stringFromDate:[msg messageAttemptedTimestamp]]:[formatter stringFromDate:[NSDate date]],
+					  msg.routerReference,
+					  msg.submitDate ? [formatter stringFromDate:msg.submitDate]:[formatter stringFromDate:[NSDate date]],
+					  msg.messageAttempted ? [formatter stringFromDate:msg.messageAttempted]:[formatter stringFromDate:[NSDate date]],
 					  ms,
 					  [msg networkErrorCode]];
 		data = [reportText dataUsingEncoding:NSISOLatin1StringEncoding allowLossyConversion:YES];
@@ -1183,24 +1184,24 @@
 	NSUInteger len;
 	int use_message_payload;
 	
-	if ( [msg pduUdhi])
+	if(msg.udhIndicator)
 		esmclass |= SMPP_PDU_ESM_CLASS_SUBMIT_UDH_INDICATOR;
-	if( [msg pduRp])
+	if(msg.replyPath)
 		esmclass |= SMPP_PDU_ESM_CLASS_SUBMIT_RPI;
 	
 	pdu = [[SmppPdu alloc] initWithType:SMPP_PDU_DATA_SM err:ESME_ROK];
 	
 	[pdu appendNSStringMax:servicetype maxLength: 6];
-	[pdu appendInt8: [[msg from] ton]];
-	[pdu appendInt8:  [[msg from] npi]];
-	[pdu appendNSStringMax: [[msg from] addr]  maxLength:65];
+	[pdu appendInt8: msg.source.ton];
+	[pdu appendInt8: msg.source.npi];
+	[pdu appendNSStringMax: msg.source.addr  maxLength:65];
 	
-	[pdu appendInt8: [[msg to] ton]];
-	[pdu appendInt8:  [[msg to] npi]];
-	[pdu appendNSStringMax: [[msg to] addr]  maxLength:65];
+	[pdu appendInt8: msg.destination.ton];
+	[pdu appendInt8: msg.destination.npi];
+	[pdu appendNSStringMax: msg.destination.addr  maxLength:65];
 	[pdu appendInt8:  esmclass]; //5.2.12
-	[pdu appendInt8:  [msg reportMask] ? 1 : 0];
-	[pdu appendInt8:  [msg pduDcs]];
+	[pdu appendInt8: msg.deliveryReportMask ? 1 : 0];
+	[pdu appendInt8:  msg.pduDcs];
     
 	data = [msg pduContentIncludingUdh];
 	

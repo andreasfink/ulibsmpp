@@ -235,7 +235,7 @@
     NSString *reportText = [NSString stringWithFormat:@"id:%@ sub:001 dlvrd:001 submit date:%@ done date:%@ stat:UNDELVRD err:%03d text:no-route-to-destination",
                             msg.routerReference,
                             msg.submitDate ?    [formatter stringFromDate:msg.submitDate]:[formatter stringFromDate:[NSDate date]],
-                            msg.messageAttemptedTimestamp ? [formatter stringFromDate:msg.messageAttemptedTimestamp]:[formatter stringFromDate:[NSDate date]],
+                            msg.messageAttempted ? [formatter stringFromDate:msg.messageAttempted]:[formatter stringFromDate:[NSDate date]],
                             errorToReturn.dlrError];
     report.reportType               = SMS_REPORT_UNDELIVERABLE;
     if(errorToReturn == NULL)
@@ -249,8 +249,8 @@
     report.userReference            = msg.userReference;
     report.originalSendingObject    = msg.originalSendingObject;
     report.reportText               = reportText;
-    report.source                   = msg.to;
-    report.destination              = msg.from;
+    report.source                   = msg.destination;
+    report.destination              = msg.source;
     
     [sendingObject deliverReport:report
                        forObject:self
@@ -297,7 +297,7 @@
     NSString *reportText = [NSString stringWithFormat:@"id:%@ sub:001 dlvrd:001 submit date:%@ done date:%@ stat:DELIVRD err:000",
                             msg.routerReference,
                             msg.submitDate ?    [formatter stringFromDate:msg.submitDate]:[formatter stringFromDate:[NSDate date]],
-                            msg.messageAttemptedTimestamp ? [formatter stringFromDate:msg.messageAttemptedTimestamp]:[formatter stringFromDate:[NSDate date]]];
+                            msg.messageAttempted ? [formatter stringFromDate:msg.messageAttempted]:[formatter stringFromDate:[NSDate date]]];
     report.reportType               = SMS_REPORT_DELIVERED;
     report.error                    = NULL;
     report.routerReference          = msg.routerReference;
@@ -305,8 +305,8 @@
     report.userReference            = msg.userReference;
     report.originalSendingObject    = msg.originalSendingObject;
     report.reportText               = reportText;
-    report.source                   = msg.to;
-    report.destination              = msg.from;
+    report.source                   = msg.destination;
+    report.destination              = msg.source;
     [sendingObject submitReport:report
                       forObject:self
                     synchronous:NO];
