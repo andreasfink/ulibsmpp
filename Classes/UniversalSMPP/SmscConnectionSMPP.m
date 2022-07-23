@@ -2450,6 +2450,7 @@ length_error:
     return nil;
 }
 
+/* process a incoming connection */
 - (void) inbound
 {
 	/* first, register self to sms router */
@@ -2485,7 +2486,6 @@ length_error:
                         sleep(1); /* we wait one second before the connection closes */
                     }
                 }
-
                 [_txSleeper sleep:200000]; /* check again in 200 ms */
 				break;
 				
