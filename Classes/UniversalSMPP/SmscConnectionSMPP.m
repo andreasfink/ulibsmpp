@@ -1307,7 +1307,7 @@ end:
 
             }
         }
-        [msg setFrom: from];
+        msg.source = from;
 
         ton  = (UMTonType)[pdu grabInt8];
         npi  = (UMNpiType)[pdu grabInt8];
@@ -1336,7 +1336,7 @@ end:
                         ]);
             }
         }
-        [msg setTo: to];
+        msg.destination = to;
         
         NSInteger esmClass = [pdu grabInt8];
         /* TODO: do something with ESM class */
@@ -1359,15 +1359,15 @@ end:
         }
         if(esmClass & SMPP_PDU_ESM_CLASS_SUBMIT_UDH_INDICATOR)
         {
-            [msg setPduUdhi: 1];
+            msg.udhIndicator=1;
         }
         if(esmClass & SMPP_PDU_ESM_CLASS_SUBMIT_RPI)
         {
-            [msg setPduRp: 1];
+            msg.replyPath = 1;
         }
 
         [msg setPduPid:  (int) [pdu grabInt8]];
-        [msg setPriority: (int) [pdu grabInt8]];
+        [msg setMessagePriority: (int) [pdu grabInt8]];
 
         NSString *defferredDeliveryString = [pdu grabStringWithEncoding:NSISOLatin1StringEncoding maxLength:255];
         NSDate *defferredDelivery = [SmppPdu smppTimestampFromString:defferredDeliveryString];
@@ -1390,7 +1390,7 @@ end:
         {
             requestMask |= (UMDLR_MASK_BUFFERED | UMDLR_MASK_SUBMIT);
         }
-        [msg setReportMask:requestMask];
+        [msg setDeliveryReportMask:requestMask];
         [msg setReplaceIfPresentFlag: ([pdu grabInt8] ? YES : NO)];
         [msg setPduDcs: [pdu grabInt8]];
         
@@ -1400,7 +1400,7 @@ end:
     //	[msg setDefaultMessageId: i];
         int length = (int)[pdu grabInt8];
             
-        if([msg pduUdhi])
+        if(msg.udhIndicator)
         {
             if(length< 1)
             {
@@ -2382,7 +2382,7 @@ end:
 		[from setNpi: npi];
 		[from setAddr: addr];
 	}
-	[msg setFrom: from];
+    msg.source = from;
     
 	ton  = (int)[pdu dest_addr_ton];
 	npi  = (int)[pdu dest_addr_npi];
@@ -2399,23 +2399,26 @@ end:
 		[to setNpi: npi];
 		[to setAddr: addr];
 	}
-	[msg setTo: to];
+    msg.destination = to;
     
     int esmClass = (int)[pdu esm_class];
     if(esmClass & SMPP_PDU_ESM_CLASS_DELIVER_UDH_INDICATOR)
-    	[msg setPduUdhi: 1];
+    {
+        msg.udhIndicator = 1;
+    }
     if(esmClass & SMPP_PDU_ESM_CLASS_DELIVER_RPI)
-    	[msg setPduRp: 1];
-    
+    {
+        msg.replyPath = 1;
+    }
     [msg setPduPid:   [pdu protocol_id]];
-	[msg setPriority: (int)[pdu priority_flag]];
+	[msg setMessagePriority: (int)[pdu priority_flag]];
     
     [msg setReplaceIfPresentFlag: ([pdu replace_if_present_flag] ? YES : NO)];
 	[msg setPduDcs: [pdu data_coding]];
     
     int length = (int)[pdu sm_length];
     NSData *sm = [pdu short_message];
-    if([msg pduUdhi])
+    if(msg.udhIndicator)
 	{
 		if(length< 1)
 			goto length_error;
