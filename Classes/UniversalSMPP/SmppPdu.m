@@ -556,7 +556,18 @@
 	[pdu appendInt8:  [msg replaceIfPresentFlag]];
 	[pdu appendInt8:  [msg pduDcs]];
 	[pdu appendInt8:  0];	/* predefined message text */
-	data = [msg pduContentIncludingUdh];
+    
+    
+    if(msg.udhIndicator)
+    {
+        NSMutableData *d = [NSMutableData dataWithData:msg.pduUdh];
+        [d appendData:msg.pduContent];
+        data = d;
+    }
+    else
+    {
+        data = msg.pduContent;
+    }
 	
 	len = [data length];
 	if(len > 254)
@@ -828,8 +839,16 @@
 	[pdu appendInt8:  msg.replaceIfPresentFlag];
 	[pdu appendInt8:  msg.pduDcs];
 	[pdu appendInt8:  0];	/* predefined message text */
-	data = [msg pduContentIncludingUdh];
-	
+    if(msg.udhIndicator)
+    {
+        NSMutableData *d = [NSMutableData dataWithData:msg.pduUdh];
+        [d appendData:msg.pduContent];
+        data = d;
+    }
+    else
+    {
+        data = msg.pduContent;
+    }
 	len = [data length];
 	if(len > 254)
 	{
@@ -1034,7 +1053,16 @@
 	}
 	else
 	{
-		data = [msg pduContentIncludingUdh];
+        if(msg.udhIndicator)
+        {
+            NSMutableData *d = [NSMutableData dataWithData:msg.pduUdh];
+            [d appendData:msg.pduContent];
+            data = d;
+        }
+        else
+        {
+            data = msg.pduContent;
+        }
 	}
 	len = [data length];
 	if(len > 254)
@@ -1203,8 +1231,17 @@
 	[pdu appendInt8: msg.deliveryReportMask ? 1 : 0];
 	[pdu appendInt8:  msg.pduDcs];
     
-	data = [msg pduContentIncludingUdh];
-	
+    if(msg.udhIndicator)
+    {
+        NSMutableData *d = [NSMutableData dataWithData:msg.pduUdh];
+        [d appendData:msg.pduContent];
+        data = d;
+    }
+    else
+    {
+        data = msg.pduContent;
+    }
+
 	len = [data length];
 	if(len > 254)
 	{

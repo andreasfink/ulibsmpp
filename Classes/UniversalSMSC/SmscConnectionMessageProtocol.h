@@ -121,7 +121,7 @@ typedef enum UMRequestMaskValue
 - (UMSigAddr *)source;
 - (void) setDestination:(UMSigAddr *)to;
 - (UMSigAddr *)destination;
-- (void) deliveryReportAddress:(UMSigAddr *)reportTo;
+- (void) setDeliveryReportAddress:(UMSigAddr *)reportTo;
 - (UMSigAddr *)deliveryReportAddress;
 - (void) setDeliveryReportMask:(UMReportMaskValue)mask;
 - (UMReportMaskValue) deliveryReportMask;
@@ -141,7 +141,6 @@ typedef enum UMRequestMaskValue
 - (NSInteger) udhIndicator;
 - (void) setPduContent:(NSData *)content;
 - (NSData *)pduContent;
-- (NSData *)pduContentIncludingUdh;
 - (NSDate *)messageAttempted;
 - (NSDate *)submitDate;
 - (NSDate *)submitAckTime;

@@ -158,7 +158,7 @@ enum SmppAlphaCoding;
 @property(readonly,strong)      UMThroughputCounter *outboundReportsThroughput;
 @property(readwrite,strong)     NSString            *lastStatus;
 @property(readwrite,assign)     int                 max_tcp_segment_size;
-@property(readonly,strong)      id<SmscConnectionReadyProtocol> readyForServiceDelegate;
+@property(readwrite,strong)     id<SmscConnectionReadyProtocol> readyForServiceDelegate;
 
 + (NSString *)uniqueMessageId;
 + (NSString *)uniqueMessageIdWithPrefix:(NSString *)prefix;
