@@ -70,6 +70,7 @@ enum SmppAlphaCoding;
 	NSString			*_version;
 	NSString			*_routerName;
 	UMSocket			*_uc;
+    UMLogLevel          _logLevel;
 #ifdef  USE_SMPP_PRIORITY_QUEUES
 	PriorityQueue		*_submitMessageQueue;
 	PriorityQueue		*_submitReportQueue;
@@ -128,6 +129,7 @@ enum SmppAlphaCoding;
 @property(readwrite,strong)		NSString			*version;
 @property(readwrite,strong)		NSString			*routerName;
 @property(readwrite,strong)		UMSocket			*uc;
+@property(readwrite,assign)     UMLogLevel          logLevel;
 @property(readwrite,strong)		id<SmscConnectionUserProtocol> user;
 //@property(readwrite,strong)		PriorityQueue		*submitMessageQueue;
 //@property(readwrite,strong)		PriorityQueue		*submitReportQueue;

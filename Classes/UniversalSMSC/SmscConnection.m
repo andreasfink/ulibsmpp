@@ -21,6 +21,7 @@
     self = [super init];
 	if(self)
     {
+        _logLevel = UMLOG_MAJOR;
         _outgoingTransactions    = [[UMSynchronizedDictionary alloc] init];
         _incomingTransactions    = [[UMSynchronizedDictionary alloc] init];
 #ifdef USE_SMPP_PRIORITY_QUEUES
