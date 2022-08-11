@@ -29,6 +29,11 @@ typedef int SmscRouterInternalError;
 #define SMSError_ConnectionOffline                    483
 #define SMSError_Timeout                              484
 #define SMSError_SubmissionFailure                    485
+#define SMSError_UserNotFound                         486
+#define SMSError_PasswordMismatch                     487
+#define SMSError_GroupNotFound                        488
+#define SMSError_ExceptionEncountered                 489
+
 
 #define SmscRouterError_TypeSMPP     1
 #define SmscRouterError_TypeGSM      2
@@ -52,7 +57,10 @@ __attribute__((__objc_exception__))
     SmppErrorCode               _smppErr;
     GSMErrorCode                _gsmErr;
     SmscRouterInternalError     _internalErr;
+    NSString                    *_humanReadable;
 }
+
+@property(readwrite,strong)     NSString *humanReadable;
 
 -(int) errorTypes;
 
