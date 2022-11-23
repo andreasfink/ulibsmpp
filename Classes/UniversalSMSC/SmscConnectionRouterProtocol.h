@@ -51,6 +51,10 @@
 - (BOOL) userExists:(NSString *)username;
 
 @optional
-- (BOOL) isAddressWhitelisted:(NSString *)ipaddress;
-- (BOOL) isAddressWhitelisted:(NSString *)ipaddress forUser:(id<SmscConnectionUserProtocol>)user;
+- (BOOL) isAddressWhitelisted:(NSString *)remoteIpAddress
+                   remotePort:(NSNumber *)remotePort
+               localIpAddress:(NSString *)localIpAddress
+                    localPort:(NSNumber *)localPort
+                  serviceType:(NSString *)serviceType
+                         user:(NSString *)username;
 @end

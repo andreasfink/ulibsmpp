@@ -757,9 +757,16 @@ end:
 					{
                         TRACK_FILE_ADD_COMMENT_FOR_FDES([_uc sock],@"accept");
                         BOOL doAccept = YES;
-                        if([_router respondsToSelector:@selector(isAddressWhitelisted:)])
+                        
+                        if([_router respondsToSelector:@selector(isAddressWhitelisted:remotePort:localIpAddress:localPort:serviceType:user:)])
                         {
-                            doAccept = [_router isAddressWhitelisted:newUc.connectedRemoteAddress];
+                            doAccept = [_router isAddressWhitelisted:newUc.connectedRemoteAddress
+                                                          remotePort:@(newUc.connectedRemotePort)
+                                                      localIpAddress:newUc.connectedLocalAddress
+                                                           localPort:@(newUc.connectedLocalPort)
+                                                         serviceType:@"smpp"
+                                                                user:NULL];
+
                         }
                         if(doAccept)
                         {
@@ -1812,9 +1819,14 @@ end:
             if ([_user hasCredits])
             {
                 BOOL doAccept=YES;
-                if([_router respondsToSelector:@selector(isAddressWhitelisted:forUser:)])
+                if([_router respondsToSelector:@selector(isAddressWhitelisted:remotePort:localIpAddress:localPort:serviceType:user:)])
                 {
-                    doAccept = [_router isAddressWhitelisted:_uc.connectedRemoteAddress forUser:_user];
+                    doAccept = [_router isAddressWhitelisted:_uc.connectedRemoteAddress
+                                                  remotePort:@(_uc.connectedRemotePort)
+                                              localIpAddress:_uc.connectedLocalAddress
+                                                   localPort:@(_uc.connectedLocalPort)
+                                                 serviceType:@"smpp"
+                                                        user:_user];
                 }
                 if(doAccept)
                 {
