@@ -1826,7 +1826,7 @@ end:
                                               localIpAddress:_uc.connectedLocalAddress
                                                    localPort:@(_uc.connectedLocalPort)
                                                  serviceType:@"smpp"
-                                                        user:_user];
+                                                        user:_user.username];
                 }
                 if(doAccept)
                 {
