@@ -34,6 +34,7 @@ typedef int SmscRouterInternalError;
 #define SMSError_GroupNotFound                        488
 #define SMSError_ExceptionEncountered                 489
 #define SMSError_NotImplemented                       490
+#define SMSError_OperationFailed                      491
 
 
 #define SmscRouterError_TypeSMPP     1
