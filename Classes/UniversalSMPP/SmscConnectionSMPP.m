@@ -1055,7 +1055,8 @@ end:
                 [_uc sendString:@"\r\n"];
                 [_uc sendString:@"<html>\r\n"];
                 [_uc sendString:@"<head>\r\n"];
-                [_uc sendString:@"<title>Wrong Port</title>\r\n"];
+                [_uc sendString:@"    <title>Wrong Port</title>\r\n"];
+                [_uc sendString:@"    <meta charset=\"UTF-8\">"];
                 [_uc sendString:@"</head>\r\n"];
                 [_uc sendString:@"<body>\r\n"];
                 [_uc sendString:@"  <h2>Wrong Port</h2>\r\n"];
