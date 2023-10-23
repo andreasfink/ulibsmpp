@@ -7,11 +7,11 @@
 //
 
 
-#import "GsmCharSet.h"
-#import "NSData+HexFunctions.h"
-#import "NSString+HexFunctions.h"
-#import "PointCode.h"
-#import "UMSigAddr.h"
-#import "UMPrefs.h"
-#import "PriorityQueue.h"
-#import "UMSigAddrWithHistory.h"
+#import <ulibsmpp/UniversalSMSUtilities/GsmCharSet.h>
+#import <ulibsmpp/UniversalSMSUtilities/NSData+HexFunctions.h>
+#import <ulibsmpp/UniversalSMSUtilities/NSString+HexFunctions.h>
+#import <ulibsmpp/UniversalSMSUtilities/PointCode.h>
+#import <ulibsmpp/UniversalSMSUtilities/UMSigAddr.h>
+#import <ulibsmpp/UniversalSMSUtilities/UMPrefs.h>
+#import <ulibsmpp/UniversalSMSUtilities/PriorityQueue.h>
+#import <ulibsmpp/UniversalSMSUtilities/UMSigAddrWithHistory.h>

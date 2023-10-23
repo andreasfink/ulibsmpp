@@ -5,11 +5,11 @@
 //  Copyright 2008-2014 Andreas Fink, Paradieshofstrasse 101, 4054 Basel, Switzerland
 //
 
-#import <Foundation/Foundation.h>
-#import "SmppErrorCode.h"
-#import "UniversalSMSUtilities.h"
-#import "UniversalSMSC.h"
+#import <ulib/ulib.h>
+#import <ulibsmpp/UniversalSMPP/SmppErrorCode.h>
+#import <ulibsmpp/UniversalSMSUtilities/UniversalSMSUtilities.h>
+#import <ulibsmpp/UniversalSMSC/UniversalSMSC.h>
 
-#import "SmscConnectionSMPP.h"
-#import "SmppPdu.h"
-#import "GSMErrorCode.h"
+#import <ulibsmpp/UniversalSMPP/SmscConnectionSMPP.h>
+#import <ulibsmpp/UniversalSMPP/SmppPdu.h>
+#import <ulibsmpp/UniversalSMPP/GSMErrorCode.h>
