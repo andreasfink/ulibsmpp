@@ -8,12 +8,12 @@
 
 #import <Foundation/Foundation.h>
 
-#import "ulib/ulib.h"
-#import "UniversalSMPP.h"
-#import "UniversalEMIUCP.h"
-#import "UniversalSMSC.h"
-#import "UniversalSMPP.h"
-#import "UniversalSMSUtilities.h"
+#import <ulib/ulib.h>
+#import <ulibsmpp/UniversalSMPP.h>
+#import <ulibsmpp/UniversalEMIUCP.h>
+#import <ulibsmpp/UniversalSMSC.h>
+#import <ulibsmpp/UniversalSMPP.h>
+#import <ulibsmpp/UniversalSMSUtilities.h>
 
 @interface ulibsmpp : NSObject
 {

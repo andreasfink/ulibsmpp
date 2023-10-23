@@ -10,7 +10,7 @@
 #import <ulibasn1/ulibasn1.h>
 #import "GSMErrorCode.h"
 //#import "SmscConnectionErrorCode.h"
-#import "SmppErrorCode.h"
+#import <ulibsmpp/UniversalSMPP/SmppErrorCode.h>
 #import "DeliveryReportErrorCode.h"
 
 typedef enum UMSmscRouterErrorTag
