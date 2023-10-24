@@ -7,7 +7,7 @@
 //
 
 #import <ulib/ulib.h>
-#import "SmscConnectionReportProtocol.h"
+#import <ulibsmpp/SmscConnectionReportProtocol.h>
 
 @interface SmscStandardReport : UMObject <SmscConnectionReportProtocol>
 {

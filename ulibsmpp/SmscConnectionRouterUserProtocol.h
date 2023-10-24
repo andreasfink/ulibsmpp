@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "SmscConnectionMessagePassingProtocol.h"
+#import <ulibsmpp/SmscConnectionMessagePassingProtocol.h>
 
 @protocol SmscConnectionMessageProtocol;
 @protocol SmscConnectionReportProtocol;

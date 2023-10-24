@@ -6,7 +6,7 @@
 //  Copyright 2008-2014 Andreas Fink, Paradieshofstrasse 101, 4054 Basel, Switzerland
 //
 
-#import "UniversalSMSUtilities.h"
+#import <ulibsmpp/UniversalSMSUtilities.h>
 
 @protocol SmscConnectionUserProtocol<NSObject>
 

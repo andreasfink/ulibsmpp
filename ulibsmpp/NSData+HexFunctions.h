@@ -9,7 +9,7 @@
 #if 0
 
 #import <Foundation/Foundation.h>
-#import "NSString+HexFunctions.h"
+#import <ulibsmpp/NSString+HexFunctions.h>
 
 
 @interface NSData (DataHexFunctions)

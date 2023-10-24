@@ -6,8 +6,8 @@
 //  Copyright 2008-2014 Andreas Fink, Paradieshofstrasse 101, 4054 Basel, Switzerland
 //
 
-#import "SmscConnectionMessageProtocol.h"
-#import "SmscConnectionReportProtocol.h"
+#import <ulibsmpp/SmscConnectionMessageProtocol.h>
+#import <ulibsmpp/SmscConnectionReportProtocol.h>
 //#import "SmscConnectionErrorCode.h"
 
 @protocol SmscConnectionTransactionProtocol<NSObject>

@@ -8,9 +8,9 @@
 
 #import <Foundation/Foundation.h>
 
-#import "SmscConnectionMessageProtocol.h"
-#import "SmscConnectionTransactionProtocol.h"
-#import "SmscConnectionReportProtocol.h"
+#import <ulibsmpp/SmscConnectionMessageProtocol.h>
+#import <ulibsmpp/SmscConnectionTransactionProtocol.h>
+#import <ulibsmpp/SmscConnectionReportProtocol.h>
 
 typedef enum SmscConnectionTransactionType
 {

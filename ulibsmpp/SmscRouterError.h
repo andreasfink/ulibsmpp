@@ -8,9 +8,9 @@
 
 #import <ulib/ulib.h>
 #import <ulibasn1/ulibasn1.h>
-#import "GSMErrorCode.h"
+#import <ulibsmpp/GSMErrorCode.h>
 #import <ulibsmpp/SmppErrorCode.h>
-#import "DeliveryReportErrorCode.h"
+#import <ulibsmpp/DeliveryReportErrorCode.h>
 
 typedef enum UMSmscRouterErrorTag
 {

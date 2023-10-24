@@ -7,10 +7,9 @@
 //
 
 #if 0
-#import "NSString+HexFunctions.h"
-#import "NSData+HexFunctions.h"
-
-#import "GsmCharSet.h"
+#import <ulibsmpp/NSString+HexFunctions.h>
+#import <ulibsmpp/NSData+HexFunctions.h>
+#import <ulibsmpp/GsmCharSet.h>
 
 @implementation NSString (SMSUtilitiesHexFunctions)
 
