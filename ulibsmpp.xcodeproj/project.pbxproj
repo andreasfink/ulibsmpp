@@ -357,17 +357,9 @@
 				A6DDD9D1163621FD002FA7CC /* NSString+UniversalSMPP.m */,
 				A6DDD9D51636221A002FA7CC /* NSMutableString+UniversalSMPP.h */,
 				A6DDD9D61636221A002FA7CC /* NSMutableString+UniversalSMPP.m */,
-				A6EF387B1A19F3D40090FC94 /* UniversalEMIUCP */,
-				A6DDD92F1635FD4B002FA7CC /* UniversalSMPP */,
-				A6DDD9361635FD4B002FA7CC /* UniversalSMSC */,
-				A6DDD9441635FD4B002FA7CC /* UniversalSMSUtilities */,
-			);
-			path = ulibsmpp;
-			sourceTree = "<group>";
-		};
-		A6DDD92F1635FD4B002FA7CC /* UniversalSMPP */ = {
-			isa = PBXGroup;
-			children = (
+				A6BCC8F62AE6DF5300C34D40 /* UniversalEMIUCP.h */,
+				A6BCC8F72AE6DF5300C34D40 /* SmscConnectionEMIUCP.h */,
+				A6BCC8F82AE6DF5300C34D40 /* SmscConnectionEMIUCP.m */,
 				A6BCC8E52AE6DF3900C34D40 /* UniversalSMPP.h */,
 				A6BCC8E32AE6DF3900C34D40 /* SmppErrorCode.h */,
 				A6BCC8EA2AE6DF3900C34D40 /* SmppMultiResult.h */,
@@ -378,13 +370,6 @@
 				A6BCC8E92AE6DF3900C34D40 /* SmppTlv.m */,
 				A6BCC8E22AE6DF3900C34D40 /* SmscConnectionSMPP.h */,
 				A6BCC8E82AE6DF3900C34D40 /* SmscConnectionSMPP.m */,
-			);
-			path = UniversalSMPP;
-			sourceTree = "<group>";
-		};
-		A6DDD9361635FD4B002FA7CC /* UniversalSMSC */ = {
-			isa = PBXGroup;
-			children = (
 				A6BCC8A92AE6DF2600C34D40 /* DeliveryReportErrorCode.h */,
 				A6BCC8BD2AE6DF2600C34D40 /* GSMErrorCode.h */,
 				A6BCC8BF2AE6DF2600C34D40 /* SmscConnection.h */,
@@ -415,13 +400,6 @@
 				A6BCC8B02AE6DF2600C34D40 /* SmscStandardReport.h */,
 				A6BCC8BE2AE6DF2600C34D40 /* SmscStandardReport.m */,
 				A6BCC8A62AE6DF2600C34D40 /* UniversalSMSC.h */,
-			);
-			path = UniversalSMSC;
-			sourceTree = "<group>";
-		};
-		A6DDD9441635FD4B002FA7CC /* UniversalSMSUtilities */ = {
-			isa = PBXGroup;
-			children = (
 				A6DDD95E1635FD4B002FA7CC /* UniversalSMSUtilities.h */,
 				A6BCC8862AE6DF0700C34D40 /* GsmCharSet.h */,
 				A6BCC87C2AE6DF0700C34D40 /* GsmCharSet.m */,
@@ -447,17 +425,7 @@
 				A6BCC8852AE6DF0700C34D40 /* UMSigAddrWithHistory.h */,
 				A6BCC8772AE6DF0700C34D40 /* UMSigAddrWithHistory.m */,
 			);
-			path = UniversalSMSUtilities;
-			sourceTree = "<group>";
-		};
-		A6EF387B1A19F3D40090FC94 /* UniversalEMIUCP */ = {
-			isa = PBXGroup;
-			children = (
-				A6BCC8F62AE6DF5300C34D40 /* UniversalEMIUCP.h */,
-				A6BCC8F72AE6DF5300C34D40 /* SmscConnectionEMIUCP.h */,
-				A6BCC8F82AE6DF5300C34D40 /* SmscConnectionEMIUCP.m */,
-			);
-			path = UniversalEMIUCP;
+			path = ulibsmpp;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
