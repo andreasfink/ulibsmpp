@@ -6,8 +6,8 @@
 //
 //
 
-#import "ulib/ulib.h"
-#import "SmppErrorCode.h"
+#import <ulib/ulib.h>
+#import <ulibsmpp/SmppErrorCode.h>
 
 @class UMSigAddr;
 

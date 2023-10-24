@@ -6,9 +6,9 @@
 //  Copyright 2008-2014 Andreas Fink, Paradieshofstrasse 101, 4054 Basel, Switzerland
 //
 
-#import "UniversalSMSUtilities.h"
-#import "SmscConnectionMessageProtocol.h"
-#import "SmscRouterError.h"
+#import <ulibsmpp/UniversalSMSUtilities.h>
+#import <ulibsmpp/SmscConnectionMessageProtocol.h>
+#import <ulibsmpp/SmscRouterError.h>
 
 typedef enum DeliveryReportType
 {

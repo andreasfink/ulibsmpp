@@ -6,7 +6,7 @@
 //  Copyright 2008-2014 Andreas Fink, Paradieshofstrasse 101, 4054 Basel, Switzerland all rights reserved.
 //
 
-#import "NSString+UniversalSMPP.h"
+#import <ulibsmpp/NSString+UniversalSMPP.h>
 #include <stdlib.h>
 #include <string.h>
 

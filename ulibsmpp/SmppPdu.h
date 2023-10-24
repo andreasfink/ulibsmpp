@@ -8,10 +8,10 @@
 
 #import <Foundation/Foundation.h>
 
-#import "UniversalSMSC.h"
-#import "SmppErrorCode.h"
-#import "SmppTlv.h"
-#import "SmppMultiResult.h"
+#import <ulibsmpp/UniversalSMSC.h>
+#import <ulibsmpp/SmppErrorCode.h>
+#import <ulibsmpp/SmppTlv.h>
+#import <ulibsmpp/SmppMultiResult.h>
 
 typedef	enum SmppReportingEntity
 {

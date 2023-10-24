@@ -10,10 +10,11 @@
 #import <ulib/ulib.h>
 #import <ulibsmpp/UniversalSMSUtilities.h>
 
-#import "SmscConnectionProtocol.h"
-#import "SmscConnectionRouterProtocol.h"
-#import "SmscConnectionMessagePassingProtocol.h"
-#import "SmscConnectionReadyProtocol.h"
+#import <ulibsmpp/SmscConnectionProtocol.h>
+#import <ulibsmpp/SmscConnectionRouterProtocol.h>
+#import <ulibsmpp/SmscConnectionMessagePassingProtocol.h>
+#import <ulibsmpp/SmscConnectionReadyProtocol.h>
+
 @class SmscConnectionTransaction;
 
 #define	SMSC_CONNECTION_DEFAULT_RECEIVE_POLL_TIMEOUT_MS		2000	/* poll timer for receive. in milliseconds */

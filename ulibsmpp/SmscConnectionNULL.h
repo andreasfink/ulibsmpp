@@ -8,7 +8,7 @@
 // positive delivery reports
 
 #import <ulib/ulib.h>
-#import "SmscConnection.h"
+#import <ulibsmpp/SmscConnection.h>
 
 @interface SmscConnectionNULL : SmscConnection
 

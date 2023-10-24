@@ -8,8 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
-#import "UniversalSMSC.h"
-#import "SmppPdu.h"
+#import <ulibsmpp/UniversalSMSC.h>
+#import <ulibsmpp/SmppPdu.h>
 
 #define	SMSC_DEFAULT_SMPP_PORT	5002
 #define MIN_SMPP_PDU_LEN        (4*4)

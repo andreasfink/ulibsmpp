@@ -33,8 +33,8 @@
  
  */
  
-#import "SmscConnectionMessageProtocol.h"
-#import "SmscConnectionReportProtocol.h"
+#import <ulibsmpp/SmscConnectionMessageProtocol.h>
+#import <ulibsmpp/SmscConnectionReportProtocol.h>
 
 @protocol SmscConnectionMessagePassingProtocol<NSObject>
 

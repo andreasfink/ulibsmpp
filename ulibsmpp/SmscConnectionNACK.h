@@ -6,8 +6,8 @@
 //
 // An SMSC which always return NACK on submit or deliver
 
-#import "SmscConnection.h"
-#import "SmscConnectionMessagePassingProtocol.h"
+#import <ulibsmpp/SmscConnection.h>
+#import <ulibsmpp/SmscConnectionMessagePassingProtocol.h>
 
 @interface SmscConnectionNACK : SmscConnection
 

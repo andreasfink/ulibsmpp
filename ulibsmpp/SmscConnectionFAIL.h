@@ -6,8 +6,8 @@
 //
 // An SMSC implementation which always return a failed delivery report
 
-#import "SmscConnection.h"
-#import "SmscConnectionMessagePassingProtocol.h"
+#import <ulibsmpp/SmscConnection.h>
+#import <ulibsmpp/SmscConnectionMessagePassingProtocol.h>
 
 
 @interface SmscConnectionFAIL : SmscConnection

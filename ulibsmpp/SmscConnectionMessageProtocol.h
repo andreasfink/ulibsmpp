@@ -7,9 +7,9 @@
 //  Copyright 2008-2014 Andreas Fink, Paradieshofstrasse 101, 4054 Basel, Switzerland
 //
 
-#import "ulib/ulib.h"
-#import "UniversalSMSUtilities.h"
-#import "SmscConnectionUserProtocol.h"
+#import <ulib/ulib.h>
+#import <ulibsmpp/UniversalSMSUtilities.h>
+#import <ulibsmpp/SmscConnectionUserProtocol.h>
 /* this is the protocol a ShortMessage object must support as a minimum so a SMSC driver can fill a message it gets from the router */
 
 #define	SMS_PARAM_UNDEFINED		-1

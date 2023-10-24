@@ -7,8 +7,8 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "ulib/ulib.h"
-#import "UniversalSMSUtilities.h"
+#import <ulib/ulib.h>
+#import <ulibsmpp/UniversalSMSUtilities.h"
 
 #import "SmscConnectionMessageProtocol.h"
 #import "SmscConnectionReportProtocol.h"

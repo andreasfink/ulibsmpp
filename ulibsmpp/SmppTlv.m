@@ -6,7 +6,7 @@
 //
 //
 
-#import "SmppTlv.h"
+#import <ulibsmpp/SmppTlv.h>
 
 @implementation SmppTlv
 

@@ -6,12 +6,12 @@
 //
 // An SMSC which always return Failed
 
-#import "SmscConnectionNACK.h"
 #import <ulib/ulib.h>
 #include <sys/signal.h>
 #include <unistd.h> /* for usleep */
-#import "NSMutableString+UniversalSMPP.h"
-#import "NSString+UniversalSMPP.h"
+#import <ulibsmpp/SmscConnectionNACK.h>
+#import <ulibsmpp/NSMutableString+UniversalSMPP.h>
+#import <ulibsmpp/NSString+UniversalSMPP.h>
 
 @implementation SmscConnectionNACK
 

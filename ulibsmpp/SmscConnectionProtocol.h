@@ -8,13 +8,13 @@
 
 #import <Foundation/Foundation.h>
 
-#import "ulib/ulib.h"
+#import <ulib/ulib.h>
 
-#import "SmscConnectionMessageProtocol.h"
-#import "SmscConnectionReportProtocol.h"
-#import "SmscConnectionRouterProtocol.h"
-#import "SmscConnectionRouterUserProtocol.h"
-#import "SmscConnectionTransactionProtocol.h"
+#import <ulibsmpp/SmscConnectionMessageProtocol.h>
+#import <ulibsmpp/SmscConnectionReportProtocol.h>
+#import <ulibsmpp/SmscConnectionRouterProtocol.h>
+#import <ulibsmpp/SmscConnectionRouterUserProtocol.h>
+#import <ulibsmpp/SmscConnectionTransactionProtocol.h>
 
 /* this is what a object which wants to submit messages to the router should obey to */
 

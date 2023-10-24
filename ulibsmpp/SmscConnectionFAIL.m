@@ -6,14 +6,14 @@
 //
 // An SMSC which always return Failed
 
-#import "SmscConnectionFAIL.h"
 #import <ulib/ulib.h>
 #include <sys/signal.h>
 #include <unistd.h> /* for usleep */
-#import "NSMutableString+UniversalSMPP.h"
-#import "NSString+UniversalSMPP.h"
-#import "SmppErrorCode.h"
-#import "SmscRouterError.h"
+#import <ulibsmpp/SmscConnectionFAIL.h>
+#import <ulibsmpp/NSMutableString+UniversalSMPP.h>
+#import <ulibsmpp/NSString+UniversalSMPP.h>
+#import <ulibsmpp/SmppErrorCode.h>
+#import <ulibsmpp/SmscRouterError.h>
 
 @implementation SmscConnectionFAIL
 
