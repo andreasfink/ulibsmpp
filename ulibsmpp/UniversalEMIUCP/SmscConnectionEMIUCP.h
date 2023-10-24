@@ -8,7 +8,7 @@
 
 
 #import <ulib/ulib.h>
-#import <ulibsmpp/UniversalSMSC/SmscConnection.h>
+#import <ulibsmpp/SmscConnection.h>
 
 @interface SmscConnectionEMIUCP : SmscConnection
 

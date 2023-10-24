@@ -6,10 +6,10 @@
 //
 
 #import <ulib/ulib.h>
-#import <ulibsmpp/UniversalSMPP/SmppErrorCode.h>
-#import <ulibsmpp/UniversalSMSUtilities/UniversalSMSUtilities.h>
-#import <ulibsmpp/UniversalSMSC/UniversalSMSC.h>
+#import <ulibsmpp/SmppErrorCode.h>
+#import <ulibsmpp/UniversalSMSUtilities.h>
+#import <ulibsmpp/UniversalSMSC.h>
 
-#import <ulibsmpp/UniversalSMPP/SmscConnectionSMPP.h>
-#import <ulibsmpp/UniversalSMPP/SmppPdu.h>
-#import <ulibsmpp/UniversalSMPP/GSMErrorCode.h>
+#import <ulibsmpp/SmscConnectionSMPP.h>
+#import <ulibsmpp/SmppPdu.h>
+#import <ulibsmpp/GSMErrorCode.h>

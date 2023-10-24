@@ -7,7 +7,7 @@
 //
 
 #import <ulib/ulib.h>
-#import <ulibsmpp/UniversalSMSC/SmscConnectionNULL.h>
+#import <ulibsmpp/SmscConnectionNULL.h>
 #include <sys/signal.h>
 #include <unistd.h> /* for usleep */
 #import "NSMutableString+UniversalSMPP.h"

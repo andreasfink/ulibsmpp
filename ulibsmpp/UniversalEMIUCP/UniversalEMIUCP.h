@@ -6,4 +6,4 @@
 //
 //
 
-#import <ulibsmpp/UniversaEMIUCP/SmscConnectionEMIUCP.h>
+#import <ulibsmpp/SmscConnectionEMIUCP.h>
