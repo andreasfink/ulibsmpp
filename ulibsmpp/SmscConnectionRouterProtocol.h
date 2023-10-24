@@ -8,15 +8,15 @@
 
 #import <Foundation/Foundation.h>
 #import <ulib/ulib.h>
-#import <ulibsmpp/UniversalSMSUtilities.h"
+#import <ulibsmpp/UniversalSMSUtilities.h>
 
-#import "SmscConnectionMessageProtocol.h"
-#import "SmscConnectionReportProtocol.h"
+#import <ulibsmpp/SmscConnectionMessageProtocol.h>
+#import <ulibsmpp/SmscConnectionReportProtocol.h>
 //#import "SmscConnectionRouterProtocol.h"
-#import "SmscConnectionUserProtocol.h"
-#import "SmscConnectionProtocol.h"
-#import "SmscConnectionRouterUserProtocol.h"
-#import "SmscRouterError.h"
+#import <ulibsmpp/SmscConnectionUserProtocol.h>
+#import <ulibsmpp/SmscConnectionProtocol.h>
+#import <ulibsmpp/SmscConnectionRouterUserProtocol.h>
+#import <ulibsmpp/SmscRouterError.h>
 
 @protocol SmscConnectionRouterProtocol<NSObject,SmscConnectionRouterUserProtocol>
 
