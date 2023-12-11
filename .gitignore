@@ -12,7 +12,8 @@ config.log
 config.status
 stamp-h1
 autom4te.cache
-Classes/ulib_config.h
+ulibsmpp/ulibsmpp_config.h
+ulibsmpp.pc
 BUILDNR
 make_buildnr.sh
 buildnumber.c
