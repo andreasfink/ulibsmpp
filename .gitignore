@@ -18,6 +18,9 @@ BUILDNR
 make_buildnr.sh
 buildnumber.c
 buildnumber.h
+version.h
+ulibsmpp.xcodeproj/project.pbxproj.bck
+ulibsmpp.xcodeproj/project.xcworkspace/xcshareddata/
 
 
 #########################
