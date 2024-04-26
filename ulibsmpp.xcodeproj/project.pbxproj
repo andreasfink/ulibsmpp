@@ -536,7 +536,7 @@
 				ORGANIZATIONNAME = "";
 				TargetAttributes = {
 					22278AF1162D53D200633C39 = {
-						DevelopmentTeam = 2GSNWPNR77;
+						DevelopmentTeam = 38L827M334;
 						ProvisioningStyle = Automatic;
 					};
 					22567EDF1AEA6FA500603C7A = {
@@ -829,7 +829,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 2.0.0;
-				DEVELOPMENT_TEAM = 2GSNWPNR77;
+				DEVELOPMENT_TEAM = 38L827M334;
 				MACOSX_DEPLOYMENT_TARGET = 13.1;
 				MARKETING_VERSION = 2.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = me.fink.ulibsmpp;
@@ -845,7 +845,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 2.0.0;
-				DEVELOPMENT_TEAM = 2GSNWPNR77;
+				DEVELOPMENT_TEAM = 38L827M334;
 				MACOSX_DEPLOYMENT_TARGET = 13.1;
 				MARKETING_VERSION = 2.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = me.fink.ulibsmpp;
