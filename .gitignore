@@ -3,6 +3,10 @@
 # gitignore contributors: remember to update Global/Xcode.gitignore, Objective-C.gitignore & Swift.gitignore
 
 *.o
+*.d
+install
+libulibsmpp.a
+libulibsmpp.so
 Makefile
 Makefile.linux
 Makefile.osx
