@@ -284,8 +284,8 @@ const SmppErrorCodeListEntry SmppErrorCodeList[] =
 
 - (UMSocketError) sendPduWithNewSeq:(SmppPdu *)pdu
 {
-    [_sendLock lock];
-	_lastSeq++;
+    UMMUTEX_LOCK(_sendLock);
+    _lastSeq++;
 	_lastSeq %= 0x7FFFFFFF;
     if(_lastSeq == 0)
     {
@@ -293,26 +293,26 @@ const SmppErrorCodeListEntry SmppErrorCodeList[] =
     }
 	[pdu setSeq:_lastSeq];
 	int ret = [self _sendPdu:pdu];
-    [_sendLock unlock];
+    UMMUTEX_UNLOCK(_sendLock);
     return ret;
 }
 
 - (UMSocketError) sendPdu:(SmppPdu *)pdu
        withSequenceString:(NSString *)seqStr
 {
-    [_sendLock lock];
+    UMMUTEX_LOCK(_sendLock);
 	[pdu setSequenceString:seqStr];
     int ret = [self _sendPdu:pdu];
-    [_sendLock unlock];
+    UMMUTEX_UNLOCK(_sendLock);
     return ret;
 }
 
 - (UMSocketError) sendPdu:(SmppPdu *)pdu withSeq:(SmppPduSequence)seq
 {
-    [_sendLock lock];
+    UMMUTEX_LOCK(_sendLock);
 	[pdu setSeq:seq];
     int ret = [self _sendPdu:pdu];
-    [_sendLock unlock];
+    UMMUTEX_UNLOCK(_sendLock);
     return ret;
 }
 
