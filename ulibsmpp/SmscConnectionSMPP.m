@@ -134,8 +134,8 @@ const SmppErrorCodeListEntry SmppErrorCodeList[] =
         [super setType: @"smpp"];
         _txSleeper = [[UMSleeper alloc]initFromFile:__FILE__ line:__LINE__ function:__func__];
         _cxSleeper = [[UMSleeper alloc]initFromFile:__FILE__ line:__LINE__ function:__func__];
-        _sendLock = [[NSLock alloc] init];
-        _trnLock = [[NSLock alloc] init];
+        _sendLock = [[UMMutex alloc] initWithName:@"smpp-send-lock"];
+        _trnLock = [[UMMutex alloc] initWithName:@"smpp-trn-lock"];
         _smppMessageIdType = -1;
         _tlvDefs = [[NSDictionary alloc] init];
         self.lastActivity = [NSDate new];
@@ -284,7 +284,7 @@ const SmppErrorCodeListEntry SmppErrorCodeList[] =
 
 - (UMSocketError) sendPduWithNewSeq:(SmppPdu *)pdu
 {
-    UMMUTEX_LOCK(_sendLock);
+    ummutex_lock(_sendLock);
     _lastSeq++;
 	_lastSeq %= 0x7FFFFFFF;
     if(_lastSeq == 0)
@@ -293,26 +293,26 @@ const SmppErrorCodeListEntry SmppErrorCodeList[] =
     }
 	[pdu setSeq:_lastSeq];
 	int ret = [self _sendPdu:pdu];
-    UMMUTEX_UNLOCK(_sendLock);
+    ummutex_unock(_sendLock);
     return ret;
 }
 
 - (UMSocketError) sendPdu:(SmppPdu *)pdu
        withSequenceString:(NSString *)seqStr
 {
-    UMMUTEX_LOCK(_sendLock);
+    ummutex_lock(_sendLock);
 	[pdu setSequenceString:seqStr];
     int ret = [self _sendPdu:pdu];
-    UMMUTEX_UNLOCK(_sendLock);
+    ummutex_unlock(_sendLock);
     return ret;
 }
 
 - (UMSocketError) sendPdu:(SmppPdu *)pdu withSeq:(SmppPduSequence)seq
 {
-    UMMUTEX_LOCK(_sendLock);
+    ummutex_lock(_sendLock);
 	[pdu setSeq:seq];
     int ret = [self _sendPdu:pdu];
-    UMMUTEX_UNLOCK(_sendLock);
+    ummutex_unlock(_sendLock);
     return ret;
 }
 

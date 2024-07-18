@@ -84,8 +84,8 @@ typedef enum SMPPConnectionMode
 
 @interface SmscConnectionSMPP : SmscConnection <SmscConnectionProtocol,SmscConnectionRouterUserProtocol>
 {
-	NSLock				*_sendLock;
-	NSLock				*_trnLock;
+	UMMutex 			*_sendLock;
+    UMMutex 			*_trnLock;
 	uint32_t			_lastSeq;
 //	EmiUcpPendingTransaction slots[EMI2_MAX_TRN];
 	SmppIncomingReceiverThreadStatus _runIncomingReceiverThread;

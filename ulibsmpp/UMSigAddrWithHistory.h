@@ -7,7 +7,7 @@
 
 #import <ulib/ulib.h>
 #import <ulibsmpp/UMSigAddr.h>
-
+U
 @interface UMSigAddrWithHistory : UMObjectWithHistory
 {
     
