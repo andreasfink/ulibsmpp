@@ -293,7 +293,7 @@ const SmppErrorCodeListEntry SmppErrorCodeList[] =
     }
 	[pdu setSeq:_lastSeq];
 	int ret = [self _sendPdu:pdu];
-    ummutex_unock(_sendLock);
+    ummutex_unlock(_sendLock);
     return ret;
 }
 
