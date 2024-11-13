@@ -1963,6 +1963,16 @@ end:
 
 - (void) handleIncomingQuerySm: (SmppPdu *)pdu
 {
+    
+    NSString *messageId = [pdu grabStringWithEncoding:NSUTF8StringEncoding maxLength:65];
+    [pdu grabStringWithEncoding:NSISOLatin1StringEncoding    maxLength:255];
+    UMTonType   ton  = (UMTonType)[pdu grabInt8];
+    UMNpiType   npi  = (UMNpiType)[pdu grabInt8];
+    NSString *addr = [pdu grabStringWithEncoding:NSISOLatin1StringEncoding maxLength:21];
+
+    id<SmscConnectionMessageProtocol> msg;
+    SmppPdu *pdu2 = SmppPdu SMPP_OutgoingQueryRespOK( msg,const char *msg_id);
+    [self sendPdu: pdu2 asResponseTo:pdu];
 }
 
 - (void) handleIncomingQuerySmResp: (SmppPdu *)pdu
