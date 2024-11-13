@@ -1963,15 +1963,23 @@ end:
 
 - (void) handleIncomingQuerySm: (SmppPdu *)pdu
 {
+    SmppPdu *pdu2 = NULL;
     
     NSString *messageId = [pdu grabStringWithEncoding:NSUTF8StringEncoding maxLength:65];
     [pdu grabStringWithEncoding:NSISOLatin1StringEncoding    maxLength:255];
-    UMTonType   ton  = (UMTonType)[pdu grabInt8];
-    UMNpiType   npi  = (UMNpiType)[pdu grabInt8];
-    NSString *addr = [pdu grabStringWithEncoding:NSISOLatin1StringEncoding maxLength:21];
-
-    id<SmscConnectionMessageProtocol> msg;
-    SmppPdu *pdu2 = SmppPdu SMPP_OutgoingQueryRespOK( msg,const char *msg_id);
+    UMTonType ton       = (UMTonType)[pdu grabInt8];
+    UMNpiType npi       = (UMNpiType)[pdu grabInt8];
+    NSString *addr      = [pdu grabStringWithEncoding:NSISOLatin1StringEncoding maxLength:21];
+    
+    if([_router respondsToSelector:@selector(queryMessage:)])
+    {
+        id<SmscConnectionMessageProtocol> msg = [_router queryMessage:messageId];
+        pdu2 = [SmppPdu OutgoingQueryRespOK:msg withId:messageId];
+    }
+    else
+    {
+        pdu2 = [SmppPdu OutgoingGenericNack:ESME_RQUERYFAIL];
+    }
     [self sendPdu: pdu2 asResponseTo:pdu];
 }
 
