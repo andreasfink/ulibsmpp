@@ -2992,8 +2992,6 @@ length_error:
         _runOutgoingReceiverThread = SMPP_ORT_STARTING;
         _endPermanently = NO;
         [self runSelectorInBackground:@selector(outgoingReceiverThread)];
-
-    //    [NSThread detachNewThreadSelector:@selector(outgoingReceiverThread) toTarget:self withObject:nil];
         while ((_runOutgoingReceiverThread != SMPP_ORT_RUNNING) && (i<100))
         {
             usleep(10000);
@@ -3033,70 +3031,83 @@ length_error:
     @autoreleasepool
     {
         ulib_set_thread_name([NSString stringWithFormat:@"[SmscConnectionSMPP outgoingReceiverThread] %@",_uc.description]);
-        
+        if(_name==NULL)
+        {
+            _name = _uc.description;
+        }
         if(_runOutgoingReceiverThread != SMPP_ORT_STARTING)
         {
             NSLog(@"wrong status %u for runOutgoingReceiverThread", _runIncomingReceiverThread);
+            return;
         }
-        
+        if(_receivePollTimeoutMs <= 0)
+        {
+            _receivePollTimeoutMs = SMSC_CONNECTION_DEFAULT_RECEIVE_POLL_TIMEOUT_MS; /* default to 500ms */
+        }
         NSString *msg = [NSString stringWithFormat:@"SmscConnectionSMPP outgoingReceiverThread]: outbound receiver thread %@ is starting\r\n", _name];
         [self.logFeed info:0 withText:msg];
         
         _runOutgoingReceiverThread = SMPP_ORT_RUNNING;
-        
-        if(_receivePollTimeoutMs <= 0)
-        {
-            _receivePollTimeoutMs = SMSC_CONNECTION_DEFAULT_RECEIVE_POLL_TIMEOUT_MS; /* default to 200ms */
-        }
-        
+                
         while ((!_endPermanently) && (!_endThisConnection) && (_runOutgoingReceiverThread==SMPP_ORT_RUNNING))
         {
             @autoreleasepool
             {
-                
-                UMSocketError err = UMSocketError_no_data;
-                
+                UMSocketError sErr = UMSocketError_no_data;
                 if (_runOutgoingReceiverThread!=SMPP_ORT_RUNNING)
                 {
                     _endThisConnection = YES;
                     continue;
                 }
-                err  = [_uc dataIsAvailable:_receivePollTimeoutMs];
-                if((err ==UMSocketError_has_data) || (err==UMSocketError_has_data_and_hup)) /* we received something */
+                sErr  = [_uc dataIsAvailable:_receivePollTimeoutMs];
+                if((sErr == UMSocketError_has_data) || (sErr==UMSocketError_has_data_and_hup)) /* we received something */
                 {
-                    UMSocketError err = [_uc receiveToBufferWithBufferLimit: 10240];
-                    if(err==UMSocketError_no_error)
+                    UMSocketError sErr2 = [_uc receiveToBufferWithBufferLimit: 10240];
+                    if(sErr2 == UMSocketError_has_data_and_hup)
+                    {
+                        sErr2 = UMSocketError_has_data;
+                    }
+                    if((sErr2== UMSocketError_no_data) || (sErr2==UMSocketError_connection_reset)) /* HUP */
+                    {
+                        NSString *msg = [NSString stringWithFormat:@"[SmscConnectionSMPP outgoingReceiverThread]: EOF read"];
+                        [self.logFeed info:0 inSubsection:@"outgoing receiver" withText:msg];
+                        _endThisConnection=YES;
+                    }
+                    else if((sErr2==UMSocketError_no_error) || (sErr2==UMSocketError_has_data))
                     {
                         [self checkForPackets];
                     }
-                    else
+                    else if(sErr2!=UMSocketError_try_again)
                     {
-                        NSString *msg = [NSString stringWithFormat:@"[SmscConnectionSMPP outgoingReceiverThread]: socket error %d when reading from socket\r\n", err];
-                        [self.logFeed info:0 inSubsection:@"outbound receiver" withText:msg];
-                        _endThisConnection = YES;
-                    }
-                    if(err==UMSocketError_has_data_and_hup)
-                    {
-                        NSString *msg = [NSString stringWithFormat:@"[SmscConnectionSMPP outgoingReceiverThread]: POLLHUP received"];
-                        [self.logFeed info:0 inSubsection:@"outbound receiver" withText:msg];
-                        _endThisConnection = YES;
+                        NSString *msg = [NSString stringWithFormat:@"[SmscConnectionSMPP outgoingReceiverThread]:socket error %d (%@) when reading a packet\r\n", sErr2, [UMSocket getSocketErrorString:sErr2]];
+                        [self.logFeed info:0 inSubsection:@"outgoing receiver" withText:msg];
+                        [self checkForPackets]; /* process whatever is left */
+                        _endThisConnection=YES;
+                        break;
                     }
                 }
-                else if(err == UMSocketError_try_again)
+                else if(sErr==UMSocketError_has_data_and_hup)
+                {
+                    [self checkForPackets]; /* process whatever is left */
+                    NSString *msg = [NSString stringWithFormat:@"[SmscConnectionSMPP outgoingReceiverThread]: POLLHUP received"];
+                    [self.logFeed info:0 inSubsection:@"outbound receiver" withText:msg];
+                    _endThisConnection=YES;
+                }
+                else if(sErr == UMSocketError_try_again)
                 {
                     usleep(10000);
                 }
-                else if (err == UMSocketError_no_error)
+                else if (sErr == UMSocketError_no_error)
                 {
                     usleep(10000);
                 }
-                else if (err == UMSocketError_no_data)
+                else if (sErr == UMSocketError_no_data)
                 {
                     usleep(10000);
                 }
                 else
                 {
-                    NSString *msg = [NSString stringWithFormat:@"[SmscConnectionSMPP outgoingReceiverThread]: socket error %d when socket returned\r\n", err];
+                    NSString *msg = [NSString stringWithFormat:@"[SmscConnectionSMPP outgoingReceiverThread]: socket error %d (%@) when socket returns, will terminate thread\r\n", sErr, [UMSocket getSocketErrorString:sErr]];
                     [self.logFeed majorError:0 inSubsection:@"init" withText:msg];
                     _endThisConnection = YES;
                     break;
