@@ -138,6 +138,7 @@ const SmppErrorCodeListEntry SmppErrorCodeList[] =
         _trnLock = [[UMMutex alloc] initWithName:@"smpp-trn-lock"];
         _smppMessageIdType = -1;
         _tlvDefs = [[NSDictionary alloc] init];
+        _transmissionMode = SMPP_CONNECTION_MODE_TRX;
         self.lastActivity = [NSDate new];
     }
     return self;
@@ -2828,8 +2829,9 @@ length_error:
         {
             return -1;
         }
-        _uc = [[UMSocket alloc] initWithType:UMSOCKET_TYPE_TCP4ONLY name:@"smpp-open-transceiver"];
+        _uc = [[UMSocket alloc] initWithType:UMSOCKET_TYPE_TCP name:@"smpp-open-transceiver"];
         [_uc setRemoteHost:_remoteHost];
+        
         if(_transmitPort == 0)
         {
             _transmitPort = _remotePort;
