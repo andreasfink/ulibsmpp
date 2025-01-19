@@ -29,8 +29,8 @@ typedef enum DeliveryReportType
 @property(readwrite,strong,atomic)  NSString *userReference;
 @property(readwrite,strong,atomic)  NSString *routerReference;
 @property(readwrite,strong,atomic)  NSString *providerReference;
-@property(readwrite,strong,atomic)  UMSigAddr *destination;
-@property(readwrite,strong,atomic)  UMSigAddr *source;
+@property(readwrite,strong,atomic)  NSString *fromNumber;
+@property(readwrite,strong,atomic)  NSString *toNumber;
 @property(readwrite,strong,atomic)  NSString *reportText;
 @property(readwrite,assign,atomic)  DeliveryReportType reportType;
 @property(readwrite,strong,atomic)  SmscRouterError *error;
