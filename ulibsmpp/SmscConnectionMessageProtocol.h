@@ -52,7 +52,8 @@
 #define	REPORT_FAILURE	2
 #define	REPORT_BUFFERED	4
 
-#define	MESSAGE_STATE_ENROUTE		1
+#define MESSAGE_STATE_NEW           0
+#define MESSAGE_STATE_ENROUTE       1
 #define	MESSAGE_STATE_DELIVERED		2
 #define	MESSAGE_STATE_EXPIRED	    3
 #define	MESSAGE_STATE_DELETED		4
@@ -91,6 +92,16 @@ typedef enum UMRequestMaskValue
 
 @protocol SmscConnectionMessageProtocol<NSObject>
 
+
+- (void) setInboundMethod:(NSString *)s;
+- (NSString *)inboundMethod;
+
+- (void) setInboundType:(NSString *)s;
+- (NSString *)inboundType;
+
+- (void) setInboundAddress:(NSString *)s;
+- (NSString *)inboundAddress;
+
 - (void) setRouterReference:(NSString *)msgid;
 - (NSString *)routerReference;
 
@@ -111,12 +122,6 @@ typedef enum UMRequestMaskValue
 - (NSString *)type;
 - (NSString *)method;
 //- (NSString *)addr;
-- (NSString *)inboundMethod;
-- (void) setInboundMethod:(NSString *)method;
-- (NSString *)inboundType;
-- (void) setInboundType:(NSString *)type;
-- (NSString *)inboundAddress;
-- (void) setInboundAddress:(NSString *)addr;
 - (void) setSource:(UMSigAddr *)from;
 - (UMSigAddr *)source;
 - (void) setDestination:(UMSigAddr *)to;

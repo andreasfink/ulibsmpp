@@ -144,7 +144,6 @@
     [desc appendFormat: @"userMessageReference: %@\n",dbUserMessageReference];
     [desc appendFormat: @"type: %@\n",dbType];
     [desc appendFormat: @"method: %@\n",dbMethod];
-    [desc appendFormat: @"inboundMethod: %@\n",dbInboundMethod];
     [desc appendFormat: @"addr: %@\n",dbAddr];
     [desc appendFormat: @"inboundType: %@\n",dbInboundType];
     [desc appendFormat: @"inboundAddress: %@\n",dbInboundAddress];
@@ -216,10 +215,6 @@
     if (![self.method isEqualToString:msg.method])
         return FALSE;
     if (!dbInboundMethod && [msg dbInboundMethod])
-        return FALSE;
-    if (dbInboundMethod &&  ![msg dbInboundMethod])
-        return FALSE;
-    if (![self.inboundMethod isEqualToString:msg.inboundMethod])
         return FALSE;
     if (!dbAddr && [msg dbAddr])
         return FALSE;
@@ -607,12 +602,6 @@
         [oldValues addObject:[dbMethod oldNonNullString]];
     }
     
-    if([dbInboundMethod hasChanged])
-    {
-        [fields addObject:@"InboundMethod"];
-        [values addObject:[dbInboundMethod nonNullString]];
-        [oldValues addObject:[dbInboundMethod oldNonNullString]];
-    }
     
     if([dbAddr hasChanged])
     {
@@ -1029,16 +1018,6 @@
 	dbMethod.string = string;
 }
 
-
-- (NSString *)inboundMethod
-{
-	return dbInboundMethod.string;
-}
-
-- (void)setInboundMethod:(NSString *)string
-{
-	dbInboundMethod.string = string;
-}
 
 
 - (NSString *)addr

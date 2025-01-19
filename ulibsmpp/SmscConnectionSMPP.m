@@ -1279,8 +1279,8 @@ end:
     id<SmscConnectionMessageProtocol> msg = [_router createMessage];
     @try
     {
-        [msg setInboundMethod: @"smpp"];
-        [msg setInboundType:@"submit"];
+        [msg setInboundMethod:  @"smpp"];
+        [msg setInboundType:    @"submit"];
         [msg setInboundAddress: [_uc connectedRemoteAddress]];
         msg.user = self.user;
 
