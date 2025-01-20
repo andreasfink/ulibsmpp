@@ -11,31 +11,31 @@
 
 @interface SmscStandardReport : UMObject <SmscConnectionReportProtocol>
 {
-    NSString    *userReference;
-    NSString    *routerReference;
-    NSString    *providerReference;
-    UMSigAddr   *destination;
-    UMSigAddr   *source;
-    NSString    *reportText;
-    SmscRouterError *error;
-    int         priority;
-    id          originalSendingObject;
-    NSString    *imsi;
-    NSString    *msc;
-    NSString    *mcc;
-    NSString    *mnc;
-    int         responseCode;
-    id<SmscConnectionMessageProtocol>   reportToMsg;
-    NSString    *reportTypeAsString;
-    DeliveryReportType reportType;
-    id          currentTransaction;
+    NSString    *_userReference;
+    NSString    *_routerReference;
+    NSString    *_providerReference;
+    NSString    *_fromNumber;
+    NSString    *_toNumber;
+    NSString    *_reportText;
+    SmscRouterError *_error;
+    int         _priority;
+    id          _originalSendingObject;
+    NSString    *_imsi;
+    NSString    *_msc;
+    NSString    *_mcc;
+    NSString    *_mnc;
+    int         _responseCode;
+    id<SmscConnectionMessageProtocol>   _reportToMsg;
+    NSString    *_reportTypeAsString;
+    DeliveryReportType _reportType;
+    id          _currentTransaction;
 }
 
 @property(readwrite,strong)  NSString    *userReference;
 @property(readwrite,strong)  NSString    *routerReference;
 @property(readwrite,strong)  NSString    *providerReference;
-@property(readwrite,strong)  UMSigAddr   *destination;
-@property(readwrite,strong)  UMSigAddr   *source;
+@property(readwrite,strong) NSString   *fromNumber;
+@property(readwrite,strong) NSString   *toNumber;
 @property(readwrite,strong)  NSString    *reportText;
 @property(readwrite,strong)  SmscRouterError *error;
 @property(readwrite,assign)  int         priority;

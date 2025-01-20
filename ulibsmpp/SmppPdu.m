@@ -554,16 +554,9 @@
         requestMask |= REQUEST_MASK_INTERMEDIATE;
     }
     [pdu appendInt8:  requestMask];
-    
-<<<<<<< HEAD
-	[pdu appendInt8:  [msg replaceIfPresentFlag].intValue];
-	[pdu appendInt8:  [msg pduDcs].intValue];
-	[pdu appendInt8:  0];	/* predefined message text */
-=======
 	[pdu appendInt8:msg.replaceIfPresentFlag.intValue];
 	[pdu appendInt8:msg.pduDcs.intValue];
 	[pdu appendInt8:0];	/* predefined message text */
->>>>>>> a41a144ff72487d5e265d676f55c72ef9c39ea7f
     
     
     if(msg.pduUdhIndicator.boolValue)

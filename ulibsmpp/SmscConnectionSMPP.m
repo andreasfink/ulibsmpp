@@ -1273,7 +1273,6 @@ end:
     int udhLen;
     int dataLen;
     SmscConnectionTransaction *transaction;
-    NSString *username;
 //    int err;
 
     id<SmscConnectionMessageProtocol> msg = [_router createMessage];
