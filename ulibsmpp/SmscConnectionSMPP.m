@@ -1399,9 +1399,9 @@ end:
         {
             requestMask |= (UMDLR_MASK_BUFFERED | UMDLR_MASK_SUBMIT);
         }
-        [msg setDeliveryReportMask:requestMask];
-        [msg setReplaceIfPresentFlag: ([pdu grabInt8] ? YES : NO)];
-        [msg setPduDcs: [pdu grabInt8]];
+        [msg setDeliveryReportMask:@(requestMask)];
+        [msg setReplaceIfPresentFlag: @([pdu grabInt8] ? YES : NO)];
+        [msg setPduDcs: @([pdu grabInt8])];
         
     //	int i;
         
@@ -2442,11 +2442,11 @@ end:
     {
         msg.replyPath = 1;
     }
-    [msg setPduPid:   [pdu protocol_id]];
-	[msg setMessagePriority: (int)[pdu priority_flag]];
+    [msg setPduPid: @([pdu protocol_id])];
+	[msg setMessagePriority: @((int)[pdu priority_flag])];
     
-    [msg setReplaceIfPresentFlag: ([pdu replace_if_present_flag] ? YES : NO)];
-	[msg setPduDcs: [pdu data_coding]];
+    [msg setReplaceIfPresentFlag: @([pdu replace_if_present_flag] ? YES : NO)];
+	[msg setPduDcs: @([pdu data_coding])];
     
     int length = (int)[pdu sm_length];
     NSData *sm = [pdu short_message];

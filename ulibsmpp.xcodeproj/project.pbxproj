@@ -146,6 +146,7 @@
 		22DF11D81635376900900D01 /* smpp-server.conf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "smpp-server.conf"; path = "ulibsmppTests/smpp-server.conf"; sourceTree = SOURCE_ROOT; };
 		22DF11DA1635377500900D01 /* submit-test.conf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "submit-test.conf"; path = "ulibsmppTests/submit-test.conf"; sourceTree = SOURCE_ROOT; };
 		A6019BAF1AC15C3A00854472 /* VERSION */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = VERSION; sourceTree = "<group>"; };
+		A639C02B2D3D330A009BFAC7 /* configure.ac */ = {isa = PBXFileReference; lastKnownFileType = text; path = configure.ac; sourceTree = "<group>"; };
 		A6798B9E22BBBAD00019806C /* ulib.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ulib.framework; path = "/Library/Application Support/FinkTelecomServices/frameworks/ulib.framework"; sourceTree = "<absolute>"; };
 		A68348C428854CF3003351AF /* ulibasn1.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ulibasn1.framework; path = "/Library/Application Support/FinkTelecomServices/frameworks/ulibasn1.framework"; sourceTree = "<absolute>"; };
 		A6BCC8762AE6DF0700C34D40 /* UMPrefs.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UMPrefs.m; sourceTree = "<group>"; };
@@ -224,7 +225,6 @@
 		A6DDD9D1163621FD002FA7CC /* NSString+UniversalSMPP.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = "NSString+UniversalSMPP.m"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		A6DDD9D51636221A002FA7CC /* NSMutableString+UniversalSMPP.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = "NSMutableString+UniversalSMPP.h"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		A6DDD9D61636221A002FA7CC /* NSMutableString+UniversalSMPP.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = "NSMutableString+UniversalSMPP.m"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
-		A6F693EE1B4E83330090FC94 /* configure.in */ = {isa = PBXFileReference; lastKnownFileType = text; path = configure.in; sourceTree = "<group>"; };
 		A6F6941B1B4E855F0090FC94 /* Makefile.linux.in */ = {isa = PBXFileReference; lastKnownFileType = text; path = Makefile.linux.in; sourceTree = "<group>"; };
 		A6F6941C1B4E855F0090FC94 /* Makefile.osx.in */ = {isa = PBXFileReference; lastKnownFileType = text; path = Makefile.osx.in; sourceTree = "<group>"; };
 		A6F6941D1B4E855F0090FC94 /* ulibsmpp.pc.in */ = {isa = PBXFileReference; lastKnownFileType = text; path = ulibsmpp.pc.in; sourceTree = "<group>"; };
@@ -255,8 +255,8 @@
 		22278AE6162D53D200633C39 = {
 			isa = PBXGroup;
 			children = (
+				A639C02B2D3D330A009BFAC7 /* configure.ac */,
 				A6019BAF1AC15C3A00854472 /* VERSION */,
-				A6F693EE1B4E83330090FC94 /* configure.in */,
 				A6F6941B1B4E855F0090FC94 /* Makefile.linux.in */,
 				A6F6941C1B4E855F0090FC94 /* Makefile.osx.in */,
 				A6F6941D1B4E855F0090FC94 /* ulibsmpp.pc.in */,

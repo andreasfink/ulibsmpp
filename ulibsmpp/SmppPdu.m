@@ -553,8 +553,8 @@
     }
     [pdu appendInt8:  requestMask];
     
-	[pdu appendInt8:  [msg replaceIfPresentFlag]];
-	[pdu appendInt8:  [msg pduDcs]];
+	[pdu appendInt8:  [msg replaceIfPresentFlag].intValue];
+	[pdu appendInt8:  [msg pduDcs].intValue];
 	[pdu appendInt8:  0];	/* predefined message text */
     
     

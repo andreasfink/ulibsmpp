@@ -122,30 +122,43 @@ typedef enum UMRequestMaskValue
 - (NSString *)type;
 - (NSString *)method;
 //- (NSString *)addr;
+
 - (void) setSource:(UMSigAddr *)from;
 - (UMSigAddr *)source;
+
 - (void) setDestination:(UMSigAddr *)to;
 - (UMSigAddr *)destination;
+
 - (void) setDeliveryReportAddress:(UMSigAddr *)reportTo;
 - (UMSigAddr *)deliveryReportAddress;
-- (void) setDeliveryReportMask:(UMReportMaskValue)mask;
-- (UMReportMaskValue) deliveryReportMask;
-- (void) setPduDcs:(NSInteger)dcs;
-- (NSInteger) pduDcs;
-- (void) setMessageClass:(NSInteger)messageClass;
-- (NSInteger) messageClass;
-- (void) setPduCoding:(NSInteger)coding;
-- (NSInteger) pduCoding;
-- (void) setPduPid:(NSInteger)pid;
-- (NSInteger) pduPid;
-- (void) setReplyPath:(NSInteger)rp;
-- (NSInteger) replyPath;
+
+- (void) setDeliveryReportMask:(NSNumber *)mask;
+- (NSNumber *) deliveryReportMask;
+
+- (void) setPduDcs:(NSNumber *)dcs;
+- (NSNumber *) pduDcs;
+
+- (void) setMessageClass:(NSNumber *)messageClass;
+- (NSNumber *) messageClass;
+
+- (void) setPduCoding:(NSNumber *)coding;
+- (NSNumber *) pduCoding;
+
+- (void) setPduPid:(NSNumber *)pid;
+- (NSNumber *) pduPid;
+
+- (void) setReplyPath:(NSNumber *)rp;
+- (NSNumber *) replyPath;
+
 - (void) setPduUdh:(NSData *)udh;
 - (NSData *) pduUdh;
-- (void) setUdhIndicator:(NSInteger)i;
-- (NSInteger) udhIndicator;
+
+- (void) setUdhIndicator:(NSNumber *)i;
+- (NSNumber *) udhIndicator;
+
 - (void) setPduContent:(NSData *)content;
 - (NSData *)pduContent;
+
 - (NSDate *)messageAttempted;
 - (NSDate *)submitDate;
 - (NSDate *)submitAckTime;
@@ -173,8 +186,8 @@ typedef enum UMRequestMaskValue
 - (id) routerTransaction;
 - (int) messagePriority;
 - (void) setMessagePriority:(int)prio;
-- (int) replaceIfPresentFlag;
-- (void) setReplaceIfPresentFlag:(int)i;
+- (NSNumber *) replaceIfPresentFlag;
+- (void) setReplaceIfPresentFlag:(NSNumber *)i;
 - (id)originalSendingObject;
 - (void)setOriginalSendingObject:(id)obj;
 - (NSString *)instance;
