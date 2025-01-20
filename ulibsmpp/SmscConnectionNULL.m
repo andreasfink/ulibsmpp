@@ -126,8 +126,8 @@
     [formatter setDateFormat:@"yyyyMMddHHmmss"];
     NSString *reportText = [NSString stringWithFormat:@"id:%@ sub:001 dlvrd:001 submit date:%@ done date:%@ stat:DELIVRD err:0",
                             msg.routerReference,
-                            msg.submitDate ?    [formatter stringFromDate:msg.submitDate]:[formatter stringFromDate:[NSDate date]],
-                            msg.messageAttempted ? [formatter stringFromDate:msg.messageAttempted]:[formatter stringFromDate:[NSDate date]]];
+                            msg.submitTimestamp           ? [formatter stringFromDate:msg.submitTimestamp]:[formatter stringFromDate:[NSDate date]],
+                            msg.messageAttemptedTimestamp ? [formatter stringFromDate:msg.messageAttemptedTimestamp]:[formatter stringFromDate:[NSDate date]]];
     report.reportType               = SMS_REPORT_DELIVERED;
     report.error                    = NULL;
     report.routerReference          = msg.routerReference;
@@ -135,8 +135,8 @@
     report.userReference            = msg.userReference;
     report.originalSendingObject    = msg.originalSendingObject;
     report.reportText               = reportText;
-    report.source                   = msg.destination; /* swapping on reply */
-    report.destination              = msg.source;
+    report.toNumber                 = msg.fromNumber; /* swapping on reply */
+    report.fromNumber               = msg.toNumber;
     report.currentTransaction       = msg.routerTransaction;
     
     [sendingObject deliverReport:report
@@ -182,8 +182,8 @@
     [formatter setDateFormat:@"yyyyMMddHHmmss"];
     NSString *reportText = [NSString stringWithFormat:@"id:%@ sub:001 dlvrd:001 submit date:%@ done date:%@ stat:DELIVRD err:0",
                             msg.routerReference,
-                            msg.submitDate ?    [formatter stringFromDate:msg.submitDate]:[formatter stringFromDate:[NSDate date]],
-                            msg.messageAttempted ? [formatter stringFromDate:msg.messageAttempted]:[formatter stringFromDate:[NSDate date]]];
+                            msg.submitTimestamp ?           [formatter stringFromDate:msg.submitTimestamp]:[formatter stringFromDate:[NSDate date]],
+                            msg.messageAttemptedTimestamp ? [formatter stringFromDate:msg.messageAttemptedTimestamp]:[formatter stringFromDate:[NSDate date]]];
     report.reportType               = SMS_REPORT_DELIVERED;
     report.error                    = NULL;
     report.routerReference          = msg.routerReference;
@@ -191,8 +191,8 @@
     report.userReference            = msg.userReference;
     report.originalSendingObject    = msg.originalSendingObject;
     report.reportText               = reportText;
-    report.source                   = msg.destination;
-    report.destination              = msg.source;
+    report.toNumber                 = msg.fromNumber;
+    report.fromNumber               = msg.toNumber;
 
     [sendingObject submitReport:report forObject:self synchronous:NO];
 }

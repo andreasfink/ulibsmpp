@@ -1316,7 +1316,7 @@ end:
 
             }
         }
-        msg.source = from;
+        msg.fromNumber = [from stringValue];
 
         ton  = (UMTonType)[pdu grabInt8];
         npi  = (UMNpiType)[pdu grabInt8];
@@ -1345,7 +1345,7 @@ end:
                         ]);
             }
         }
-        msg.destination = to;
+        msg.toNumber = to.stringValue;
         
         NSInteger esmClass = [pdu grabInt8];
         /* TODO: do something with ESM class */
@@ -1368,15 +1368,15 @@ end:
         }
         if(esmClass & SMPP_PDU_ESM_CLASS_SUBMIT_UDH_INDICATOR)
         {
-            msg.udhIndicator=1;
+            msg.pduUdhIndicator=@YES;
         }
         if(esmClass & SMPP_PDU_ESM_CLASS_SUBMIT_RPI)
         {
-            msg.replyPath = 1;
+            msg.pduReplyPathIndicator = @YES;
         }
 
-        [msg setPduPid:  (int) [pdu grabInt8]];
-        [msg setMessagePriority: (int) [pdu grabInt8]];
+        [msg setPduPid:  @([pdu grabInt8])];
+        [msg setMessagePriority: @([pdu grabInt8])];
 
         NSString *defferredDeliveryString = [pdu grabStringWithEncoding:NSISOLatin1StringEncoding maxLength:255];
         NSDate *defferredDelivery = [SmppPdu smppTimestampFromString:defferredDeliveryString];
@@ -1409,7 +1409,7 @@ end:
     //	[msg setDefaultMessageId: i];
         int length = (int)[pdu grabInt8];
             
-        if(msg.udhIndicator)
+        if(msg.pduUdhIndicator.boolValue)
         {
             if(length< 1)
             {
@@ -1460,7 +1460,7 @@ end:
         [pdu grabTlvsWithDefinitions:_tlvDefs];
         if([msg respondsToSelector:@selector(setTlvs:)])
         {
-            [msg setTlvs:[pdu tlv]];
+            msg.tlvs = pdu.tlvs;
         }
 		
         switch(pdu.dest_addr_subunit)
@@ -1468,16 +1468,16 @@ end:
             case 0x00: /* Unknown (default) */
                 break;
             case 0x01: /* MS Display */
-                msg.messageClass= MC_CLASS0; /* 3GPP TS 23.038 Class 0 = flash SMS */
+                msg.messageClass= @(MC_CLASS0); /* 3GPP TS 23.038 Class 0 = flash SMS */
                 break;
             case 0x02: /* Mobile Equipment */
-                msg.messageClass=MC_CLASS1; /* 3GPP TS 23.038 Default meaning: ME-specific. */
+                msg.messageClass=@(MC_CLASS1); /* 3GPP TS 23.038 Default meaning: ME-specific. */
                 break;
             case 0x03: /* Smart Card 1 (expected to be SIM if a SIM exists in the MS) */
-                msg.messageClass= MC_CLASS2; /* 3GPP TS 23.038 (U)SIM specific message */
+                msg.messageClass= @(MC_CLASS2); /* 3GPP TS 23.038 (U)SIM specific message */
                 break;
             case 0x04: /* External Unit 1 */
-                msg.messageClass= MC_CLASS3; /* default meaning: TE specific (see 3GPP TS 27.005 [8]) */
+                msg.messageClass= @(MC_CLASS3); /* default meaning: TE specific (see 3GPP TS 27.005 [8]) */
                 break;
             default: /*  5 to 255 = reserved */
                 @throw([NSException exceptionWithName:@"ESME_ROPTPARNOTALLWD"
@@ -1519,8 +1519,7 @@ end:
         [_user increase];
         [self.inboundMessagesThroughput increase];
 
-        username = [_user username];
-        [msg.dbUser setString:username];
+        msg.user = _user;
         [msg setUserReference:[pdu sequenceString]];
         
         transaction = [[SmscConnectionTransaction alloc] init];
@@ -1579,7 +1578,7 @@ end:
     id<SmscConnectionMessageProtocol>msg = transaction._message;
     if(msg)
     {
-        [msg setNetworkErrorCode:stCode];
+        msg.networkErrorCode = @(stCode);
         msg.providerReference = remoteMessageId;
 
         if (stCode == ESME_ROK)
@@ -1718,7 +1717,7 @@ end:
     else if(message)
     {
         /* this is an ack on a sms-mo we sent upstream */
-        [message setNetworkErrorCode:stCode];
+        message.networkErrorCode=@(stCode);
         // As we sent a deliver sm upstream, remoteMessageId should be our own router id we send before
         // so definitively not the same as the provider's message ID we used before.
         //message.connectionReference = remoteMessageId;/* FIXME setRemoteMessageId should be what? */
@@ -2125,7 +2124,7 @@ end:
     report = [_router createReport];
     errInt = ESME_RUNKNOWNERR;
 
-    NSDictionary *tlvs = [pdu tlv];
+    NSDictionary *tlvs = [pdu tlvs];
     /* check for SMPP v.3.4. and message_payload */
     messagePayload = tlvs[@"message payload"];
     shortMessage = [pdu short_message];
@@ -2359,7 +2358,7 @@ end:
 		[from setNpi:(UMNpiType)[pdu source_addr_npi]];
 		[from setAddr:[pdu source_addr]];
 	}
-    [report setSource:from];
+    report.fromNumber = from.stringValue;
     
     UMSigAddr *to;
     if([pdu dest_addr_ton] == UMTON_ALPHANUMERIC)
@@ -2374,7 +2373,7 @@ end:
 		[to setNpi:(UMNpiType)[pdu dest_addr_npi]];
 		[to setAddr:[pdu destination_addr]];
 	}
-    [report setDestination:to];
+    report.toNumber = to.stringValue;
     if([report respondsToSelector:@selector(setTlvs:)])
     {
         [report setTlvs:tlvs];
@@ -2414,7 +2413,7 @@ end:
 		[from setNpi: npi];
 		[from setAddr: addr];
 	}
-    msg.source = from;
+    msg.fromNumber = from.stringValue;
     
 	ton  = (int)[pdu dest_addr_ton];
 	npi  = (int)[pdu dest_addr_npi];
@@ -2431,16 +2430,16 @@ end:
 		[to setNpi: npi];
 		[to setAddr: addr];
 	}
-    msg.destination = to;
+    msg.toNumber = to.stringValue;
     
     int esmClass = (int)[pdu esm_class];
     if(esmClass & SMPP_PDU_ESM_CLASS_DELIVER_UDH_INDICATOR)
     {
-        msg.udhIndicator = 1;
+        msg.pduUdhIndicator = @YES;
     }
     if(esmClass & SMPP_PDU_ESM_CLASS_DELIVER_RPI)
     {
-        msg.replyPath = 1;
+        msg.pduReplyPathIndicator = @YES;
     }
     [msg setPduPid: @([pdu protocol_id])];
 	[msg setMessagePriority: @((int)[pdu priority_flag])];
@@ -2450,7 +2449,7 @@ end:
     
     int length = (int)[pdu sm_length];
     NSData *sm = [pdu short_message];
-    if(msg.udhIndicator)
+     if(msg.pduUdhIndicator.boolValue)
 	{
 		if(length< 1)
 			goto length_error;

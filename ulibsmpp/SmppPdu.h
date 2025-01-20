@@ -270,7 +270,7 @@ typedef unsigned long		SmppPduSequence;
     long                ms_availability_status;
     
     long                sc_interface_version;
-    NSMutableDictionary *tlv;
+    NSMutableDictionary *tlvs;
 }
 
 
@@ -295,7 +295,7 @@ typedef unsigned long		SmppPduSequence;
 @property(readwrite,assign) long                protocol_id;
 @property(readwrite,assign) long                priority_flag;
 @property(readwrite,strong) NSData              *message_payload;
-@property(readwrite,strong) NSMutableDictionary *tlv;
+@property(readwrite,strong) NSMutableDictionary *tlvs;
 @property(readwrite,strong) NSString            *message_id;
 @property(readwrite,assign) long                replace_if_present_flag;
 @property(readwrite,assign) long                dest_addr_subunit;
