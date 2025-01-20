@@ -50,9 +50,11 @@
 - (id<SmscConnectionUserProtocol>) authenticateUser:(NSString *)username withPassword:(NSString *)password;
 - (BOOL) userExists:(NSString *)username;
 
-- (id<SmscConnectionMessageProtocol>)queryMessage:(NSString *)msgid;
-
 @optional
+
+- (id<SmscConnectionMessageProtocol>)queryMessage:(NSString *)msgid;
+- (id<SmscConnectionMessageProtocol>)queryMessage:(NSString *)msgid withNumber:(NSString *)msisdn;
+
 - (BOOL) isAddressWhitelisted:(NSString *)remoteIpAddress
                    remotePort:(NSNumber *)remotePort
                localIpAddress:(NSString *)localIpAddress

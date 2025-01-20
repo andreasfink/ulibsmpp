@@ -1280,7 +1280,7 @@ end:
     {
         [msg setInboundMethod:  @"smpp"];
         [msg setInboundType:    @"submit"];
-        [msg setInboundAddress: [_uc connectedRemoteAddress]];
+        [msg setFromIp: [_uc connectedRemoteAddress]];
         msg.user = self.user;
 
         [pdu resetCursor];
@@ -1966,10 +1966,19 @@ end:
     
     NSString *messageId = [pdu grabStringWithEncoding:NSUTF8StringEncoding maxLength:65];
     [pdu grabStringWithEncoding:NSISOLatin1StringEncoding    maxLength:255];
-    UMTonType ton       = (UMTonType)[pdu grabInt8];
-    UMNpiType npi       = (UMNpiType)[pdu grabInt8];
-    NSString *addr      = [pdu grabStringWithEncoding:NSISOLatin1StringEncoding maxLength:21];
+    UMSigAddr *to = [[UMSigAddr alloc] init];
+    to.ton       = (UMTonType)[pdu grabInt8];
+    to.npi       = (UMNpiType)[pdu grabInt8];
+    to.addr      = [pdu grabStringWithEncoding:NSISOLatin1StringEncoding maxLength:21];
+    NSString *toNumber = [to stringValue];
+
     
+    if([_router respondsToSelector:@selector(queryMessage:withNumber:)])
+    {
+        id<SmscConnectionMessageProtocol> msg = [_router queryMessage:messageId withNumber:toNumber];
+        pdu2 = [SmppPdu OutgoingQueryRespOK:msg withId:messageId];
+    }
+
     if([_router respondsToSelector:@selector(queryMessage:)])
     {
         id<SmscConnectionMessageProtocol> msg = [_router queryMessage:messageId];
@@ -2393,9 +2402,9 @@ end:
     SmppPdu *pdu2;
     
     msg = [_router createMessage];
-	[msg setInboundMethod: @"smpp"];
-	[msg setInboundType:@"deliver"];
-	[msg setInboundAddress: [_uc connectedRemoteAddress]];
+    msg.inboundMethod   =   @"smpp";
+    msg.inboundType     =   @"deliver";
+	msg.fromIp = [_uc connectedRemoteAddress];
     
 	ton  = (int)[pdu source_addr_ton];
 	npi  = (int)[pdu source_addr_npi];

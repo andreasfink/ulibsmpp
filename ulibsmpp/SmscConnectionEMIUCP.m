@@ -193,7 +193,8 @@
     report.originalSendingObject    = msg.originalSendingObject;
     report.reportText               = reportText;
     report.fromNumber               = msg.toNumber;
-    report.reportToMsg              = msg.fromNumber;
+    report.toNumber                 = msg.fromNumber;
+    report.reportToMsg              = msg;
     [sendingObject submitReport:report
                       forObject:self
                     synchronous:NO];

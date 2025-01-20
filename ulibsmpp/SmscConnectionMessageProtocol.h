@@ -104,7 +104,7 @@ typedef enum UMRequestMaskValue
 @property(readwrite)    NSString *deliveryMethod;
 @property(readwrite)    NSString *inboundMethod;
 @property(readwrite)    NSString *inboundType;
-@property(readwrite)    NSString *inboundAddress;
+@property(readwrite)    NSString *fromIp;
 @property(readwrite)    NSString *routerReference;
 @property(readwrite)    NSString *userReference;
 @property(readwrite)    NSString *providerReference;
