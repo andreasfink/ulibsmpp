@@ -140,8 +140,9 @@
     [self getBytes:buf range:NSMakeRange(start, 1)];
     
     if (isspace(buf[0]))
+    {
         return YES;
-    
+    }
     return NO;
 }
 
@@ -150,8 +151,9 @@
     unsigned char buf[1];
     
     if (end < 0)
+    {
         return NO;
-    
+    }
     [self getBytes:buf range:NSMakeRange(end, 1)];
     
     if (isspace(buf[0]))
@@ -167,18 +169,22 @@
     
     /* Remove white space from the beginning of the text */
     while ([self blankAtBeginning:start])
+    {
         start ++;
-    
+    }
     if (start > 0)
+    {
         [self replaceBytesInRange:NSMakeRange(0, start) withBytes:nil length:0];
-    
+    }
     /* and from the end. */
     
-    if ((len = (int)[self length]) > 0) {
+    if ((len = (int)[self length]) > 0)
+    {
         end = len = len - 1;
         while ([self blankAtEnd:end])
+        {
             end--;
-        
+        }
         blanks = NSMakeRange(end, len - end);
         [self replaceBytesInRange:blanks withBytes:nil length:0];
     }
