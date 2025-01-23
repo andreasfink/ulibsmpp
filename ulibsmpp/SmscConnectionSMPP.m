@@ -675,6 +675,7 @@ end:
 
 - (void) inboundListener
 {
+    
 	UMSocket	*newUc;
 	NSString	*newName;
 	
@@ -962,16 +963,23 @@ end:
                 sErr  = [_uc dataIsAvailable:_receivePollTimeoutMs];
                 if((sErr == UMSocketError_has_data) || (sErr==UMSocketError_has_data_and_hup)) /* we received something */
                 {
-                    UMSocketError sErr2 = [_uc receiveToBufferWithBufferLimit: 10240];
+                    UMSocketError sErr2 = [_uc receiveToBufferWithBufferLimit: 1024];
                     if((sErr2== UMSocketError_no_data) || (sErr2==UMSocketError_connection_reset)) /* HUP */
                     {
                         NSString *msg = [NSString stringWithFormat:@"[SmscConnectionSMPP incomingReceiverThread]: EOF read"];
                         [self.logFeed info:0 inSubsection:@"outbound receiver" withText:msg];
                         _endThisConnection=YES;
                     }
-                    else if(sErr2==UMSocketError_no_error)
+                    else if((sErr2==UMSocketError_no_error) || (sErr2==UMSocketError_has_data))
                     {
                         [self checkForPackets];
+                    }
+                    else if(sErr==UMSocketError_has_data_and_hup)
+                    {
+                        [self checkForPackets]; /* process whatever is left */
+                        NSString *msg = [NSString stringWithFormat:@"[SmscConnectionSMPP incomingReceiverThread]: POLLHUP received"];
+                        [self.logFeed info:0 inSubsection:@"outbound receiver" withText:msg];
+                        _endThisConnection=YES;
                     }
                     else if(sErr2!=UMSocketError_try_again)
                     {
@@ -981,13 +989,7 @@ end:
                         _endThisConnection=YES;
                         break;
                     }
-                    if(sErr==UMSocketError_has_data_and_hup)
-                    {
-                        [self checkForPackets]; /* process whatever is left */
-                        NSString *msg = [NSString stringWithFormat:@"[SmscConnectionSMPP incomingReceiverThread]: POLLHUP received"];
-                        [self.logFeed info:0 inSubsection:@"outbound receiver" withText:msg];
-                        _endThisConnection=YES;
-                    }
+
                 }
                 else if((sErr != UMSocketError_try_again) && (sErr !=UMSocketError_no_error) && (sErr != UMSocketError_no_data))
                 {
