@@ -122,6 +122,7 @@ typedef enum UMRequestMaskValue
 @property(readwrite)    NSNumber *pduUdhIndicator;
 @property(readwrite)    NSData *pduUdh;
 @property(readwrite)    NSData *pduContent;
+@property(readwrite)    NSString *plaintextContent;
 @property(readwrite)    NSDate *submitTimestamp;
 @property(readwrite)    NSDate *submitAckTimestamp;
 @property(readwrite)    NSDate *submitErrorTimestamp;
