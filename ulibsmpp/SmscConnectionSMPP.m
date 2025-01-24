@@ -7,6 +7,7 @@
 //
 
 #import <ulib/ulib.h>
+#import <ulibsms/ulibsms.h>
 #import "SmscConnectionSMPP.h"
 #import "SmppPdu.h"
 #import "NSMutableString+UniversalSMPP.h"
@@ -1284,9 +1285,9 @@ end:
         [msg setInboundType:    @"submit"];
         [msg setFromIp: [_uc connectedRemoteAddress]];
         msg.user = self.user;
-
+        
         [pdu resetCursor];
-
+        
         /*serviceType = */
         [pdu grabStringWithEncoding:NSISOLatin1StringEncoding	maxLength:255];
         ton  = (UMTonType)[pdu grabInt8];
@@ -1295,62 +1296,62 @@ end:
         if(ton == UMTON_ALPHANUMERIC)
         {
             from = [[UMSigAddr alloc] initWithAlpha:addr];
-            [from setNpi: npi];
+            from.npi = npi;
         }
         else
         {
             from = [[UMSigAddr alloc] init];
-            [from setTon: ton];
-            [from setNpi: npi];
-            [from setAddr: addr];
+            from.ton = ton;
+            from.npi = npi;
+            from.addr = addr;
             if(![addr hasOnlyDecimalDigits])
             {
                 @throw([NSException exceptionWithName:@"ESME_RINVSRCADR"
                                                reason:NULL
                                              userInfo:@{
-                                                        @"sysmsg" : @"invalid_source_address (address does not only contain digits)",
-                                                        @"func": @(__func__),
-                                                        @"obj":self,
-                                                        @"code":@(ESME_RINVSRCADR)
-                                                        }
-                        ]);
-
+                    @"sysmsg" : @"invalid_source_address (address does not only contain digits)",
+                    @"func": @(__func__),
+                    @"obj":self,
+                    @"code":@(ESME_RINVSRCADR)
+                }
+                       ]);
+                
             }
         }
-        msg.fromNumber = [from stringValue];
-
+        msg.fromNumber = [from asString:1];
+        
         ton  = (UMTonType)[pdu grabInt8];
         npi  = (UMNpiType)[pdu grabInt8];
         addr = [pdu grabStringWithEncoding:NSISOLatin1StringEncoding	maxLength:31];
         if(ton == UMTON_ALPHANUMERIC)
         {
             to = [[UMSigAddr alloc] initWithAlpha:addr];
-            [to setNpi: npi];
+            to.npi = npi;
         }
         else
         {
             to = [[UMSigAddr alloc] init];
-            [to setTon: ton];
-            [to setNpi: npi];
-            [to setAddr: addr];
+            to.ton = ton;
+            to.npi = npi;
+            to.addr = addr;
             if(![addr hasOnlyDecimalDigits])
             {
                 @throw([NSException exceptionWithName:@"ESME_RINVDSTADR"
                                                reason:NULL
                                              userInfo:@{
-                                                        @"sysmsg" : @"invalid_destination_addres (address does not only contain digits)",
-                                                        @"func": @(__func__),
-                                                        @"obj":self,
-                                                        @"code":@(ESME_RINVDSTADR)
-                                                        }
-                        ]);
+                    @"sysmsg" : @"invalid_destination_addres (address does not only contain digits)",
+                    @"func": @(__func__),
+                    @"obj":self,
+                    @"code":@(ESME_RINVDSTADR)
+                }
+                       ]);
             }
         }
-        msg.toNumber = to.stringValue;
+        msg.toNumber = [to asString:1];
         
         NSInteger esmClass = [pdu grabInt8];
         /* TODO: do something with ESM class */
-
+        
         if((esmClass & 0x03) == 0)
         {
             esmClass |= SMPP_PDU_ESM_CLASS_SUBMIT_STORE_AND_FORWARD_MODE;
@@ -1360,32 +1361,39 @@ end:
             @throw([NSException exceptionWithName:@"ESME_RINVESMCLASS"
                                            reason:NULL
                                          userInfo:@{
-                                                    @"sysmsg" : @"error_wrong_esm_clas should be 0x03 for store & forward",
-                                                    @"func": @(__func__),
-                                                    @"obj":self,
-                                                    @"code":@(ESME_RINVESMCLASS)
-                                                    }
-                    ]);
+                @"sysmsg" : @"error_wrong_esm_clas should be 0x03 for store & forward",
+                @"func": @(__func__),
+                @"obj":self,
+                @"code":@(ESME_RINVESMCLASS)
+            }
+                   ]);
         }
         if(esmClass & SMPP_PDU_ESM_CLASS_SUBMIT_UDH_INDICATOR)
         {
             msg.pduUdhIndicator=@YES;
         }
+        else
+        {
+            msg.pduUdhIndicator=@NO;
+        }
         if(esmClass & SMPP_PDU_ESM_CLASS_SUBMIT_RPI)
         {
             msg.pduReplyPathIndicator = @YES;
         }
+        else
+        {
+            msg.pduReplyPathIndicator = @NO;
+        }
+        msg.pduPid =  @([pdu grabInt8]);
+        msg.messagePriority = @([pdu grabInt8]);
 
-        [msg setPduPid:  @([pdu grabInt8])];
-        [msg setMessagePriority: @([pdu grabInt8])];
+        NSString *defferredDeliveryString   = [pdu grabStringWithEncoding:NSISOLatin1StringEncoding maxLength:255];
+        NSDate *defferredDelivery           = [SmppPdu smppTimestampFromString:defferredDeliveryString];
+        msg.deferred = defferredDelivery;
 
-        NSString *defferredDeliveryString = [pdu grabStringWithEncoding:NSISOLatin1StringEncoding maxLength:255];
-        NSDate *defferredDelivery = [SmppPdu smppTimestampFromString:defferredDeliveryString];
-        [msg setDeferred:defferredDelivery];
-
-        NSString *validityPeriodString   = [pdu grabStringWithEncoding:NSISOLatin1StringEncoding maxLength:255];
-        NSDate *validityPeriod = [SmppPdu smppTimestampFromString:validityPeriodString];
-        [msg setValidity:validityPeriod];
+        NSString *validityPeriodString      = [pdu grabStringWithEncoding:NSISOLatin1StringEncoding maxLength:255];
+        NSDate *validityPeriod              = [SmppPdu smppTimestampFromString:validityPeriodString];
+        msg.validity = validityPeriod;
         UMRequestMaskValue dlrMask = (UMRequestMaskValue)[pdu grabInt8];
         UMReportMaskValue requestMask = 0;
         if(dlrMask & REQUEST_MASK_SUCCESS_OR_FAIL)
@@ -1400,9 +1408,9 @@ end:
         {
             requestMask |= (UMDLR_MASK_BUFFERED | UMDLR_MASK_SUBMIT);
         }
-        [msg setDeliveryReportMask:@(requestMask)];
-        [msg setReplaceIfPresentFlag: @([pdu grabInt8] ? YES : NO)];
-        [msg setPduDcs: @([pdu grabInt8])];
+        msg.deliveryReportMask      = @(requestMask);
+        msg.replaceIfPresentFlag    = [pdu grabInt8] ? @YES : @NO;
+        msg.pduDcs                  = @([pdu grabInt8]);
         
     //	int i;
         
@@ -1410,7 +1418,7 @@ end:
     //	[msg setDefaultMessageId: i];
         int length = (int)[pdu grabInt8];
             
-        if(msg.pduUdhIndicator.boolValue)
+        if(msg.pduUdhIndicator.boolValue==YES)
         {
             if(length< 1)
             {
@@ -1455,8 +1463,9 @@ end:
             data = [[NSData alloc] initWithBytes: &((unsigned char *)[[pdu payload] bytes])[[pdu cursor]] length:dataLen];
             [pdu setCursor: [pdu cursor] + dataLen + 1];
         }
-        [msg setPduUdh: udh];
-        [msg setPduContent: data];
+        msg.pduUdh = udh;
+        msg.pduContent = data;
+        msg.plaintextContent = [SmscConnectionSMPP stringFromGsm8:data];
         
         [pdu grabTlvsWithDefinitions:_tlvDefs];
         if([msg respondsToSelector:@selector(setTlvs:)])
@@ -4158,4 +4167,201 @@ length_error:
     }
 }
 
++ (NSString *)stringFromGsm8:(NSData *)d
+{
+    NSMutableString *out = [[NSMutableString alloc]init];
+    const uint8_t *inBytes = d.bytes;
+    NSInteger i;
+    NSInteger len = d.length;
+    BOOL escape = NO;
+    for(i=0;i<len;i++)
+    {
+        NSString *c = @"";
+        if(escape)
+        {
+            escape = NO;
+            switch(inBytes[i])
+            {
+                case 0x14:
+                    c = @"^";
+                    break;
+                case 0x28:
+                    c = @"{";
+                    break;
+                case 0x29:
+                    c = @"}";
+                    break;
+                case 0x2F:
+                    c = @"\\";
+                    break;
+                case 0x3C:
+                    c = @"[";
+                    break;
+                case 0x3D:
+                    c = @"~";
+                    break;
+                case 0x3E:
+                    c = @"]";
+                    break;
+                case 0x40:
+                    c = @"|";
+                    break;
+                case 0x65:
+                    c = @"€";
+                    break;
+                case 0x0A:
+                    c = @"\n";
+                    break;
+                default:
+                    break;
+            }
+        }
+        else
+        {
+            switch(inBytes[i])
+            {
+                case 0x00:
+                    c = @"@";
+                    break;
+                case 0x01:
+                    c = @"£";
+                    break;
+                case 0x02:
+                    c = @"$";
+                    break;
+                case 0x03:
+                    c = @"¥";
+                    break;
+                case 0x04:
+                    c = @"è";
+                    break;
+                case 0x05:
+                    c = @"é";
+                    break;
+                case 0x06:
+                    c = @"ù";
+                    break;
+                case 0x07:
+                    c = @"ì";
+                    break;
+                case 0x08:
+                    c = @"ò";
+                    break;
+                case 0x09:
+                    c = @"Ç";
+                    break;
+                case 0x0A:
+                    c = @"\n";
+                    break;
+                case 0x0B:
+                    c = @"Ø";
+                    break;
+                case 0x0C:
+                    c = @"ø";
+                    break;
+                case 0x0D:
+                    c = @"\r";
+                    break;
+                case 0x0E:
+                    c = @"Å";
+                    break;
+                case 0x0F:
+                    c = @"å";
+                    break;
+                case 0x10:
+                    c = @"Δ";
+                    break;
+                case 0x11:
+                    c = @"_";
+                    break;
+                case 0x12:
+                    c = @"Φ";
+                    break;
+                case  0x13:
+                    c = @"Γ";
+                    break;
+                case  0x14:
+                    c = @"Λ";
+                    break;
+                case  0x15:
+                    c = @"Ω";
+                    break;
+                case  0x16:
+                    c = @"Π";
+                    break;
+                case  0x17:
+                    c = @"Ψ";
+                    break;
+                case  0x18:
+                    c = @"Σ";
+                    break;
+                case  0x19:
+                    c = @"Θ";
+                    break;
+                case 0x1A:
+                    c = @"Ξ";
+                    break;
+                case 0x01B:
+                    escape = YES;
+                    break;
+                case 0x1C:
+                    c = @"Æ";
+                    break;
+                case 0x1D:
+                    c = @"æ";
+                    break;
+                case 0x1E:
+                    c = @"ß";
+                    break;
+                case 0x1F:
+                    c = @"É";
+                    break;
+                case 0x24:
+                    c = @"¤";
+                    break;
+                case 0x40:
+                    c = @"¡";
+                    break;
+                case 0x5B:
+                    c = @"Ä";
+                    break;
+                case 0x5C:
+                    c = @"Ö";
+                    break;
+                case 0x5D:
+                    c = @"Ñ";
+                    break;
+                case 0x5E:
+                    c = @"Ü";
+                    break;
+                case 0x5F:
+                    c = @"§";
+                    break;
+                case 0x60:
+                    c = @"¿";
+                    break;
+                case 0x7B:
+                    c = @"ä";
+                    break;
+                case 0x7C:
+                    c = @"ö";
+                    break;
+                case 0x7D:
+                    c = @"ñ";
+                    break;
+                case 0x7E:
+                    c = @"ü";
+                    break;
+                case 0x7F:
+                    c = @"à";
+                    break;
+                default:
+                    c = [NSString stringWithFormat:@"%c",inBytes[i]];
+                    break;
+            }
+        }
+        [out appendString:c];
+    }
+    return out;
+}
 @end

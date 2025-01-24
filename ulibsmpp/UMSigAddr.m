@@ -14,10 +14,6 @@
 static int is_all_digits(NSString *str, int startpos);
 
 @implementation UMSigAddr
-@synthesize		ton;
-@synthesize		npi;
-@synthesize		addr;
-@synthesize     debugString;
 
 - (UMSigAddr *) initWithString: (NSString *)digits
 {
