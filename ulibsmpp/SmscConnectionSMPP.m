@@ -1639,8 +1639,11 @@ end:
     [pdu unpackDeliverSmUsingTlvDefinition:_tlvDefs];
     
     esmClass = (int)[pdu esm_class];
-    
-    deliveryReport = esmClass == SMPP_PDU_ESM_CLASS_DELIVER_SMSC_DELIVER_ACK || esmClass == SMPP_PDU_ESM_CLASS_DELIVER_SME_DELIVER_ACK ||        	esmClass == SMPP_PDU_ESM_CLASS_DELIVER_SME_MANULAL_ACK || esmClass == SMPP_PDU_ESM_CLASS_DELIVER_INTERM_DEL_NOTIFICATION;
+    msg.esmClass = @(esmClass);
+    deliveryReport = esmClass == SMPP_PDU_ESM_CLASS_DELIVER_SMSC_DELIVER_ACK ||
+                     esmClass == SMPP_PDU_ESM_CLASS_DELIVER_SME_DELIVER_ACK ||
+                     esmClass == SMPP_PDU_ESM_CLASS_DELIVER_SME_MANULAL_ACK ||
+                     esmClass == SMPP_PDU_ESM_CLASS_DELIVER_INTERM_DEL_NOTIFICATION;
     
     transaction = [[SmscConnectionTransaction alloc] init];
     transaction.sequenceNumber =[pdu sequenceString];
