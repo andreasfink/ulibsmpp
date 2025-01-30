@@ -117,7 +117,7 @@ typedef enum UMRequestMaskValue
 @property(readwrite)    NSNumber *esmClass;
 @property(readwrite)    NSNumber *messageClass;
 @property(readwrite)    NSNumber *pduDcs;
-@property(readwrite)    NSNumber *pduCoding;
+@property(readwrite)    NSString *pduCoding;
 @property(readwrite)    NSNumber *pduPid;
 @property(readwrite)    NSNumber *pduReplyPathIndicator;
 @property(readwrite)    NSNumber *pduUdhIndicator;

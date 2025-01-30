@@ -703,7 +703,7 @@ end:
 		switch(_incomingStatus)
 		{
 			case SMPP_STATUS_INCOMING_OFF:
-                _uc = [[UMSocket alloc] initWithType:UMSOCKET_TYPE_TCP4ONLY name:@"smpp-listener"]; /* FIXME: really IPv4 only? */
+                _uc = [[UMSocket alloc] initWithType:UMSOCKET_TYPE_TCP name:@"smpp-listener"];
 				[_uc setLocalHost:_localHost];
 				[_uc setLocalPort:_localPort];
                 _uc.configuredMaxSegmentSize = _max_tcp_segment_size;
@@ -1284,7 +1284,7 @@ end:
         [msg setInboundMethod:  @"smpp"];
         [msg setInboundType:    @"submit"];
         [msg setFromIp: [_uc connectedRemoteAddress]];
-        msg.user = self.user;
+        msg.user = _user;
         
         [pdu resetCursor];
         
@@ -1410,7 +1410,62 @@ end:
         }
         msg.deliveryReportMask      = @(requestMask);
         msg.replaceIfPresentFlag    = [pdu grabInt8] ? @YES : @NO;
-        msg.pduDcs                  = @([pdu grabInt8]);
+        int dcs = [pdu grabInt8];
+        switch(dcs)
+        {
+            case 0: /* default */
+            case 1: /* IA5 CCITT T.50 */
+                msg.pduCoding=@"gsm";
+                break;
+            case 2: /* Octet unspecified (8-bit binary) */
+            case 4: /* Octet unspecified (8-bit binary) */
+                msg.pduCoding=@"binary";
+                break;
+            case 3: /* Latin 1 ISO-8859-1 */
+                msg.pduCoding=@"latin-1";
+                break;
+            case 5: /* JIS (X 0208-1990) */
+                msg.pduCoding=@"jis";
+                break;
+            case 6: /* Cyrillic (ISO-8859-5) */
+                msg.pduCoding=@"cyrillic";
+                break;
+            case 7: /* Latin/Hebrew (ISO-8859-8)  */
+                msg.pduCoding=@"latin-8";
+                break;
+            case 8: /* UCS2 */
+                msg.pduCoding=@"ucs2";
+                break;
+            case 9: /* UCS2 */
+                msg.pduCoding=@"ucs2";
+                break;
+            case 0x0A: /* Music Codes */
+                msg.pduCoding=@"music";
+                break;
+            case 0x0D:
+                msg.pduCoding = @"extended-kanji";
+                break;
+            case 0x0E:
+                msg.pduCoding = @"ks-c-5601";
+                break;
+            default:
+            {
+                int upperFlags = dcs & 0xF0;
+                if((upperFlags == 0xC0)  || (upperFlags == 0xD0))
+                {
+                    msg.pduCoding = @"gsm-mwi";
+                }
+                else if(upperFlags == 0xF0)
+                {
+                    msg.pduCoding = @"gsm-message-class-control";
+                }
+                else
+                {
+                    msg.pduCoding = @"reserved";
+                }
+            }
+        }
+        msg.pduDcs                  = @(dcs);
         
     //	int i;
         
@@ -1813,6 +1868,7 @@ end:
         }
         else
         {
+            _logFeed.name = [NSString stringWithFormat:@"smpp:%@",_user.username];
             /* switching logging to tracefile */
 
             if([_user respondsToSelector:@selector(tracing)] && [_user respondsToSelector:@selector(tracePath)])
@@ -2792,7 +2848,7 @@ length_error:
         {
             return -1;
         }
-        _uc = [[UMSocket alloc] initWithType:UMSOCKET_TYPE_TCP4ONLY name:@"smpp-open-transmitter"];
+        _uc = [[UMSocket alloc] initWithType:UMSOCKET_TYPE_TCP name:@"smpp-open-transmitter"];
         if (!_uc)
         {
             NSString *msg = [NSString stringWithFormat:@"[SmscConnectionSMPP openTransmitter] [%@]: Couldn't connect to server (no socket, status %d).\r\n", _name, _outgoingStatus];
@@ -2909,7 +2965,7 @@ length_error:
         if (!_login || !_password)
             return -1;
         
-        _uc = [[UMSocket alloc] initWithType:UMSOCKET_TYPE_TCP4ONLY name:@"open-receiver"];
+        _uc = [[UMSocket alloc] initWithType:UMSOCKET_TYPE_TCP name:@"open-receiver"];
         [_uc setRemoteHost:_remoteHost];
         [_uc setRequestedRemotePort:_receivePort];
         _uc.configuredMaxSegmentSize = _max_tcp_segment_size;
