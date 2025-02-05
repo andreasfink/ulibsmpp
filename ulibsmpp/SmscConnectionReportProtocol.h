@@ -24,6 +24,7 @@ typedef enum DeliveryReportType
     SMS_REPORT_REJECTED         = 8,
 } DeliveryReportType;
 
+
 @protocol SmscConnectionReportProtocol<NSObject>
 @property(readwrite,strong,atomic)  id      currentTransaction;
 @property(readwrite,strong,atomic)  NSString *userReference;
