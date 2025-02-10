@@ -1052,7 +1052,7 @@
 					  msg.submitTimestamp ? [formatter stringFromDate:msg.submitTimestamp]:[formatter stringFromDate:[NSDate date]],
 					  msg.messageAttemptedTimestamp ? [formatter stringFromDate:msg.messageAttemptedTimestamp]:[formatter stringFromDate:[NSDate date]],
 					  ms,
-                      [msg networkErrorCode]];
+                      msg.networkErrorCode ? [NSString stringWithFormat:@"%03d",msg.networkErrorCode.intValue] : @"000"];
 		data = [reportText dataUsingEncoding:NSISOLatin1StringEncoding allowLossyConversion:YES];
 	}
 	else

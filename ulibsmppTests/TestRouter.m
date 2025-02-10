@@ -1305,6 +1305,7 @@ extern TestDelegate *global_appDelegate;
         case SMS_REPORT_REJECTED:
             /* negative reports */
             report.routerReference = transaction.originalMessage.routerReference;
+            report.reportToMsg = transaction.originalMessage;
             [transaction.connectionForForwarding submitMessage:transaction.originalMessage forObject:self];
             [transaction.upperObject deliverReport:report forObject:self];
             transaction.state = stateAwaitingReportAcknowlegmentFromUser;

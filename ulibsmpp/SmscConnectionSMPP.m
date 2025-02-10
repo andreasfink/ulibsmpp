@@ -177,7 +177,7 @@ const SmppErrorCodeListEntry SmppErrorCodeList[] =
             return YES;
         }
     }
-    if ((_outgoingStatus == SMPP_STATUS_OUTGOING_ACTIVE) && (_user != NULL))
+    if ((_outgoingStatus == SMPP_STATUS_OUTGOING_ACTIVE) && (_login != NULL) && (_password!=NULL))
     {
         return YES;
     }
@@ -565,7 +565,7 @@ const SmppErrorCodeListEntry SmppErrorCodeList[] =
 #endif
     if(report)
     {
-        msg = [report reportToMsg];
+        msg = report.reportToMsg;
         pdu = [SmppPdu OutgoingSubmitSmReport: msg reportingEntity:SMPP_REPORTING_ENTITY_SMSC];
         [self.outboundReportsThroughput increase];
 
@@ -774,7 +774,7 @@ end:
                         if(doAccept)
                         {
 
-                            newName = [NSString stringWithFormat:@"%@ (%p)",
+                            newName = [NSString stringWithFormat:@"%@ (%@)",
                                        _name, newUc];
                             
                             SmscConnectionSMPP *e = [[SmscConnectionSMPP alloc] init];
