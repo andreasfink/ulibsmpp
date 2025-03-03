@@ -834,7 +834,7 @@
     [pdu appendInt8:  msg.messagePriority.intValue]; //5.2.13
 	[pdu appendDate:  msg.deferred]; //scheduled time
 	[pdu appendDate:  msg.validity];
-	[pdu appendInt8:  msg.deliveryReportMask ? 1 : 0];
+    [pdu appendInt8:  msg.deliveryReportMask.intValue ? 1 : 0];
     [pdu appendInt8:  (msg.replaceIfPresentFlag.boolValue ? 1 : 0)];
     [pdu appendInt8:  msg.pduDcs.intValue];
 	[pdu appendInt8:  0];	/* predefined message text */

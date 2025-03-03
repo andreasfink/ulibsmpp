@@ -1410,7 +1410,7 @@ end:
         }
         msg.deliveryReportMask      = @(requestMask);
         msg.replaceIfPresentFlag    = [pdu grabInt8] ? @YES : @NO;
-        int dcs = [pdu grabInt8];
+        int dcs = (int)[pdu grabInt8];
         switch(dcs)
         {
             case 0: /* default */
