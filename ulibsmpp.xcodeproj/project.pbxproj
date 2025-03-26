@@ -11,20 +11,6 @@
 		221D0F6A1AEA71D4000E8189 /* NSString+UniversalSMPP.m in Sources */ = {isa = PBXBuildFile; fileRef = A6DDD9D1163621FD002FA7CC /* NSString+UniversalSMPP.m */; };
 		221D0F6B1AEA71D8000E8189 /* NSMutableString+UniversalSMPP.m in Sources */ = {isa = PBXBuildFile; fileRef = A6DDD9D61636221A002FA7CC /* NSMutableString+UniversalSMPP.m */; };
 		22567EE61AEA6FA500603C7A /* ulibsmpp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 22278AF2162D53D200633C39 /* ulibsmpp.framework */; };
-		22567EEC1AEA6FFE00603C7A /* submit-test.conf in Resources */ = {isa = PBXBuildFile; fileRef = 22DF11DA1635377500900D01 /* submit-test.conf */; };
-		22567EED1AEA700400603C7A /* smpp-server.conf in Resources */ = {isa = PBXBuildFile; fileRef = 22DF11D81635376900900D01 /* smpp-server.conf */; };
-		22567EEE1AEA700800603C7A /* smpp-client.conf in Resources */ = {isa = PBXBuildFile; fileRef = 22DF11D61635375800900D01 /* smpp-client.conf */; };
-		22567EEF1AEA700E00603C7A /* smpptest.m in Sources */ = {isa = PBXBuildFile; fileRef = 22278B2B162D55C800633C39 /* smpptest.m */; };
-		22567EF01AEA701B00603C7A /* NSString+TestSMPPAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 22278B27162D559100633C39 /* NSString+TestSMPPAdditions.m */; };
-		22567EF11AEA702100603C7A /* TestCounter.m in Sources */ = {isa = PBXBuildFile; fileRef = 22DB84B6162DAA0100F2223C /* TestCounter.m */; };
-		22567EF21AEA702800603C7A /* TestLogFile.m in Sources */ = {isa = PBXBuildFile; fileRef = 22278B2E162D55E400633C39 /* TestLogFile.m */; };
-		22567EF31AEA702D00603C7A /* TestMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 22278B31162D561000633C39 /* TestMessage.m */; };
-		22567EF41AEA703200603C7A /* TestObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 22278B34162D562D00633C39 /* TestObject.m */; };
-		22567EF51AEA703700603C7A /* TestRouter.m in Sources */ = {isa = PBXBuildFile; fileRef = 22278B3A162D566100633C39 /* TestRouter.m */; };
-		22567EF61AEA703B00603C7A /* TestSMPPAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 227F45E716B9657100E93608 /* TestSMPPAdditions.m */; };
-		22567EF71AEA704100603C7A /* TestUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 227F45ED16B965A500E93608 /* TestUtils.m */; };
-		22567EF81AEA704600603C7A /* TestUser.m in Sources */ = {isa = PBXBuildFile; fileRef = 22278B3D162D569200633C39 /* TestUser.m */; };
-		225C20101AEF862B00C86D4F /* TestDeliveryReport.m in Sources */ = {isa = PBXBuildFile; fileRef = 225C200F1AEF862B00C86D4F /* TestDeliveryReport.m */; };
 		A642ADB91AC9CEE500854472 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 22278AFA162D53D200633C39 /* Foundation.framework */; };
 		A6793D921934AA2F0090FC94 /* ulibsmpp.h in Headers */ = {isa = PBXBuildFile; fileRef = A6DDD9C816361D92002FA7CC /* ulibsmpp.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		A6793D931934AA2F0090FC94 /* NSString+UniversalSMPP.h in Headers */ = {isa = PBXBuildFile; fileRef = A6DDD9D0163621FD002FA7CC /* NSString+UniversalSMPP.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -42,18 +28,12 @@
 		A6BCC8962AE6DF0800C34D40 /* NSData+HexFunctions.m in Sources */ = {isa = PBXBuildFile; fileRef = A6BCC87E2AE6DF0700C34D40 /* NSData+HexFunctions.m */; };
 		A6BCC8972AE6DF0800C34D40 /* SigAddr.h in Headers */ = {isa = PBXBuildFile; fileRef = A6BCC87F2AE6DF0700C34D40 /* SigAddr.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		A6BCC8982AE6DF0800C34D40 /* UMSigAddr.h in Headers */ = {isa = PBXBuildFile; fileRef = A6BCC8802AE6DF0700C34D40 /* UMSigAddr.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		A6BCC8992AE6DF0800C34D40 /* NSMutableData+UMTestString.h in Headers */ = {isa = PBXBuildFile; fileRef = A6BCC8812AE6DF0700C34D40 /* NSMutableData+UMTestString.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		A6BCC89A2AE6DF0800C34D40 /* NSString+HexFunctions.m in Sources */ = {isa = PBXBuildFile; fileRef = A6BCC8822AE6DF0700C34D40 /* NSString+HexFunctions.m */; };
 		A6BCC89B2AE6DF0800C34D40 /* PriorityQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = A6BCC8832AE6DF0700C34D40 /* PriorityQueue.m */; };
-		A6BCC89C2AE6DF0800C34D40 /* TestUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = A6BCC8842AE6DF0700C34D40 /* TestUtils.m */; };
 		A6BCC89D2AE6DF0800C34D40 /* UMSigAddrWithHistory.h in Headers */ = {isa = PBXBuildFile; fileRef = A6BCC8852AE6DF0700C34D40 /* UMSigAddrWithHistory.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		A6BCC89E2AE6DF0800C34D40 /* GsmCharSet.h in Headers */ = {isa = PBXBuildFile; fileRef = A6BCC8862AE6DF0700C34D40 /* GsmCharSet.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		A6BCC89F2AE6DF0800C34D40 /* PriorityQueue.h in Headers */ = {isa = PBXBuildFile; fileRef = A6BCC8872AE6DF0800C34D40 /* PriorityQueue.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		A6BCC8A02AE6DF0800C34D40 /* NSMutableString+UMTestString.h in Headers */ = {isa = PBXBuildFile; fileRef = A6BCC8882AE6DF0800C34D40 /* NSMutableString+UMTestString.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		A6BCC8A12AE6DF0800C34D40 /* PointCode.h in Headers */ = {isa = PBXBuildFile; fileRef = A6BCC8892AE6DF0800C34D40 /* PointCode.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		A6BCC8A22AE6DF0800C34D40 /* TestUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = A6BCC88A2AE6DF0800C34D40 /* TestUtils.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		A6BCC8A32AE6DF0800C34D40 /* NSMutableData+UMTestString.m in Sources */ = {isa = PBXBuildFile; fileRef = A6BCC88B2AE6DF0800C34D40 /* NSMutableData+UMTestString.m */; };
-		A6BCC8A42AE6DF0800C34D40 /* NSMutableString+UMTestString.m in Sources */ = {isa = PBXBuildFile; fileRef = A6BCC88C2AE6DF0800C34D40 /* NSMutableString+UMTestString.m */; };
 		A6BCC8A52AE6DF0800C34D40 /* NSData+HexFunctions.h in Headers */ = {isa = PBXBuildFile; fileRef = A6BCC88D2AE6DF0800C34D40 /* NSData+HexFunctions.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		A6BCC8C42AE6DF2600C34D40 /* UniversalSMSC.h in Headers */ = {isa = PBXBuildFile; fileRef = A6BCC8A62AE6DF2600C34D40 /* UniversalSMSC.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		A6BCC8C52AE6DF2600C34D40 /* SmscConnectionMessageProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = A6BCC8A72AE6DF2600C34D40 /* SmscConnectionMessageProtocol.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -98,6 +78,7 @@
 		A6BCC8F92AE6DF5300C34D40 /* UniversalEMIUCP.h in Headers */ = {isa = PBXBuildFile; fileRef = A6BCC8F62AE6DF5300C34D40 /* UniversalEMIUCP.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		A6BCC8FA2AE6DF5300C34D40 /* SmscConnectionEMIUCP.h in Headers */ = {isa = PBXBuildFile; fileRef = A6BCC8F72AE6DF5300C34D40 /* SmscConnectionEMIUCP.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		A6BCC8FB2AE6DF5300C34D40 /* SmscConnectionEMIUCP.m in Sources */ = {isa = PBXBuildFile; fileRef = A6BCC8F82AE6DF5300C34D40 /* SmscConnectionEMIUCP.m */; };
+		A6DA330D2D941C6800B7027F /* um.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A6DA330C2D941C6800B7027F /* um.framework */; };
 		A6DB3E74191E41810090FC94 /* ulibsmpp.m in Sources */ = {isa = PBXBuildFile; fileRef = A6DB3E73191E41810090FC94 /* ulibsmpp.m */; };
 		A6DDD9D3163621FD002FA7CC /* NSString+UniversalSMPP.m in Sources */ = {isa = PBXBuildFile; fileRef = A6DDD9D1163621FD002FA7CC /* NSString+UniversalSMPP.m */; };
 		A6DDD9D81636221A002FA7CC /* NSMutableString+UniversalSMPP.m in Sources */ = {isa = PBXBuildFile; fileRef = A6DDD9D61636221A002FA7CC /* NSMutableString+UniversalSMPP.m */; };
@@ -116,35 +97,7 @@
 /* Begin PBXFileReference section */
 		22278AF2162D53D200633C39 /* ulibsmpp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ulibsmpp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		22278AFA162D53D200633C39 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
-		22278B26162D558400633C39 /* NSString+TestSMPPAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+TestSMPPAdditions.h"; sourceTree = "<group>"; };
-		22278B27162D559100633C39 /* NSString+TestSMPPAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+TestSMPPAdditions.m"; sourceTree = "<group>"; };
-		22278B29162D559E00633C39 /* NSString+TestUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+TestUtils.h"; sourceTree = "<group>"; };
-		22278B2A162D55BB00633C39 /* smpptest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = smpptest.h; sourceTree = "<group>"; };
-		22278B2B162D55C800633C39 /* smpptest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = smpptest.m; sourceTree = "<group>"; };
-		22278B2D162D55D100633C39 /* TestLogFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestLogFile.h; sourceTree = "<group>"; };
-		22278B2E162D55E400633C39 /* TestLogFile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestLogFile.m; sourceTree = "<group>"; };
-		22278B30162D560700633C39 /* TestMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestMessage.h; sourceTree = "<group>"; };
-		22278B31162D561000633C39 /* TestMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestMessage.m; sourceTree = "<group>"; };
-		22278B33162D562100633C39 /* TestObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestObject.h; sourceTree = "<group>"; };
-		22278B34162D562D00633C39 /* TestObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestObject.m; sourceTree = "<group>"; };
-		22278B39162D565400633C39 /* TestRouter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestRouter.h; sourceTree = "<group>"; };
-		22278B3A162D566100633C39 /* TestRouter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestRouter.m; sourceTree = "<group>"; };
-		22278B3C162D568100633C39 /* TestUser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestUser.h; sourceTree = "<group>"; };
-		22278B3D162D569200633C39 /* TestUser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestUser.m; sourceTree = "<group>"; };
 		22567EE01AEA6FA500603C7A /* ulibsmppTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ulibsmppTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		22567EE31AEA6FA500603C7A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		225C200F1AEF862B00C86D4F /* TestDeliveryReport.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = TestDeliveryReport.m; path = ulibsmppTests/TestDeliveryReport.m; sourceTree = "<group>"; };
-		225C20111AEF869200C86D4F /* TestDeliveryReport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestDeliveryReport.h; sourceTree = "<group>"; };
-		225C20141AEF873400C86D4F /* TestDeliveryReport.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestDeliveryReport.m; sourceTree = "<group>"; };
-		227F45E616B9655D00E93608 /* TestSMPPAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestSMPPAdditions.h; sourceTree = "<group>"; };
-		227F45E716B9657100E93608 /* TestSMPPAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestSMPPAdditions.m; sourceTree = "<group>"; };
-		227F45EC16B9659A00E93608 /* TestUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestUtils.h; sourceTree = "<group>"; };
-		227F45ED16B965A500E93608 /* TestUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestUtils.m; sourceTree = "<group>"; };
-		22DB84B5162DAA0000F2223C /* TestCounter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = TestCounter.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
-		22DB84B6162DAA0100F2223C /* TestCounter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = TestCounter.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
-		22DF11D61635375800900D01 /* smpp-client.conf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "smpp-client.conf"; path = "ulibsmppTests/smpp-client.conf"; sourceTree = SOURCE_ROOT; };
-		22DF11D81635376900900D01 /* smpp-server.conf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "smpp-server.conf"; path = "ulibsmppTests/smpp-server.conf"; sourceTree = SOURCE_ROOT; };
-		22DF11DA1635377500900D01 /* submit-test.conf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "submit-test.conf"; path = "ulibsmppTests/submit-test.conf"; sourceTree = SOURCE_ROOT; };
 		A6019BAF1AC15C3A00854472 /* VERSION */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = VERSION; sourceTree = "<group>"; };
 		A639C02B2D3D330A009BFAC7 /* configure.ac */ = {isa = PBXFileReference; lastKnownFileType = text; path = configure.ac; sourceTree = "<group>"; };
 		A6798B9E22BBBAD00019806C /* ulib.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ulib.framework; path = "/Library/Application Support/FinkTelecomServices/frameworks/ulib.framework"; sourceTree = "<absolute>"; };
@@ -159,18 +112,12 @@
 		A6BCC87E2AE6DF0700C34D40 /* NSData+HexFunctions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+HexFunctions.m"; sourceTree = "<group>"; };
 		A6BCC87F2AE6DF0700C34D40 /* SigAddr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SigAddr.h; sourceTree = "<group>"; };
 		A6BCC8802AE6DF0700C34D40 /* UMSigAddr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UMSigAddr.h; sourceTree = "<group>"; };
-		A6BCC8812AE6DF0700C34D40 /* NSMutableData+UMTestString.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSMutableData+UMTestString.h"; sourceTree = "<group>"; };
 		A6BCC8822AE6DF0700C34D40 /* NSString+HexFunctions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+HexFunctions.m"; sourceTree = "<group>"; };
 		A6BCC8832AE6DF0700C34D40 /* PriorityQueue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PriorityQueue.m; sourceTree = "<group>"; };
-		A6BCC8842AE6DF0700C34D40 /* TestUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestUtils.m; sourceTree = "<group>"; };
 		A6BCC8852AE6DF0700C34D40 /* UMSigAddrWithHistory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UMSigAddrWithHistory.h; sourceTree = "<group>"; };
 		A6BCC8862AE6DF0700C34D40 /* GsmCharSet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GsmCharSet.h; sourceTree = "<group>"; };
 		A6BCC8872AE6DF0800C34D40 /* PriorityQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PriorityQueue.h; sourceTree = "<group>"; };
-		A6BCC8882AE6DF0800C34D40 /* NSMutableString+UMTestString.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSMutableString+UMTestString.h"; sourceTree = "<group>"; };
 		A6BCC8892AE6DF0800C34D40 /* PointCode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PointCode.h; sourceTree = "<group>"; };
-		A6BCC88A2AE6DF0800C34D40 /* TestUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestUtils.h; sourceTree = "<group>"; };
-		A6BCC88B2AE6DF0800C34D40 /* NSMutableData+UMTestString.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSMutableData+UMTestString.m"; sourceTree = "<group>"; };
-		A6BCC88C2AE6DF0800C34D40 /* NSMutableString+UMTestString.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSMutableString+UMTestString.m"; sourceTree = "<group>"; };
 		A6BCC88D2AE6DF0800C34D40 /* NSData+HexFunctions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+HexFunctions.h"; sourceTree = "<group>"; };
 		A6BCC8A62AE6DF2600C34D40 /* UniversalSMSC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UniversalSMSC.h; sourceTree = "<group>"; };
 		A6BCC8A72AE6DF2600C34D40 /* SmscConnectionMessageProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SmscConnectionMessageProtocol.h; sourceTree = "<group>"; };
@@ -216,6 +163,7 @@
 		A6BCC8F72AE6DF5300C34D40 /* SmscConnectionEMIUCP.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SmscConnectionEMIUCP.h; sourceTree = "<group>"; };
 		A6BCC8F82AE6DF5300C34D40 /* SmscConnectionEMIUCP.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SmscConnectionEMIUCP.m; sourceTree = "<group>"; };
 		A6D54EAA181EAE630030B3BD /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		A6DA330C2D941C6800B7027F /* um.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = um.framework; path = "/Library/Application Support/FinkTelecomServices/frameworks/um.framework"; sourceTree = "<absolute>"; };
 		A6DB3E73191E41810090FC94 /* ulibsmpp.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ulibsmpp.m; sourceTree = "<group>"; };
 		A6DDD9281635FAFA002FA7CC /* ulibsmpp-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ulibsmpp-Prefix.pch"; sourceTree = "<group>"; };
 		A6DDD92B1635FBC6002FA7CC /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = InfoPlist.strings; sourceTree = "<group>"; };
@@ -237,6 +185,7 @@
 			files = (
 				A6798B9F22BBBAD00019806C /* ulib.framework in Frameworks */,
 				A642ADB91AC9CEE500854472 /* Foundation.framework in Frameworks */,
+				A6DA330D2D941C6800B7027F /* um.framework in Frameworks */,
 				A68348C528854CF3003351AF /* ulibasn1.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -260,7 +209,6 @@
 				A6F6941B1B4E855F0090FC94 /* Makefile.linux.in */,
 				A6F6941C1B4E855F0090FC94 /* Makefile.osx.in */,
 				A6F6941D1B4E855F0090FC94 /* ulibsmpp.pc.in */,
-				225C200F1AEF862B00C86D4F /* TestDeliveryReport.m */,
 				A6DDD92E1635FD4B002FA7CC /* ulibsmpp */,
 				22278B11162D53D200633C39 /* ulibsmppTests */,
 				22278AF4162D53D200633C39 /* Frameworks */,
@@ -282,9 +230,10 @@
 		22278AF4162D53D200633C39 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				22278AFA162D53D200633C39 /* Foundation.framework */,
 				A6798B9E22BBBAD00019806C /* ulib.framework */,
 				A68348C428854CF3003351AF /* ulibasn1.framework */,
-				22278AFA162D53D200633C39 /* Foundation.framework */,
+				A6DA330C2D941C6800B7027F /* um.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -292,33 +241,6 @@
 		22278B11162D53D200633C39 /* ulibsmppTests */ = {
 			isa = PBXGroup;
 			children = (
-				22DF11DA1635377500900D01 /* submit-test.conf */,
-				22567EE31AEA6FA500603C7A /* Info.plist */,
-				22DF11D81635376900900D01 /* smpp-server.conf */,
-				22DF11D61635375800900D01 /* smpp-client.conf */,
-				22278B2A162D55BB00633C39 /* smpptest.h */,
-				22278B2B162D55C800633C39 /* smpptest.m */,
-				22278B29162D559E00633C39 /* NSString+TestUtils.h */,
-				22278B26162D558400633C39 /* NSString+TestSMPPAdditions.h */,
-				22278B27162D559100633C39 /* NSString+TestSMPPAdditions.m */,
-				22DB84B5162DAA0000F2223C /* TestCounter.h */,
-				22DB84B6162DAA0100F2223C /* TestCounter.m */,
-				22278B2D162D55D100633C39 /* TestLogFile.h */,
-				22278B2E162D55E400633C39 /* TestLogFile.m */,
-				225C20111AEF869200C86D4F /* TestDeliveryReport.h */,
-				225C20141AEF873400C86D4F /* TestDeliveryReport.m */,
-				22278B30162D560700633C39 /* TestMessage.h */,
-				22278B31162D561000633C39 /* TestMessage.m */,
-				22278B33162D562100633C39 /* TestObject.h */,
-				22278B34162D562D00633C39 /* TestObject.m */,
-				22278B39162D565400633C39 /* TestRouter.h */,
-				22278B3A162D566100633C39 /* TestRouter.m */,
-				227F45E616B9655D00E93608 /* TestSMPPAdditions.h */,
-				227F45E716B9657100E93608 /* TestSMPPAdditions.m */,
-				227F45EC16B9659A00E93608 /* TestUtils.h */,
-				227F45ED16B965A500E93608 /* TestUtils.m */,
-				22278B3C162D568100633C39 /* TestUser.h */,
-				22278B3D162D569200633C39 /* TestUser.m */,
 			);
 			path = ulibsmppTests;
 			sourceTree = "<group>";
@@ -405,10 +327,6 @@
 				A6BCC87C2AE6DF0700C34D40 /* GsmCharSet.m */,
 				A6BCC88D2AE6DF0800C34D40 /* NSData+HexFunctions.h */,
 				A6BCC87E2AE6DF0700C34D40 /* NSData+HexFunctions.m */,
-				A6BCC8812AE6DF0700C34D40 /* NSMutableData+UMTestString.h */,
-				A6BCC88B2AE6DF0800C34D40 /* NSMutableData+UMTestString.m */,
-				A6BCC8882AE6DF0800C34D40 /* NSMutableString+UMTestString.h */,
-				A6BCC88C2AE6DF0800C34D40 /* NSMutableString+UMTestString.m */,
 				A6BCC87B2AE6DF0700C34D40 /* NSString+HexFunctions.h */,
 				A6BCC8822AE6DF0700C34D40 /* NSString+HexFunctions.m */,
 				A6BCC8892AE6DF0800C34D40 /* PointCode.h */,
@@ -416,8 +334,6 @@
 				A6BCC8872AE6DF0800C34D40 /* PriorityQueue.h */,
 				A6BCC8832AE6DF0700C34D40 /* PriorityQueue.m */,
 				A6BCC87F2AE6DF0700C34D40 /* SigAddr.h */,
-				A6BCC88A2AE6DF0800C34D40 /* TestUtils.h */,
-				A6BCC8842AE6DF0700C34D40 /* TestUtils.m */,
 				A6BCC8782AE6DF0700C34D40 /* UMPrefs.h */,
 				A6BCC8762AE6DF0700C34D40 /* UMPrefs.m */,
 				A6BCC8802AE6DF0700C34D40 /* UMSigAddr.h */,
@@ -442,7 +358,6 @@
 				A6BCC8D52AE6DF2600C34D40 /* SmscConnectionUserProtocol.h in Headers */,
 				A6793D941934AA2F0090FC94 /* NSMutableString+UniversalSMPP.h in Headers */,
 				A6BCC8D22AE6DF2600C34D40 /* SmscConnectionTransactionProtocol.h in Headers */,
-				A6BCC8992AE6DF0800C34D40 /* NSMutableData+UMTestString.h in Headers */,
 				A6BCC8CF2AE6DF2600C34D40 /* SmscConnectionRouterProtocol.h in Headers */,
 				A6BCC8EC2AE6DF3900C34D40 /* SmscConnectionSMPP.h in Headers */,
 				A6BCC8E12AE6DF2600C34D40 /* SmscConnectionMessagePassingProtocol.h in Headers */,
@@ -480,8 +395,6 @@
 				A6BCC8DD2AE6DF2600C34D40 /* SmscConnection.h in Headers */,
 				A6BCC8DB2AE6DF2600C34D40 /* GSMErrorCode.h in Headers */,
 				A6BCC89D2AE6DF0800C34D40 /* UMSigAddrWithHistory.h in Headers */,
-				A6BCC8A02AE6DF0800C34D40 /* NSMutableString+UMTestString.h in Headers */,
-				A6BCC8A22AE6DF0800C34D40 /* TestUtils.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -578,9 +491,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				22567EED1AEA700400603C7A /* smpp-server.conf in Resources */,
-				22567EEE1AEA700800603C7A /* smpp-client.conf in Resources */,
-				22567EEC1AEA6FFE00603C7A /* submit-test.conf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -618,7 +528,6 @@
 				A6BCC8DC2AE6DF2600C34D40 /* SmscStandardReport.m in Sources */,
 				A6BCC8EE2AE6DF3900C34D40 /* SmppMultiResult.m in Sources */,
 				A6BCC8922AE6DF0800C34D40 /* UMSigAddr.m in Sources */,
-				A6BCC8A32AE6DF0800C34D40 /* NSMutableData+UMTestString.m in Sources */,
 				A6BCC8F32AE6DF3900C34D40 /* SmppTlv.m in Sources */,
 				A6BCC8D32AE6DF2600C34D40 /* SmscConnectionNACK.m in Sources */,
 				A6DB3E74191E41810090FC94 /* ulibsmpp.m in Sources */,
@@ -632,9 +541,7 @@
 				A6DDD9D3163621FD002FA7CC /* NSString+UniversalSMPP.m in Sources */,
 				A6BCC89A2AE6DF0800C34D40 /* NSString+HexFunctions.m in Sources */,
 				A6DDD9D81636221A002FA7CC /* NSMutableString+UniversalSMPP.m in Sources */,
-				A6BCC89C2AE6DF0800C34D40 /* TestUtils.m in Sources */,
 				A6BCC8F22AE6DF3900C34D40 /* SmscConnectionSMPP.m in Sources */,
-				A6BCC8A42AE6DF0800C34D40 /* NSMutableString+UMTestString.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -642,20 +549,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				22567EF51AEA703700603C7A /* TestRouter.m in Sources */,
 				221D0F6B1AEA71D8000E8189 /* NSMutableString+UniversalSMPP.m in Sources */,
-				22567EF11AEA702100603C7A /* TestCounter.m in Sources */,
-				22567EF31AEA702D00603C7A /* TestMessage.m in Sources */,
-				225C20101AEF862B00C86D4F /* TestDeliveryReport.m in Sources */,
-				22567EF81AEA704600603C7A /* TestUser.m in Sources */,
-				22567EF21AEA702800603C7A /* TestLogFile.m in Sources */,
-				22567EF41AEA703200603C7A /* TestObject.m in Sources */,
-				22567EF61AEA703B00603C7A /* TestSMPPAdditions.m in Sources */,
 				221D0F6A1AEA71D4000E8189 /* NSString+UniversalSMPP.m in Sources */,
 				221D0F691AEA71CF000E8189 /* ulibsmpp.m in Sources */,
-				22567EEF1AEA700E00603C7A /* smpptest.m in Sources */,
-				22567EF01AEA701B00603C7A /* NSString+TestSMPPAdditions.m in Sources */,
-				22567EF71AEA704100603C7A /* TestUtils.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -843,6 +739,10 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 2.0.0;
 				DEVELOPMENT_TEAM = 38L827M334;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(LOCAL_LIBRARY_DIR)/Application\\ Support/FinkTelecomServices/frameworks",
+				);
 				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LD_RUNPATH_SEARCH_PATHS = "\"/Library/Application Support/\"";
 				MACOSX_DEPLOYMENT_TARGET = 15.0;
@@ -865,6 +765,10 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 2.0.0;
 				DEVELOPMENT_TEAM = 38L827M334;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(LOCAL_LIBRARY_DIR)/Application\\ Support/FinkTelecomServices/frameworks",
+				);
 				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LD_RUNPATH_SEARCH_PATHS = "\"/Library/Application Support/\"";
 				MACOSX_DEPLOYMENT_TARGET = 15.0;

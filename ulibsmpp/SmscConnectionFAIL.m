@@ -222,7 +222,7 @@
     
     id<SmscConnectionReportProtocol> report = NULL;
     
-    msg.providerReference = [NSString stringWithUTF8String:this_msg_id];
+    msg.providerReference = UMDIRTY_STRING([NSString stringWithUTF8String:this_msg_id]);
     [sendingObject submitMessageSent:msg
                            forObject:self
                          synchronous:NO];
@@ -234,8 +234,10 @@
     [formatter setDateFormat:@"yyyyMMddHHmmss"];
     NSString *reportText = [NSString stringWithFormat:@"id:%@ sub:001 dlvrd:001 submit date:%@ done date:%@ stat:UNDELVRD err:%03d text:no-route-to-destination",
                             msg.routerReference,
-                            msg.submitTimestamp ?    [formatter stringFromDate:msg.submitTimestamp]:[formatter stringFromDate:[NSDate date]],
-                            msg.messageAttemptedTimestamp ? [formatter stringFromDate:msg.messageAttemptedTimestamp]:[formatter stringFromDate:[NSDate date]],
+                            msg.submitTimestamp     ?    [formatter stringFromDate:msg.submitTimestamp.dateValue]
+                                                         :[formatter stringFromDate:[NSDate date]],
+                            msg.messageAttemptedTimestamp ? [formatter stringFromDate:msg.messageAttemptedTimestamp.dateValue]
+                                                          :[formatter stringFromDate:[NSDate date]],
                             errorToReturn.dlrError];
     report.reportType               = SMS_REPORT_UNDELIVERABLE;
     if(errorToReturn == NULL)
@@ -244,13 +246,13 @@
         [errorToReturn setSmppErrorCode:ESME_RSYSERR];
     }
     report.error                    = errorToReturn;
-    report.routerReference          = msg.routerReference;
-    report.providerReference        = msg.providerReference;
-    report.userReference            = msg.userReference;
+    report.routerReference          = msg.routerReference.stringValue;
+    report.providerReference        = msg.providerReference.stringValue;
+    report.userReference            = msg.userReference.stringValue;
     report.originalSendingObject    = msg.originalSendingObject;
     report.reportText               = reportText;
-    report.fromNumber               = msg.toNumber;
-    report.toNumber                 = msg.fromNumber;
+    report.fromNumber               = msg.toNumber.stringValue;
+    report.toNumber                 = msg.fromNumber.stringValue;
     
     [sendingObject deliverReport:report
                        forObject:self
@@ -296,17 +298,17 @@
     [formatter setDateFormat:@"yyyyMMddHHmmss"];
     NSString *reportText = [NSString stringWithFormat:@"id:%@ sub:001 dlvrd:001 submit date:%@ done date:%@ stat:DELIVRD err:000",
                             msg.routerReference,
-                            msg.submitTimestamp  ?    [formatter stringFromDate:msg.submitTimestamp]:[formatter stringFromDate:[NSDate date]],
-                            msg.messageAttemptedTimestamp ? [formatter stringFromDate:msg.messageAttemptedTimestamp]:[formatter stringFromDate:[NSDate date]]];
+                            msg.submitTimestamp  ?    [formatter stringFromDate:msg.submitTimestamp.dateValue]:[formatter stringFromDate:[NSDate date]],
+                            msg.messageAttemptedTimestamp ? [formatter stringFromDate:msg.messageAttemptedTimestamp.dateValue]:[formatter stringFromDate:[NSDate date]]];
     report.reportType               = SMS_REPORT_DELIVERED;
     report.error                    = NULL;
-    report.routerReference          = msg.routerReference;
-    report.providerReference        = msg.providerReference;
-    report.userReference            = msg.userReference;
+    report.routerReference          = msg.routerReference.stringValue;
+    report.providerReference        = msg.providerReference.stringValue;
+    report.userReference            = msg.userReference.stringValue;
     report.originalSendingObject    = msg.originalSendingObject;
     report.reportText               = reportText;
-    report.fromNumber               = msg.toNumber;
-    report.toNumber                 = msg.fromNumber;
+    report.fromNumber               = msg.toNumber.stringValue;
+    report.toNumber                 = msg.fromNumber.stringValue;
     [sendingObject submitReport:report
                       forObject:self
                     synchronous:NO];

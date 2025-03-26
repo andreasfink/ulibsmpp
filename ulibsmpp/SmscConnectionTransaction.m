@@ -14,7 +14,6 @@
 @synthesize incoming;
 @synthesize status;
 @synthesize	sequenceNumber;
-@synthesize	_message;
 @synthesize	report;
 @synthesize upperObject;
 @synthesize lowerObject;

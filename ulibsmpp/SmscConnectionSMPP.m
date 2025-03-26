@@ -395,7 +395,7 @@ const SmppErrorCodeListEntry SmppErrorCodeList[] =
 	{
 		if(transaction.status.internalError == SMSError_none)
 		{
-			pdu2 = [SmppPdu OutgoingSubmitSmRespOK:transaction._message withId:[transaction._message routerReference]];
+            pdu2 = [SmppPdu OutgoingSubmitSmRespOK:transaction.message withId:transaction.message.routerReference.stringValue];
 			err = [self sendPdu: pdu2 withSequenceString:transaction.sequenceNumber];
 		}
 		else 
@@ -413,7 +413,7 @@ const SmppErrorCodeListEntry SmppErrorCodeList[] =
 	{
         if(transaction.status.internalError == SMSError_none)
 		{
-            pdu2 = [SmppPdu OutgoingDeliverSmRespOK:transaction._message withId:[transaction._message routerReference]];
+            pdu2 = [SmppPdu OutgoingDeliverSmRespOK:transaction.message withId:transaction.message.routerReference.stringValue];
 			err = [self sendPdu: pdu2 withSequenceString:transaction.sequenceNumber];
 		}
 		else
@@ -453,7 +453,7 @@ const SmppErrorCodeListEntry SmppErrorCodeList[] =
 	{
         if(transaction.status.internalError == SMSError_none)
 		{
-			pdu2 = [SmppPdu OutgoingSubmitSmRespOK:transaction._message withId:[transaction._message routerReference]];
+			pdu2 = [SmppPdu OutgoingSubmitSmRespOK:transaction.message withId:transaction.message.routerReference.stringValue];
 			err = [self sendPdu: pdu2 withSequenceString:transaction.sequenceNumber];
 		}
 		else
@@ -518,7 +518,7 @@ const SmppErrorCodeListEntry SmppErrorCodeList[] =
         {
             SmscConnectionTransaction *transaction = [[SmscConnectionTransaction alloc]init];
             transaction.sequenceNumber = [pdu sequenceString];
-            transaction._message = msg;
+            transaction.message = msg;
             transaction.type = TT_SUBMIT_MESSAGE;
             [self addOutgoingTransaction: transaction];
             i++;
@@ -546,7 +546,7 @@ const SmppErrorCodeListEntry SmppErrorCodeList[] =
         {
             SmscConnectionTransaction *transaction = [[SmscConnectionTransaction alloc]init];
             transaction.sequenceNumber = [pdu sequenceString];
-            transaction._message = msg;
+            transaction.message = msg;
             transaction.type = TT_DELIVER_MESSAGE;
             [self addOutgoingTransaction: transaction];
             i++;
@@ -574,7 +574,7 @@ const SmppErrorCodeListEntry SmppErrorCodeList[] =
         {
             SmscConnectionTransaction *transaction = [[SmscConnectionTransaction alloc]init];
             transaction.sequenceNumber = [pdu sequenceString];
-            transaction._message = msg;
+            transaction.message = msg;
             transaction.report = report;
             transaction.type = TT_SUBMIT_REPORT;
             [self addOutgoingTransaction: transaction];
@@ -606,7 +606,7 @@ const SmppErrorCodeListEntry SmppErrorCodeList[] =
         {
             SmscConnectionTransaction *transaction = [[SmscConnectionTransaction alloc]init];
             transaction.sequenceNumber = [pdu sequenceString];
-            transaction._message = msg;
+            transaction.message = msg;
             transaction.report = report;
             transaction.type = TT_DELIVER_REPORT;
             [self addOutgoingTransaction: transaction];
@@ -1281,9 +1281,9 @@ end:
     id<SmscConnectionMessageProtocol> msg = [_router createMessage];
     @try
     {
-        [msg setInboundMethod:  @"smpp"];
-        [msg setInboundType:    @"submit"];
-        [msg setFromIp: [_uc connectedRemoteAddress]];
+        msg.inboundMethod = UMDIRTY_STRING(@"smpp");
+        msg.inboundType   = UMDIRTY_STRING(@"submit");
+        msg.fromIp        = UMDIRTY_STRING([_uc connectedRemoteAddress]);
         msg.user = _user;
         
         [pdu resetCursor];
@@ -1318,7 +1318,7 @@ end:
                 
             }
         }
-        msg.fromNumber = [from asString:1];
+        msg.fromNumber = UMDIRTY_STRING([from asString:1]);
         
         ton  = (UMTonType)[pdu grabInt8];
         npi  = (UMNpiType)[pdu grabInt8];
@@ -1347,7 +1347,7 @@ end:
                        ]);
             }
         }
-        msg.toNumber = [to asString:1];
+        msg.toNumber = UMDIRTY_STRING([to asString:1]);
         
         NSInteger esmClass = [pdu grabInt8];
         /* TODO: do something with ESM class */
@@ -1370,30 +1370,30 @@ end:
         }
         if(esmClass & SMPP_PDU_ESM_CLASS_SUBMIT_UDH_INDICATOR)
         {
-            msg.pduUdhIndicator=@YES;
+            msg.pduUdhIndicator=UMDIRTY_INTEGER(1);
         }
         else
         {
-            msg.pduUdhIndicator=@NO;
+            msg.pduUdhIndicator=UMDIRTY_INTEGER(0);
         }
         if(esmClass & SMPP_PDU_ESM_CLASS_SUBMIT_RPI)
         {
-            msg.pduReplyPathIndicator = @YES;
+            msg.pduReplyPathIndicator = UMDIRTY_INTEGER(1);
         }
         else
         {
-            msg.pduReplyPathIndicator = @NO;
+            msg.pduReplyPathIndicator = UMDIRTY_INTEGER(0);
         }
-        msg.pduPid =  @([pdu grabInt8]);
-        msg.messagePriority = @([pdu grabInt8]);
+        msg.pduPid =  UMDIRTY_INTEGER([pdu grabInt8]);
+        msg.messagePriority = UMDIRTY_INTEGER([pdu grabInt8]);
 
         NSString *defferredDeliveryString   = [pdu grabStringWithEncoding:NSISOLatin1StringEncoding maxLength:255];
         NSDate *defferredDelivery           = [SmppPdu smppTimestampFromString:defferredDeliveryString];
-        msg.deferred = defferredDelivery;
+        msg.deferred = UMDIRTY_DATE(defferredDelivery);
 
         NSString *validityPeriodString      = [pdu grabStringWithEncoding:NSISOLatin1StringEncoding maxLength:255];
         NSDate *validityPeriod              = [SmppPdu smppTimestampFromString:validityPeriodString];
-        msg.validity = validityPeriod;
+        msg.validity = UMDIRTY_DATE(validityPeriod);
         UMRequestMaskValue dlrMask = (UMRequestMaskValue)[pdu grabInt8];
         UMReportMaskValue requestMask = 0;
         if(dlrMask & REQUEST_MASK_SUCCESS_OR_FAIL)
@@ -1408,64 +1408,64 @@ end:
         {
             requestMask |= (UMDLR_MASK_BUFFERED | UMDLR_MASK_SUBMIT);
         }
-        msg.deliveryReportMask      = @(requestMask);
-        msg.replaceIfPresentFlag    = [pdu grabInt8] ? @YES : @NO;
+        msg.deliveryReportMask      = [[UMDirtyInteger alloc]initWithInteger:requestMask];
+        msg.replaceIfPresentFlag    = [[UMDirtyInteger alloc]initWithInteger:([pdu grabInt8] ? 1 : 0)];
         int dcs = (int)[pdu grabInt8];
         switch(dcs)
         {
             case 0: /* default */
             case 1: /* IA5 CCITT T.50 */
-                msg.pduCoding=@"gsm";
+                msg.pduCoding=[[UMDirtyString alloc]initWithString:@"gsm"];
                 break;
             case 2: /* Octet unspecified (8-bit binary) */
             case 4: /* Octet unspecified (8-bit binary) */
-                msg.pduCoding=@"binary";
+                msg.pduCoding=UMDIRTY_STRING(@"binary");
                 break;
             case 3: /* Latin 1 ISO-8859-1 */
-                msg.pduCoding=@"latin-1";
+                msg.pduCoding=UMDIRTY_STRING(@"latin-1");
                 break;
             case 5: /* JIS (X 0208-1990) */
-                msg.pduCoding=@"jis";
+                msg.pduCoding=UMDIRTY_STRING(@"jis");
                 break;
             case 6: /* Cyrillic (ISO-8859-5) */
-                msg.pduCoding=@"cyrillic";
+                msg.pduCoding=UMDIRTY_STRING(@"cyrillic");
                 break;
             case 7: /* Latin/Hebrew (ISO-8859-8)  */
-                msg.pduCoding=@"latin-8";
+                msg.pduCoding=UMDIRTY_STRING(@"latin-8");
                 break;
             case 8: /* UCS2 */
-                msg.pduCoding=@"ucs2";
+                msg.pduCoding=UMDIRTY_STRING(@"ucs2");
                 break;
             case 9: /* UCS2 */
-                msg.pduCoding=@"ucs2";
+                msg.pduCoding=UMDIRTY_STRING(@"ucs2");
                 break;
             case 0x0A: /* Music Codes */
-                msg.pduCoding=@"music";
+                msg.pduCoding=UMDIRTY_STRING(@"music");
                 break;
             case 0x0D:
-                msg.pduCoding = @"extended-kanji";
+                msg.pduCoding = UMDIRTY_STRING(@"extended-kanji");
                 break;
             case 0x0E:
-                msg.pduCoding = @"ks-c-5601";
+                msg.pduCoding = UMDIRTY_STRING(@"ks-c-5601");
                 break;
             default:
             {
                 int upperFlags = dcs & 0xF0;
                 if((upperFlags == 0xC0)  || (upperFlags == 0xD0))
                 {
-                    msg.pduCoding = @"gsm-mwi";
+                    msg.pduCoding = UMDIRTY_STRING(@"gsm-mwi");
                 }
                 else if(upperFlags == 0xF0)
                 {
-                    msg.pduCoding = @"gsm-message-class-control";
+                    msg.pduCoding = UMDIRTY_STRING(@"gsm-message-class-control");
                 }
                 else
                 {
-                    msg.pduCoding = @"reserved";
+                    msg.pduCoding = UMDIRTY_STRING(@"reserved");
                 }
             }
         }
-        msg.pduDcs                  = @(dcs);
+        msg.pduDcs= UMDIRTY_INTEGER(dcs);
         
     //	int i;
         
@@ -1473,7 +1473,7 @@ end:
     //	[msg setDefaultMessageId: i];
         int length = (int)[pdu grabInt8];
             
-        if(msg.pduUdhIndicator.boolValue==YES)
+        if(msg.pduUdhIndicator.integerValue==YES)
         {
             if(length< 1)
             {
@@ -1518,9 +1518,9 @@ end:
             data = [[NSData alloc] initWithBytes: &((unsigned char *)[[pdu payload] bytes])[[pdu cursor]] length:dataLen];
             [pdu setCursor: [pdu cursor] + dataLen + 1];
         }
-        msg.pduUdh = udh;
-        msg.pduContent = data;
-        msg.plaintextContent = [SmscConnectionSMPP stringFromGsm8:data];
+        msg.pduUdh = UMDIRTY_DATA(udh);
+        msg.pduContent = UMDIRTY_DATA(data);
+        msg.plaintextContent = UMDIRTY_STRING([SmscConnectionSMPP stringFromGsm8:data]);
         
         [pdu grabTlvsWithDefinitions:_tlvDefs];
         if([msg respondsToSelector:@selector(setTlvs:)])
@@ -1533,16 +1533,16 @@ end:
             case 0x00: /* Unknown (default) */
                 break;
             case 0x01: /* MS Display */
-                msg.messageClass= @(MC_CLASS0); /* 3GPP TS 23.038 Class 0 = flash SMS */
+                msg.messageClass= UMDIRTY_INTEGER(MC_CLASS0); /* 3GPP TS 23.038 Class 0 = flash SMS */
                 break;
             case 0x02: /* Mobile Equipment */
-                msg.messageClass=@(MC_CLASS1); /* 3GPP TS 23.038 Default meaning: ME-specific. */
+                msg.messageClass=UMDIRTY_INTEGER(MC_CLASS1); /* 3GPP TS 23.038 Default meaning: ME-specific. */
                 break;
             case 0x03: /* Smart Card 1 (expected to be SIM if a SIM exists in the MS) */
-                msg.messageClass= @(MC_CLASS2); /* 3GPP TS 23.038 (U)SIM specific message */
+                msg.messageClass= UMDIRTY_INTEGER(MC_CLASS2); /* 3GPP TS 23.038 (U)SIM specific message */
                 break;
             case 0x04: /* External Unit 1 */
-                msg.messageClass= @(MC_CLASS3); /* default meaning: TE specific (see 3GPP TS 27.005 [8]) */
+                msg.messageClass= UMDIRTY_INTEGER(MC_CLASS3); /* default meaning: TE specific (see 3GPP TS 27.005 [8]) */
                 break;
             default: /*  5 to 255 = reserved */
                 @throw([NSException exceptionWithName:@"ESME_ROPTPARNOTALLWD"
@@ -1585,12 +1585,12 @@ end:
         [self.inboundMessagesThroughput increase];
 
         msg.user = _user;
-        [msg setUserReference:[pdu sequenceString]];
+        msg.userReference = UMDIRTY_STRING([pdu sequenceString]);
         
         transaction = [[SmscConnectionTransaction alloc] init];
         [transaction setLowerObject:self];
         transaction.sequenceNumber = [pdu sequenceString];
-        transaction._message= msg;
+        transaction.message= msg;
         [transaction setType: TT_SUBMIT_MESSAGE];
         [transaction setIncoming:YES];
         [self addIncomingTransaction:transaction];
@@ -1640,11 +1640,11 @@ end:
     }
     
     SmscConnectionTransaction *transaction = [self findOutgoingTransaction:[pdu sequenceString]];
-    id<SmscConnectionMessageProtocol>msg = transaction._message;
+    id<SmscConnectionMessageProtocol>msg = transaction.message;
     if(msg)
     {
-        msg.networkErrorCode = @(stCode);
-        msg.providerReference = remoteMessageId;
+        msg.networkErrorCode = UMDIRTY_INTEGER(stCode);
+        msg.providerReference = UMDIRTY_STRING(remoteMessageId);
 
         if (stCode == ESME_ROK)
         {
@@ -1694,7 +1694,7 @@ end:
     [pdu unpackDeliverSmUsingTlvDefinition:_tlvDefs];
     
     esmClass = (int)[pdu esm_class];
-    msg.esmClass = @(esmClass);
+    msg.esmClass = UMDIRTY_INTEGER(esmClass);
     deliveryReport = esmClass == SMPP_PDU_ESM_CLASS_DELIVER_SMSC_DELIVER_ACK ||
                      esmClass == SMPP_PDU_ESM_CLASS_DELIVER_SME_DELIVER_ACK ||
                      esmClass == SMPP_PDU_ESM_CLASS_DELIVER_SME_MANULAL_ACK ||
@@ -1711,7 +1711,7 @@ end:
     else
     {
         msg = [self deliverPduToMsg:pdu];
-        transaction._message = msg;
+        transaction.message = msg;
         [transaction setType: TT_DELIVER_MESSAGE];
     }
     [transaction setIncoming:YES];
@@ -1758,8 +1758,8 @@ end:
 //    NSString *remoteMessageId = [pdu grabStringWithEncoding:NSASCIIStringEncoding maxLength:65];
     SmscConnectionTransaction *transaction = [self findOutgoingTransaction:[pdu sequenceString]];
 
-//    NSString *sentMessageId = transaction._message.routerReference;
-    message = transaction._message;
+//    NSString *sentMessageId = transaction.message.routerReference;
+    message = transaction.message;
     report = [transaction report];
     if(report)
     {
@@ -1785,7 +1785,7 @@ end:
     else if(message)
     {
         /* this is an ack on a sms-mo we sent upstream */
-        message.networkErrorCode=@(stCode);
+        message.networkErrorCode=UMDIRTY_INTEGER(stCode);
         // As we sent a deliver sm upstream, remoteMessageId should be our own router id we send before
         // so definitively not the same as the provider's message ID we used before.
         //message.connectionReference = remoteMessageId;/* FIXME setRemoteMessageId should be what? */
@@ -2472,9 +2472,9 @@ end:
     SmppPdu *pdu2;
     
     msg = [_router createMessage];
-    msg.inboundMethod   =   @"smpp";
-    msg.inboundType     =   @"deliver";
-	msg.fromIp = [_uc connectedRemoteAddress];
+    msg.inboundMethod   = UMDIRTY_STRING(@"smpp");
+    msg.inboundType     = UMDIRTY_STRING(@"deliver");
+	msg.fromIp          = UMDIRTY_STRING([_uc connectedRemoteAddress]);
     
 	ton  = (int)[pdu source_addr_ton];
 	npi  = (int)[pdu source_addr_npi];
@@ -2491,7 +2491,7 @@ end:
 		[from setNpi: npi];
 		[from setAddr: addr];
 	}
-    msg.fromNumber = from.stringValue;
+    msg.fromNumber = UMDIRTY_STRING(from.stringValue);
     
 	ton  = (int)[pdu dest_addr_ton];
 	npi  = (int)[pdu dest_addr_npi];
@@ -2508,26 +2508,26 @@ end:
 		[to setNpi: npi];
 		[to setAddr: addr];
 	}
-    msg.toNumber = to.stringValue;
-    
+    msg.toNumber = UMDIRTY_STRING(to.stringValue);
+
     int esmClass = (int)[pdu esm_class];
     if(esmClass & SMPP_PDU_ESM_CLASS_DELIVER_UDH_INDICATOR)
     {
-        msg.pduUdhIndicator = @YES;
+        msg.pduUdhIndicator = UMDIRTY_INTEGER(1);
     }
     if(esmClass & SMPP_PDU_ESM_CLASS_DELIVER_RPI)
     {
-        msg.pduReplyPathIndicator = @YES;
+        msg.pduReplyPathIndicator = UMDIRTY_INTEGER(1);
     }
-    [msg setPduPid: @([pdu protocol_id])];
-	[msg setMessagePriority: @((int)[pdu priority_flag])];
+    msg.pduPid = UMDIRTY_INTEGER(pdu.protocol_id);
+	msg.messagePriority = UMDIRTY_INTEGER(pdu.priority_flag);
     
-    [msg setReplaceIfPresentFlag: @([pdu replace_if_present_flag] ? YES : NO)];
-	[msg setPduDcs: @([pdu data_coding])];
+    msg.replaceIfPresentFlag = UMDIRTY_INTEGER(pdu.replace_if_present_flag ? 1 : 0);
+    msg.pduDcs = UMDIRTY_INTEGER(pdu.data_coding);
     
     int length = (int)[pdu sm_length];
     NSData *sm = [pdu short_message];
-     if(msg.pduUdhIndicator.boolValue)
+    if(msg.pduUdhIndicator.integerValue)
 	{
 		if(length< 1)
 			goto length_error;
@@ -2545,15 +2545,15 @@ end:
 	}
 	else
 	{
-        //		udhLen = 0;
+        // udhLen = 0;
 		dataLen = length;
 		udh = nil;
 		data = [NSData dataWithData:sm];
 		[pdu setCursor: [pdu cursor] + dataLen + 1];
 	}
     
-	[msg setPduUdh: udh];
-	[msg setPduContent: data];
+	msg.pduUdh = UMDIRTY_DATA(udh);
+	msg.pduContent = UMDIRTY_DATA(data);
     return msg;
     
 length_error:

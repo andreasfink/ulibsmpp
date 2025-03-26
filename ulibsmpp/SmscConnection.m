@@ -494,7 +494,7 @@
         for(key in allKeys)
         {
             transaction = incomingTransactions[key];
-            if([transaction._message isEqual:msg])
+            if([transaction.message isEqual:msg])
             {
                 return transaction;
             }
@@ -516,7 +516,7 @@
         for(key in allKeys)
         {
             transaction = _outgoingTransactions[key];
-            if([transaction._message isEqual:msg])
+            if([transaction.message isEqual:msg])
             {
                 return transaction;
             }

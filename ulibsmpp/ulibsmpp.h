@@ -13,6 +13,7 @@
 #import <ulibsmpp/UniversalSMPP.h>
 #import <ulibsmpp/UniversalEMIUCP.h>
 #import <ulibsmpp/UniversalSMSUtilities.h>
+#import <um/um.h>
 
 @interface ulibsmpp : NSObject
 {
