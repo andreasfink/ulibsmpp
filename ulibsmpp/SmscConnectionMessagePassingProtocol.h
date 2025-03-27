@@ -5,7 +5,6 @@
 //  Created by Andreas Fink on 26/03/15.
 //
 //
-
 /*  the message passing protocol specifies the minimum
     methods to send/receive messages
     between SMSC layers
@@ -33,8 +32,6 @@
  
  */
  
-//#import <ulibsmpp/SmscConnectionMessageProtocol.h>
-#import <ulibsmpp/SmscConnectionReportProtocol.h>
 #import <um/um.h>
 
 @protocol SmscConnectionMessagePassingProtocol<NSObject>
@@ -48,7 +45,7 @@
                synchronous:(BOOL)sync;
 
 - (void) submitMessageFailed:(UMMessage *)msg
-                   withError:(SmscRouterError *)err
+                       error:(NSNumber *)error /* UMSmppError */
                    forObject:(id)reportingObject
                  synchronous:(BOOL)sync;
 
@@ -62,7 +59,7 @@
               synchronous:(BOOL)sync;
 
 - (void) submitReportFailed:(UMMessageReport *)r
-                  withError:(SmscRouterError *)err
+                      error:(NSNumber *)error /* UMSmppError */
                   forObject:(id)reportingObject
                 synchronous:(BOOL)sync;
 
@@ -75,7 +72,7 @@
                 synchronous:(BOOL)sync;
 
 - (void) deliverMessageFailed:(UMMessage *)msg
-                    withError:(SmscRouterError *)err
+                        error:(NSNumber *)error /* UMSmppError */
                     forObject:(id)reportingObject
                   synchronous:(BOOL)sync;
 
@@ -89,8 +86,9 @@
                synchronous:(BOOL)sync;
 
 - (void) deliverReportFailed:(UMMessageReport *)report
-                   withError:(SmscRouterError *)err
+                       error:(NSNumber *)error /* UMSmppError */
                    forObject:(id)reportingObject
                  synchronous:(BOOL)sync;
 
 @end
+

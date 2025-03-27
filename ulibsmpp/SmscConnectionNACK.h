@@ -9,6 +9,6 @@
 #import <ulibsmpp/SmscConnection.h>
 #import <ulibsmpp/SmscConnectionMessagePassingProtocol.h>
 
-@interface SmscConnectionNACK : SmscConnection
+@interface SmscConnectionNACK : SmscConnection<SmscConnectionMessagePassingProtocol>
 
 @end

@@ -14,6 +14,7 @@
 #import "NSString+UniversalSMPP.h"
 #include <sys/signal.h>
 #import "SmscConnectionUserProtocol.h"
+#import <ulibsmpp/UMSmppError.h>
 
 #define SMPP_RECONNECT_DELAY                 30
 #define SMPP_WAIT_FOR_BIND_RESPONSE_DELAY    30
@@ -118,6 +119,7 @@ const SmppErrorCodeListEntry SmppErrorCodeList[] =
 #import "NSString+UniversalSMPP.h"
 
 //#include "utils.h"
+static NSNumber * smppErrorFromInternalError(NSNumber *internalError);
 
 
 @implementation SmscConnectionSMPP
@@ -293,7 +295,7 @@ const SmppErrorCodeListEntry SmppErrorCodeList[] =
     {
         _lastSeq = 1;
     }
-	[pdu setSeq:_lastSeq];
+    pdu.seq =_lastSeq;
 	int ret = [self _sendPdu:pdu];
     ummutex_unlock(_sendLock);
     return ret;
@@ -312,7 +314,7 @@ const SmppErrorCodeListEntry SmppErrorCodeList[] =
 - (UMSocketError) sendPdu:(SmppPdu *)pdu withSeq:(SmppPduSequence)seq
 {
     ummutex_lock(_sendLock);
-	[pdu setSeq:seq];
+    pdu.seq = seq;
     int ret = [self _sendPdu:pdu];
     ummutex_unlock(_sendLock);
     return ret;
@@ -320,7 +322,7 @@ const SmppErrorCodeListEntry SmppErrorCodeList[] =
 
 - (UMSocketError) sendPdu:(SmppPdu *)pdu asResponseTo:(SmppPdu *)pdu1
 {
-	return [self sendPdu:pdu withSeq:[pdu1 seq]];
+	return [self sendPdu:pdu withSeq:pdu1.seq];
 }
 
 - (UMSocketError) _sendPdu:(SmppPdu *)pdu
@@ -333,12 +335,12 @@ const SmppErrorCodeListEntry SmppErrorCodeList[] =
 	NSMutableData	*d;
 	unsigned char header[16];
 	
-	l	= [pdu pdulen];
+	l	= pdu.pdulen;
     [self logOutgoingPdu:pdu];
 
-	t	= (SmppPduType)[pdu type];
-	e	= (SmppErrorCode)[pdu err];
-	s	= [pdu seq];
+	t	= (SmppPduType)pdu.type;
+	e	= (SmppErrorCode)pdu.err;
+	s	= pdu.seq;
 
 	header[0] = (l & 0xFF000000) >> 24;
 	header[1] = (l & 0x00FF0000) >> 16;
@@ -361,7 +363,7 @@ const SmppErrorCodeListEntry SmppErrorCodeList[] =
 	header[15] = (s & 0x000000FF) >> 0;
 
 	d = [[NSMutableData alloc] initWithBytes:header length:16];
-	[d appendData:[pdu payload]];
+	[d appendData:pdu.payload];
      
 	err = [_uc sendMutableData: d];
 	if(err)
@@ -391,16 +393,22 @@ const SmppErrorCodeListEntry SmppErrorCodeList[] =
 	SmppPdu *pdu2;
     UMSocketError err = 0;
 
+    if((transaction.smppError==NULL) && (transaction.error.intValue !=UM_NO_ERROR))
+    {
+        transaction.smppError = smppErrorFromInternalError(transaction.internalError);
+    }
+
 	if(transaction.type == TT_SUBMIT_MESSAGE)
 	{
-		if(transaction.status.internalError == SMSError_none)
+        if(transaction.error.intValue == UM_NO_ERROR)
 		{
-            pdu2 = [SmppPdu OutgoingSubmitSmRespOK:transaction.message withId:transaction.message.routerReference.stringValue];
+            pdu2 = [SmppPdu OutgoingSubmitSmRespOK:transaction.message
+                                            withId:transaction.message.routerReference.stringValue];
 			err = [self sendPdu: pdu2 withSequenceString:transaction.sequenceNumber];
 		}
 		else 
 		{
-			pdu2 = [SmppPdu OutgoingSubmitSmRespErr:transaction.status.smppError];
+            pdu2 = [SmppPdu OutgoingSubmitSmRespErr:transaction.smppError.intValue];
 			err = [self sendPdu: pdu2 withSequenceString:transaction.sequenceNumber];
 		}
         if(err==0)
@@ -411,14 +419,18 @@ const SmppErrorCodeListEntry SmppErrorCodeList[] =
 
 	else if(transaction.type == TT_DELIVER_MESSAGE)
 	{
-        if(transaction.status.internalError == SMSError_none)
+        if(transaction.error.intValue == UM_NO_ERROR)
 		{
             pdu2 = [SmppPdu OutgoingDeliverSmRespOK:transaction.message withId:transaction.message.routerReference.stringValue];
 			err = [self sendPdu: pdu2 withSequenceString:transaction.sequenceNumber];
 		}
 		else
 		{
-			pdu2 = [SmppPdu OutgoingDeliverSmRespErr:transaction.status.smppError];
+            if(transaction.smppError==NULL)
+            {
+                transaction.smppError = smppErrorFromInternalError(transaction.internalError);
+            }
+            pdu2 = [SmppPdu OutgoingDeliverSmRespErr:transaction.smppError.intValue];
 			err = [self sendPdu: pdu2 withSequenceString:transaction.sequenceNumber];
 		}
         if(err==0)
@@ -430,7 +442,7 @@ const SmppErrorCodeListEntry SmppErrorCodeList[] =
     else if(transaction.type == TT_DELIVER_REPORT)
 	{
         /* we received a delivery report from a provider and have to ack it */
-        if(transaction.status.internalError == SMSError_none)
+        if(transaction.error.intValue == UM_NO_ERROR)
 		{
             UMMessageReport * report = [transaction report];
             pdu2 = [SmppPdu OutgoingDeliverSmReportRespOK:report
@@ -440,7 +452,12 @@ const SmppErrorCodeListEntry SmppErrorCodeList[] =
 		}
 		else
 		{
-			pdu2 = [SmppPdu OutgoingDeliverSmRespErr:transaction.status.smppError];
+            if(transaction.smppError==NULL)
+            {
+                transaction.smppError = smppErrorFromInternalError(transaction.internalError);
+            }
+
+            pdu2 = [SmppPdu OutgoingDeliverSmRespErr:transaction.smppError.intValue];
 			err = [self sendPdu: pdu2 withSequenceString:transaction.sequenceNumber];
 		}
         if(err==0)
@@ -451,14 +468,18 @@ const SmppErrorCodeListEntry SmppErrorCodeList[] =
     
     else if(transaction.type == TT_SUBMIT_REPORT)
 	{
-        if(transaction.status.internalError == SMSError_none)
+        if(transaction.error.intValue == UM_NO_ERROR)
 		{
 			pdu2 = [SmppPdu OutgoingSubmitSmRespOK:transaction.message withId:transaction.message.routerReference.stringValue];
 			err = [self sendPdu: pdu2 withSequenceString:transaction.sequenceNumber];
 		}
 		else
 		{
-			pdu2 = [SmppPdu OutgoingSubmitSmRespErr:transaction.status.smppError];
+            if(transaction.smppError==NULL)
+            {
+                transaction.smppError = smppErrorFromInternalError(transaction.internalError);
+            }
+			pdu2 = [SmppPdu OutgoingSubmitSmRespErr:transaction.smppError.intValue];
 			err = [self sendPdu: pdu2 withSequenceString:transaction.sequenceNumber];
 		}
         if(err==0)
@@ -1114,7 +1135,7 @@ end:
 	int i;
 	for (i=0;i< sizeof(SmppPDUTable) / sizeof(SmppPduTableEntry);i++)
 	{
-		if( SmppPDUTable[i].pduType == [pdu type])
+		if( SmppPDUTable[i].pduType == pdu.type)
 		{
 			if(0 == (SmppPDUTable[i].allowedSources & source))
             {
@@ -1168,7 +1189,7 @@ end:
                 break;
                 
             case SMPP_AUTH_OK:
-                switch( (int)[pdu type])
+                switch( (int)pdu.type)
             {
                 case SMPP_PDU_SUBMIT_SM:
                     time(&_lastSubmitSmReceived);
@@ -1503,30 +1524,27 @@ end:
                                                         }
                         ]);
             }
-            [pdu setCursor: [pdu cursor] -1];
-            udh = [[NSData alloc] initWithBytes: &((unsigned char *)[[pdu payload] bytes])[[pdu cursor]] length:udhLen+1];
-            [pdu setCursor: [pdu cursor] + udhLen + 1];
+            pdu.cursor = pdu.cursor - 1;
+            udh = [[NSData alloc] initWithBytes: &((unsigned char *)[pdu.payload bytes])[pdu.cursor] length:udhLen+1];
+            [pdu setCursor: pdu.cursor + udhLen + 1];
 
-            data = [[NSData alloc] initWithBytes: &((unsigned char *)[[pdu payload] bytes])[[pdu cursor]] length:dataLen];
-            [pdu setCursor: [pdu cursor] + dataLen + 1];
+            data = [[NSData alloc] initWithBytes: &((unsigned char *)[pdu.payload bytes])[pdu.cursor] length:dataLen];
+            [pdu setCursor: pdu.cursor + dataLen + 1];
         }
         else
         {
     //		udhLen = 0;
             dataLen = length;
             udh = nil;
-            data = [[NSData alloc] initWithBytes: &((unsigned char *)[[pdu payload] bytes])[[pdu cursor]] length:dataLen];
-            [pdu setCursor: [pdu cursor] + dataLen + 1];
+            data = [[NSData alloc] initWithBytes: &((unsigned char *)[pdu.payload bytes])[pdu.cursor] length:dataLen];
+            [pdu setCursor: pdu.cursor + dataLen + 1];
         }
         msg.pduUdh = UMDIRTY_DATA(udh);
         msg.pduContent = UMDIRTY_DATA(data);
         msg.plaintextContent = UMDIRTY_STRING([SmscConnectionSMPP stringFromGsm8:data]);
         
         [pdu grabTlvsWithDefinitions:_tlvDefs];
-        if([msg respondsToSelector:@selector(setTlvs:)])
-        {
-            msg.tlvs = pdu.tlvs;
-        }
+        msg.tlvsText = UMDIRTY_STRING([pdu.tlvs jsonString]);
 		
         switch(pdu.dest_addr_subunit)
         {
@@ -1629,7 +1647,7 @@ end:
 
 - (void) handleIncomingSubmitSmResp: (SmppPdu *)pdu
 {
-    SmppErrorCode stCode = [pdu err];
+    SmppErrorCode stCode = pdu.err;
     NSString *remoteMessageId = [pdu grabStringWithEncoding:NSASCIIStringEncoding maxLength:65];
   
     if(_usesHexMessageIdInSubmitSmResp)
@@ -1655,13 +1673,10 @@ end:
         }
         else
         {
-            SmscRouterError *err = [_router createError];
-            [err setSmppErrorCode:stCode];
-
             [_router submitMessageFailed:msg
-                              withError: [[SmscRouterError alloc]initWithSmppErrorCode:stCode]
-                              forObject:self
-                            synchronous:NO];
+                                   error:@(stCode)
+                               forObject:self
+                             synchronous:NO];
             _lastStatus = [NSString stringWithFormat:@"%@ (0x%08lx)",[SmscConnectionSMPP smppErrorToString:stCode], (unsigned long )stCode ];
 
         }
@@ -1693,7 +1708,7 @@ end:
     
     [pdu unpackDeliverSmUsingTlvDefinition:_tlvDefs];
     
-    esmClass = (int)[pdu esm_class];
+    esmClass = (int)pdu.esm_class;
     msg.esmClass = UMDIRTY_INTEGER(esmClass);
     deliveryReport = esmClass == SMPP_PDU_ESM_CLASS_DELIVER_SMSC_DELIVER_ACK ||
                      esmClass == SMPP_PDU_ESM_CLASS_DELIVER_SME_DELIVER_ACK ||
@@ -1754,7 +1769,7 @@ end:
     UMMessageReport *report;
     UMMessage       *message;
     
-    SmppErrorCode stCode = [pdu err];
+    SmppErrorCode stCode = pdu.err;
 //    NSString *remoteMessageId = [pdu grabStringWithEncoding:NSASCIIStringEncoding maxLength:65];
     SmscConnectionTransaction *transaction = [self findOutgoingTransaction:[pdu sequenceString]];
 
@@ -1774,12 +1789,11 @@ end:
         }
         else
         {
-            SmscRouterError *err = [_router createError];
-            [err setSmppErrorCode:stCode];
             [_router deliverReportFailed:report
-                              withError:err
+                                   error:@(UM_ESME_RDELIVERYFAILURE)
                               forObject:self
                             synchronous:NO];
+
         }
     }
     else if(message)
@@ -1797,10 +1811,8 @@ end:
         }
         else
         {
-            SmscRouterError *err = [_router createError];
-            [err setSmppErrorCode:stCode];
             [_router deliverMessageFailed:message
-                               withError:err
+                                    error:@(UM_ESME_RDELIVERYFAILURE)
                                forObject:self
                              synchronous:NO];
         }
@@ -1973,7 +1985,7 @@ end:
 
     systemId = [pdu grabStringWithEncoding:NSISOLatin1StringEncoding	maxLength:16];
     
-    err = [pdu err];
+    err = pdu.err;
     if ((err != ESME_ROK) && (err != ESME_RALYBND))
     {
         NSString *msg = [NSString stringWithFormat:@"SmscConnectionSMPP:handleIncomingBindReceiverResp: [%@]: SMSC rejected login to transmit, code 0x%08lx (%@) with <%@>.\r\n", _name, (unsigned long )err, [SmscConnectionSMPP smppErrorToString:err], systemId];
@@ -2009,7 +2021,7 @@ end:
     _bindExpires = NULL;
     systemId = [pdu grabStringWithEncoding:NSUTF8StringEncoding maxLength:16];
     
-    err = [pdu err];
+    err = pdu.err;
     if ((err != ESME_ROK) && (err != ESME_RALYBND))
     {
         NSString *msg = [NSString stringWithFormat:@"SmscConnectionSMPP:handleIncomingBindTransmitterResp: [%@]: SMSC rejected login to transmit, code 0x%08lx (%@) with <%@>.\r\n", _name, (unsigned long )err, [SmscConnectionSMPP smppErrorToString:err], systemId];
@@ -2147,7 +2159,7 @@ end:
 
     systemId = [pdu grabStringWithEncoding:NSUTF8StringEncoding maxLength:16];
     
-    err = [pdu err];
+    err = pdu.err;
     if ((err != ESME_ROK) && (err != ESME_RALYBND))
     {
         NSString *msg = [NSString stringWithFormat:@"SmscConnectionSMPP:handleIncomingBindTransceiverResp: [%@]: SMSC rejected login (systemId: <%@>) to transmit, code 0x%08lx (%@).\r\n", _name, systemId,(unsigned long )err, [SmscConnectionSMPP smppErrorToString:err]];
@@ -2192,7 +2204,7 @@ end:
     //NSString *doneDateString =NULL;
     NSData *messagePayload;
     NSData *shortMessage;
-    DeliveryReportType messageState = SMS_REPORT_UNSET;
+    UMMessageState messageState = UMMESSAGE_STATE_UNDEFINED;
     NSData *networkErrorCode;
     int errInt;
     NSString *tmp;
@@ -2202,10 +2214,10 @@ end:
     report = [_router createReport];
     errInt = ESME_RUNKNOWNERR;
 
-    NSDictionary *tlvs = [pdu tlvs];
+    NSDictionary *tlvs = pdu.tlvs;
     /* check for SMPP v.3.4. and message_payload */
     messagePayload = tlvs[@"message payload"];
-    shortMessage = [pdu short_message];
+    shortMessage = pdu.short_message;
     if ([[self version] integerValue] > 0x33 && !shortMessage)
     {
         r = [[NSString alloc] initWithData:messagePayload encoding:NSASCIIStringEncoding];
@@ -2275,37 +2287,37 @@ end:
         {
             if ([value isEqualToString:@"ENROUTE"])
             {
-                messageState = SMS_REPORT_ENROUTE;
+                messageState = UMMESSAGE_STATE_ENROUTE;
             }
             else if (([value isEqualToString:@"DELIVRD"]) || ([value isEqualToString:@"DELIVERED"]))
             {
-                messageState = SMS_REPORT_DELIVERED;
+                messageState = UMMESSAGE_STATE_DELIVERED;
             }
             else if ([value isEqualToString:@"EXPIRED"])
             {
-                messageState = SMS_REPORT_EXPIRED;
+                messageState = UMMESSAGE_STATE_EXPIRED;
             }
             else if ([value isEqualToString:@"DELETED"])
             {
-                messageState = SMS_REPORT_DELETED;
+                messageState = UMMESSAGE_STATE_DELETED;
             }
             else if (([value isEqualToString:@"UNDELIV"]) || ([value isEqualToString:@"UNDELIVERABLE"]))
             {
-                messageState = SMS_REPORT_UNDELIVERABLE;
+                messageState = UMMESSAGE_STATE_UNDELIVERABLE;
             }
             else if (([value isEqualToString:@"ACCEPTD"]) || ([value isEqualToString:@"ACCEPTED"]))
             {
-                messageState = SMS_REPORT_ACCEPTED;
+                messageState = UMMESSAGE_STATE_ACCEPTED;
             }
             else if ( ([value isEqualToString:@"REJECTD"])
                         || ([value isEqualToString:@"REJECTED"])
                         || ([value isEqualToString:@"REJECT"]))
             {
-                messageState = SMS_REPORT_REJECTED;
+                messageState = UMMESSAGE_STATE_REJECTED;
             }
             else
             {
-                messageState = SMS_REPORT_UNKNOWN;
+                messageState = UMMESSAGE_STATE_UNKNOWN;
                 [self.logFeed minorError:0 withText:[NSString stringWithFormat:@"Unknown message state %@",value]];
             }
         }
@@ -2325,35 +2337,35 @@ end:
     {
         if (([s isEqualToString:@"1"]) || ([s isEqualToString:@"1"]))
         {
-            messageState = SMS_REPORT_ENROUTE;
+            messageState = UMMESSAGE_STATE_ENROUTE;
         }
         else if (([s isEqualToString:@"DELIVRD"]) || ([s isEqualToString:@"DELIVERED"]) || ([s isEqualToString:@"2"]))
         {
-            messageState = SMS_REPORT_DELIVERED;
+            messageState = UMMESSAGE_STATE_DELIVERED;
         }
         else if ([s isEqualToString:@"EXPIRED"] || ([s isEqualToString:@"3"]))
         {
-            messageState = SMS_REPORT_EXPIRED;
+            messageState = UMMESSAGE_STATE_EXPIRED;
         }
         else if ([s isEqualToString:@"DELETED"]|| ([s isEqualToString:@"4"]))
         {
-            messageState = SMS_REPORT_DELETED;
+            messageState = UMMESSAGE_STATE_DELETED;
         }
         else if (([s isEqualToString:@"UNDELIV"]) || ([s isEqualToString:@"UNDELIVERABLE"]) || ([s isEqualToString:@"5"]))
         {
-            messageState = SMS_REPORT_UNDELIVERABLE;
+            messageState = UMMESSAGE_STATE_UNDELIVERABLE;
         }
         else if (([s isEqualToString:@"ACCEPTD"]) || ([s isEqualToString:@"ACCEPTED"])|| ([s isEqualToString:@"6"]))
         {
-            messageState = SMS_REPORT_ACCEPTED;
+            messageState = UMMESSAGE_STATE_ACCEPTED;
         }
         else if (([s isEqualToString:@"REJECTD"]) || ([s isEqualToString:@"REJECTED"])|| ([s isEqualToString:@"8"]))
         {
-            messageState = SMS_REPORT_REJECTED;
+            messageState = UMMESSAGE_STATE_REJECTED;
         }
         else
         {
-            messageState = SMS_REPORT_UNKNOWN;
+            messageState = UMMESSAGE_STATE_UNKNOWN;
         }
     }
 
@@ -2411,17 +2423,14 @@ end:
     [report setReportText:r];
     [report setReportType:messageState];
 
-    SmscRouterError *err = [_router createError];
-
-    if((errInt==0) && (messageState != SMS_REPORT_DELIVERED))
+    if((errInt==0) && (messageState != UMMESSAGE_STATE_DELIVERED))
     {
-        [err setDeliveryReportErrorCode:DLR_ERROR_NO_ERROR_CODE_PROVIDED];
+        report.error = @(UM_ESME_VENDOR_SPECIFIC_NO_ERROR_CODE_PROVIDED);
     }
     else
     {
-        [err setDeliveryReportErrorCode:errInt];
+        report.error = @(errInt);
     }
-    report.error =  err;
 
     UMSigAddr *from;
     if([pdu source_addr_ton] == UMTON_ALPHANUMERIC)
@@ -2452,10 +2461,7 @@ end:
 		[to setAddr:[pdu destination_addr]];
 	}
     report.toNumber = to.stringValue;
-    if([report respondsToSelector:@selector(setTlvs:)])
-    {
-        [report setTlvs:tlvs];
-    }
+    report.tlvsText = [tlvs jsonString];
     return report;
 }
 
@@ -2549,7 +2555,7 @@ end:
 		dataLen = length;
 		udh = nil;
 		data = [NSData dataWithData:sm];
-		[pdu setCursor: [pdu cursor] + dataLen + 1];
+		[pdu setCursor: pdu.cursor + dataLen + 1];
 	}
     
 	msg.pduUdh = UMDIRTY_DATA(udh);
@@ -4424,3 +4430,13 @@ length_error:
     return out;
 }
 @end
+
+
+static NSNumber * smppErrorFromInternalError(NSNumber *internalError)
+{
+    if(internalError==NULL)
+    {
+        return NULL;
+    }
+}
+

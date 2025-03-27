@@ -1,5 +1,5 @@
 //
-//  DeliveryReportErrorCode.h
+//  UMDeliveryReportErrorCode.h
 //  ulibsmpp
 //
 //  Created by Andreas Fink on 06/05/15.
@@ -10,7 +10,7 @@
 
 /* DLR Error codes. Mostly same ones as GSM Map error codes */
 
-typedef enum DeliveryReportErrorCode
+typedef enum UMDeliveryReportErrorCode
 {
     DLR_ERROR_NONE                                  = 0,
     DLR_ERROR_UNKNOWN_SUB                           = 1,

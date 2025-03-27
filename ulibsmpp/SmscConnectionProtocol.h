@@ -10,8 +10,7 @@
 
 #import <ulib/ulib.h>
 
-//#import <ulibsmpp/SmscConnectionMessageProtocol.h>
-#import <ulibsmpp/SmscConnectionReportProtocol.h>
+#import <ulibsmpp/SmscConnectionMessageProtocol.h>
 #import <ulibsmpp/SmscConnectionRouterProtocol.h>
 #import <ulibsmpp/SmscConnectionRouterUserProtocol.h>
 #import <ulibsmpp/SmscConnectionTransactionProtocol.h>
@@ -21,7 +20,11 @@
 @protocol SmscConnectionSubmitterProtocol
 
 - (void) ackIncomingTransaction:(id<SmscConnectionTransactionProtocol>)transaction;
-- (void) nackIncomingTransaction:(id<SmscConnectionTransactionProtocol>)transaction err:(SmscRouterError *)code;
+- (void) nackIncomingTransaction:(id<SmscConnectionTransactionProtocol>)transaction
+                             internalError:(NSNumber *)code
+                                 smppError:(NSNumber *)smppError
+                              networkError:(NSNumber *)networkError
+                               errorString:(NSString *)errorString;
 
 @end
 

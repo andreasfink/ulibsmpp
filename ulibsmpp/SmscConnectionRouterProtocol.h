@@ -10,9 +10,6 @@
 #import <ulib/ulib.h>
 #import <ulibsmpp/UniversalSMSUtilities.h>
 
-//#import <ulibsmpp/SmscConnectionMessageProtocol.h>
-#import <ulibsmpp/SmscConnectionReportProtocol.h>
-//#import "SmscConnectionRouterProtocol.h"
 #import <ulibsmpp/SmscConnectionUserProtocol.h>
 #import <ulibsmpp/SmscConnectionProtocol.h>
 #import <ulibsmpp/SmscConnectionRouterUserProtocol.h>

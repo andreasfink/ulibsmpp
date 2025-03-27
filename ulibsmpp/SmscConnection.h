@@ -177,7 +177,11 @@ enum SmppAlphaCoding;
 - (void) removeOutgoingTransaction:(SmscConnectionTransaction *)transaction;
 
 - (void) ackIncomingTransaction:(SmscConnectionTransaction *)transaction;
-- (void) nackIncomingTransaction:(SmscConnectionTransaction *)transaction err:(SmscRouterError *)code;
+- (void) nackIncomingTransaction:(SmscConnectionTransaction *)transaction
+                   internalError:(NSNumber *)internalErr
+                       smppError:(NSNumber *)smppErr
+                    networkError:(NSNumber *)networkErr
+                     errorString:(NSString *)errorString;
 - (void) timeoutOutgoingTransaction:(SmscConnectionTransaction *)transaction;
 - (void) timeoutIncomingTransaction:(SmscConnectionTransaction *)transaction;
 - (SmscConnectionTransaction *) findIncomingTransaction:(NSString *)trn;

@@ -18,7 +18,6 @@
 
 #import <ulibsmpp/SmscConnectionTransactionProtocol.h>
 //#import <ulibsmpp/SmscConnectionMessageProtocol.h>
-#import <ulibsmpp/SmscConnectionReportProtocol.h>
 #import <ulibsmpp/SmscConnectionUserProtocol.h>
 #import <ulibsmpp/SmscConnectionRouterProtocol.h>
 #import <ulibsmpp/SmscConnectionProtocol.h>
@@ -28,7 +27,7 @@
 #import <ulibsmpp/SmscConnectionNULL.h>
 #import <ulibsmpp/SmscConnectionFAIL.h>
 #import <ulibsmpp/SmscConnectionNACK.h>
-#import <ulibsmpp/DeliveryReportErrorCode.h>
+#import <ulibsmpp/UMDeliveryReportErrorCode.h>
 #import <ulibsmpp/GSMErrorCode.h>
 #import <ulibsmpp/SmscRouterError.h>
 #import <ulibsmpp/SmscConnectionReadyProtocol.h>

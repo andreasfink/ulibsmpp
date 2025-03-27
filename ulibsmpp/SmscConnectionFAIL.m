@@ -14,6 +14,7 @@
 #import <ulibsmpp/NSString+UniversalSMPP.h>
 #import <ulibsmpp/SmppErrorCode.h>
 #import <ulibsmpp/SmscRouterError.h>
+#import <ulibsmpp/UMSmppError.h>
 
 @implementation SmscConnectionFAIL
 
@@ -239,13 +240,9 @@
                             msg.messageAttemptedTimestamp ? [formatter stringFromDate:msg.messageAttemptedTimestamp.dateValue]
                                                           :[formatter stringFromDate:[NSDate date]],
                             errorToReturn.dlrError];
-    report.reportType               = SMS_REPORT_UNDELIVERABLE;
-    if(errorToReturn == NULL)
-    {
-        errorToReturn = [_router createError];
-        [errorToReturn setSmppErrorCode:ESME_RSYSERR];
-    }
-    report.error                    = errorToReturn;
+    report.reportType               = UMMESSAGE_STATE_UNDELIVERABLE;
+    report.error                    = @(UM_ESME_RSUBMITFAIL);
+    msg.submitErrorCode = [[UMDirtyInteger alloc]initWithInteger:UM_ESME_RSUBMITFAIL];
     report.routerReference          = msg.routerReference.stringValue;
     report.providerReference        = msg.providerReference.stringValue;
     report.userReference            = msg.userReference.stringValue;

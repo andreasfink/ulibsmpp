@@ -134,7 +134,7 @@
                             msg.messageAttemptedTimestamp ?
                                                        [formatter stringFromDate:msg.messageAttemptedTimestamp.dateValue]
                                                      : [formatter stringFromDate:[NSDate date]]];
-    report.reportType               = SMS_REPORT_DELIVERED;
+    report.reportType               = UMMESSAGE_STATE_DELIVERED;
     report.error                    = NULL;
     report.routerReference          = msg.routerReference.stringValue;
     report.providerReference        = msg.providerReference.stringValue;
@@ -190,7 +190,7 @@
                                                      :[formatter stringFromDate:[NSDate date]],
                             msg.messageAttemptedTimestamp ? [formatter stringFromDate:msg.messageAttemptedTimestamp.dateValue]
                                                      :[formatter stringFromDate:[NSDate date]]];
-    report.reportType               = SMS_REPORT_DELIVERED;
+    report.reportType               = UMMESSAGE_STATE_DELIVERED;
     report.error                    = NULL;
     report.routerReference          = msg.routerReference.stringValue;
     report.providerReference        = msg.providerReference.stringValue;

@@ -11,6 +11,7 @@
 #import "SmscConnectionTransaction.h"
 #include <uuid/uuid.h>
 #import "SmscRouterError.h"
+#import <ulibsmpp/UMSmppError.h>
 
 #define	EMPTYSTRINGFORNIL(a)	(a?a:@"")
 #define	EMPTYIPFORNIL(a)        (a?a:@"0.0.0.0")
@@ -159,21 +160,17 @@
     SmscConnectionTransaction *transaction = [self findIncomingTransactionByMessage:msg];
     if(transaction)
     {
-        [transaction.status setInternalErrorCode:SMSError_none];
-#ifdef USE_SMPP_PRIORITY_QUEUES
-        [ackNackQueue addToQueue:transaction priority:msg.priority];
-#else
+        transaction.error = @(UM_NO_ERROR);
         [_ackNackQueue append:transaction];
-#endif
     }
 }
 
 
 /* submitMessageFailed: router->inbound TX connection */
-- (void) submitMessageFailed:(UMMessage *)msg
-                   withError:(SmscRouterError *)code
-                   forObject:(id)reportingObject
-                 synchronous:(BOOL)sync
+- (void)submitMessageFailed:(UMMessage *)msg
+                      error:(NSNumber *)error
+                  forObject:(id)reportingObject
+                synchronous:(BOOL)sync
 {
     /* router is telling us that a submit message we sent to him has failed */
     /* TODO: we should send out submitSMResponse matching that transaction */
@@ -181,12 +178,8 @@
     SmscConnectionTransaction *transaction = [self findIncomingTransactionByMessage:msg];
     if(transaction)
     {
-        transaction.status = code;
-#ifdef USE_SMPP_PRIORITY_QUEUES
-        [ackNackQueue addToQueue:transaction priority:msg.priority];
-#else
+        transaction.error   = error;
         [_ackNackQueue append:transaction];
-#endif
     }
 }
 
@@ -198,18 +191,16 @@
     SmscConnectionTransaction * transaction = [self findIncomingTransactionByReport:rep];
     if(transaction)
     {
-        [transaction.status setInternalErrorCode:SMSError_none];
-#ifdef USE_SMPP_PRIORITY_QUEUES
-        [ackNackQueue addToQueue:transaction priority:rep.priority];
-#else
+        transaction.error   = @(UM_NO_ERROR);
         [_ackNackQueue append:transaction];
-#endif
-
     }
 }
 
 - (void) submitReportFailed:(UMMessageReport *)rep
-                  withError:(SmscRouterError *)code
+              internalError:(NSNumber *)internalErr
+                  smppError:(NSNumber *)smppErr
+               networkError:(NSNumber *)networkErr
+                  errorString:(NSString *)errorString
                   forObject:(id)reportingObject
                 synchronous:(BOOL)sync
 {
@@ -217,12 +208,8 @@
     SmscConnectionTransaction * transaction = [self findIncomingTransactionByReport:rep];
     if(transaction)
     {
-        transaction.status = code;
-#ifdef USE_SMPP_PRIORITY_QUEUES
-        [ackNackQueue addToQueue:transaction priority:rep.priority];
-#else
+        transaction.error   = @(UM_NO_ERROR);
         [_ackNackQueue append:transaction];
-#endif
     }
 }
 
@@ -234,17 +221,16 @@
     SmscConnectionTransaction * transaction = [self findOutgoingTransactionByMessage:msg];
     if(transaction)
     {
-        [transaction.status setInternalErrorCode:SMSError_none];
-#ifdef USE_SMPP_PRIORITY_QUEUES
-        [ackNackQueue addToQueue:transaction priority:msg.priority];
-#else
+        transaction.error   = @(UM_NO_ERROR);
         [_ackNackQueue append:transaction];
-#endif
     }
 }
 
 - (void) deliverMessageFailed:(UMMessage *)msg
-                    withError:(SmscRouterError *)code
+                internalError:(NSNumber *)internalErr
+                    smppError:(NSNumber *)smppErr
+                 networkError:(NSNumber *)networkErr
+                    errorString:(NSString *)errorString
                     forObject:(id)reportingObject
                   synchronous:(BOOL)sync
 {
@@ -252,13 +238,8 @@
     SmscConnectionTransaction * transaction = [self findOutgoingTransactionByMessage:msg];
     if(transaction)
     {
-        transaction.status = code;
-#ifdef USE_SMPP_PRIORITY_QUEUES
-        [ackNackQueue addToQueue:transaction priority:msg.priority];
-#else
+        transaction.error   = @(UM_NO_ERROR);
         [_ackNackQueue append:transaction];
-#endif
-
     }
 }
 
@@ -271,17 +252,13 @@
     SmscConnectionTransaction * transaction = [self findIncomingTransactionByReport:rep];
     if(transaction)
     {
-        [transaction.status setInternalErrorCode:SMSError_none];
-#ifdef USE_SMPP_PRIORITY_QUEUES
-        [ackNackQueue addToQueue:transaction priority:rep.priority];
-#else
+        transaction.error   = @(UM_NO_ERROR);
         [_ackNackQueue append:transaction];
-#endif
     }
 }
 
 - (void) deliverReportFailed:(UMMessageReport *)rep
-                   withError:(SmscRouterError *)code
+                       error:(NSNumber *)err
                    forObject:(id)reportingObject
                  synchronous:(BOOL)sync
 {
@@ -289,12 +266,8 @@
     SmscConnectionTransaction * transaction = [self findOutgoingTransactionByReport:rep];
     if(transaction)
     {
-        transaction.status = code;
-#ifdef USE_SMPP_PRIORITY_QUEUES
-        [ackNackQueue addToQueue:transaction priority:rep.priority];
-#else
+        transaction.error   = err;
         [_ackNackQueue append:transaction];
-#endif
     }
 }
 
@@ -543,7 +516,7 @@
     return transaction;
 }
 
-- (id) findOutgoingTransactionByReport:(id)rep
+- (id) findOutgoingTransactionByReport:(UMMessageReport *)rep
 {
     SmscConnectionTransaction *transaction = NULL;
     NSString *key;
@@ -562,7 +535,7 @@
                 {
                     break;
                 }
-                else if ([[transaction sequenceNumber] isEqual:[rep userReference]])
+                else if ([transaction.sequenceNumber isEqualToString:rep.userReference])
                 {
                     break;
                 }
@@ -618,79 +591,45 @@
 {
     SmscConnectionTransaction *t = transaction;
 	[self removeIncomingTransaction:t];
-    [t.status setInternalErrorCode:SMSError_none];
-#ifdef USE_SMPP_PRIORITY_QUEUES
-    [ackNackQueue addToQueue: transaction];
-// why dont we know the priority here?
-// like:  [ackNackQueue addToQueue:transaction priority:rep.priority];
-#else
+    t.error = @(UM_NO_ERROR);
     [_ackNackQueue append:transaction];
-#endif
 }
 
 /* called on timeout of incoming transaction (no answer by router */
-- (void) nackIncomingTransaction:(SmscConnectionTransaction *)transaction err:(SmscRouterError *)code
+- (void) nackIncomingTransaction:(SmscConnectionTransaction *)t
+                           error:(NSNumber *)err
 {
-	[self removeIncomingTransaction:transaction];
-	[transaction setStatus:code];
-#ifdef USE_SMPP_PRIORITY_QUEUES
-    [ackNackQueue addToQueue: transaction];
-    // why dont we know the priority here?
-    // like:  [ackNackQueue addToQueue:transaction priority:rep.priority];
-#else
-    [_ackNackQueue append:transaction];
-#endif
+	[self removeIncomingTransaction:t];
+    t.error = err;
+    [_ackNackQueue append:t];
 }
 
-- (void) ackOutgoingTransaction:(SmscConnectionTransaction *)transaction
+- (void) ackOutgoingTransaction:(SmscConnectionTransaction *)t
 {
-	[self removeOutgoingTransaction:transaction];
-    [transaction.status setInternalErrorCode:SMSError_none];
-#ifdef USE_SMPP_PRIORITY_QUEUES
-    [ackNackQueue addToQueue: transaction];
-    // why dont we know the priority here?
-    // like:  [ackNackQueue addToQueue:transaction priority:rep.priority];
-#else
-    [_ackNackQueue append:transaction];
-#endif
+	[self removeOutgoingTransaction:t];
+    t.error     = @(UM_NO_ERROR);
+    [_ackNackQueue append:t];
 
 }
 
-- (void) nackOutgoingTransaction:(SmscConnectionTransaction *)transaction err:(SmscRouterError *)code
+- (void) nackOutgoingTransaction:(SmscConnectionTransaction *)t
+                           error:(NSNumber *)err
 {
-	[self removeOutgoingTransaction:transaction];
-	[transaction setStatus:code];
-#ifdef USE_SMPP_PRIORITY_QUEUES
-    [ackNackQueue addToQueue: transaction];
-    // why dont we know the priority here?
-    // like:  [ackNackQueue addToQueue:transaction priority:rep.priority];
-#else
-    [_ackNackQueue append:transaction];
-#endif
+    [self removeOutgoingTransaction:t];
+    t.error             = err;
+    [_ackNackQueue append:t];
 }
 
 - (void) timeoutIncomingTransaction:(id)transaction
 {
-    SmscRouterError *err = [_router createError];
-    if(err==NULL)
-    {
-        err = [[SmscRouterError alloc]init];
-    }
-    [err setSmppErrorCode:ESME_RUNKNOWNERR];
-    [err setInternalErrorCode:SMSError_Timeout];
-    [self nackIncomingTransaction:transaction err:err];
+    [self nackIncomingTransaction:transaction
+                            error:@(UM_ESME_VENDOR_SPECIFIC_TIMEOUT)];
 }
 
 - (void) timeoutOutgoingTransaction:(id)transaction
 {
-    SmscRouterError *err = [_router createError];
-    if(err==NULL)
-    {
-        err = [[SmscRouterError alloc]init];
-    }
-    [err setInternalErrorCode:SMSError_Timeout];
-
-    [self nackOutgoingTransaction:transaction err: err];
+    [self nackOutgoingTransaction:transaction
+                            error:@(UM_ESME_VENDOR_SPECIFIC_TIMEOUT)];
 }
 
 - (void) checkForTimedOutTransactions
@@ -807,4 +746,5 @@
     _max_tcp_segment_size = max;
     _uc.configuredMaxSegmentSize = max;
 }
+
 @end

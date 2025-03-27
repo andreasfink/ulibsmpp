@@ -10,7 +10,7 @@
 #import <ulibasn1/ulibasn1.h>
 #import <ulibsmpp/GSMErrorCode.h>
 #import <ulibsmpp/SmppErrorCode.h>
-#import <ulibsmpp/DeliveryReportErrorCode.h>
+#import <ulibsmpp/UMDeliveryReportErrorCode.h>
 
 typedef enum UMSmscRouterErrorTag
 {
@@ -21,7 +21,7 @@ typedef enum UMSmscRouterErrorTag
 } UMSmscRouterErrorTag;
 
 typedef int SmscRouterInternalError;
-
+/*
 #define SMSError_none                                 0
 #define SMSError_DeliveryFailure                      481
 #define SMSError_AllOutgoingConnectionsUnavailable    482
@@ -34,7 +34,7 @@ typedef int SmscRouterInternalError;
 #define SMSError_ExceptionEncountered                 489
 #define SMSError_NotImplemented                       490
 #define SMSError_OperationFailed                      491
-
+*/
 
 #define SmscRouterError_TypeSMPP     1
 #define SmscRouterError_TypeGSM      2
