@@ -432,7 +432,7 @@ const SmppErrorCodeListEntry SmppErrorCodeList[] =
         /* we received a delivery report from a provider and have to ack it */
         if(transaction.status.internalError == SMSError_none)
 		{
-            id<SmscConnectionReportProtocol> report = [transaction report];
+            UMMessageReport * report = [transaction report];
             pdu2 = [SmppPdu OutgoingDeliverSmReportRespOK:report
                                                    withId:report.providerReference];
 			err = [self sendPdu: pdu2 withSequenceString:transaction.sequenceNumber];
@@ -473,8 +473,8 @@ const SmppErrorCodeListEntry SmppErrorCodeList[] =
 - (int) activePhase:(int)outbound
 {
 	id<SmscConnectionTransactionProtocol>		an;
-	id<SmscConnectionMessageProtocol>			msg;
-	id<SmscConnectionReportProtocol>			report;
+	UMMessage           *msg;
+	UMMessageReport     *report;
 	SmppPdu *pdu;
 	int i=0;
 	UMSocketError err=0;
@@ -1278,11 +1278,11 @@ end:
     SmscConnectionTransaction *transaction;
 //    int err;
 
-    id<SmscConnectionMessageProtocol> msg = [_router createMessage];
+    UMMessage * msg = [_router createMessage];
     @try
     {
-        msg.inboundMethod = UMDIRTY_STRING(@"smpp");
-        msg.inboundType   = UMDIRTY_STRING(@"submit");
+        msg.submissionMethod = UMDIRTY_STRING(@"smpp");
+        msg.submissionType   = UMDIRTY_STRING(@"submit");
         msg.fromIp        = UMDIRTY_STRING([_uc connectedRemoteAddress]);
         msg.user = _user;
         
@@ -1640,7 +1640,7 @@ end:
     }
     
     SmscConnectionTransaction *transaction = [self findOutgoingTransaction:[pdu sequenceString]];
-    id<SmscConnectionMessageProtocol>msg = transaction.message;
+    UMMessage *msg = transaction.message;
     if(msg)
     {
         msg.networkErrorCode = UMDIRTY_INTEGER(stCode);
@@ -1688,8 +1688,8 @@ end:
     BOOL deliveryReport = NO;
     SmscConnectionTransaction *transaction = NULL;
     int esmClass;
-    id<SmscConnectionReportProtocol> report=NULL;
-    id<SmscConnectionMessageProtocol> msg=NULL;
+    UMMessageReport * report=NULL;
+    UMMessage * msg=NULL;
     
     [pdu unpackDeliverSmUsingTlvDefinition:_tlvDefs];
     
@@ -1751,8 +1751,8 @@ end:
 
 - (void) handleIncomingDeliverSmResp: (SmppPdu *)pdu
 {
-    id<SmscConnectionReportProtocol>report;
-    id<SmscConnectionMessageProtocol>message;
+    UMMessageReport *report;
+    UMMessage       *message;
     
     SmppErrorCode stCode = [pdu err];
 //    NSString *remoteMessageId = [pdu grabStringWithEncoding:NSASCIIStringEncoding maxLength:65];
@@ -2045,13 +2045,13 @@ end:
     
     if([_router respondsToSelector:@selector(queryMessage:withNumber:)])
     {
-        id<SmscConnectionMessageProtocol> msg = [_router queryMessage:messageId withNumber:toNumber];
+        UMMessage *msg = [_router queryMessage:messageId withNumber:toNumber];
         pdu2 = [SmppPdu OutgoingQueryRespOK:msg withId:messageId];
     }
 
     if([_router respondsToSelector:@selector(queryMessage:)])
     {
-        id<SmscConnectionMessageProtocol> msg = [_router queryMessage:messageId];
+        UMMessage * msg = [_router queryMessage:messageId];
         pdu2 = [SmppPdu OutgoingQueryRespOK:msg withId:messageId];
     }
     else
@@ -2184,9 +2184,9 @@ end:
 }
 
 
-- (id<SmscConnectionReportProtocol>)deliverPduToReport:(SmppPdu *)pdu
+- (UMMessageReport *)deliverPduToReport:(SmppPdu *)pdu
 {
-    id<SmscConnectionReportProtocol> report=NULL;
+    UMMessageReport * report=NULL;
     NSString *receiptedId =NULL;
     //NSString *submitDateString =NULL;
     //NSString *doneDateString =NULL;
@@ -2459,9 +2459,9 @@ end:
     return report;
 }
 
-- (id<SmscConnectionMessageProtocol>)deliverPduToMsg:(SmppPdu *)pdu
+- (UMMessage *)deliverPduToMsg:(SmppPdu *)pdu
 {
-    id<SmscConnectionMessageProtocol> msg;
+    UMMessage * msg;
     UMSigAddr *from, *to;
     NSString *addr;
     int ton, npi;
@@ -2472,8 +2472,8 @@ end:
     SmppPdu *pdu2;
     
     msg = [_router createMessage];
-    msg.inboundMethod   = UMDIRTY_STRING(@"smpp");
-    msg.inboundType     = UMDIRTY_STRING(@"deliver");
+    msg.submissionMethod   = UMDIRTY_STRING(@"smpp");
+    msg.submissionType     = UMDIRTY_STRING(@"deliver");
 	msg.fromIp          = UMDIRTY_STRING([_uc connectedRemoteAddress]);
     
 	ton  = (int)[pdu source_addr_ton];

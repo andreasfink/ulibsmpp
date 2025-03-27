@@ -10,7 +10,7 @@
 
 #import <ulib/ulib.h>
 
-#import <ulibsmpp/SmscConnectionMessageProtocol.h>
+//#import <ulibsmpp/SmscConnectionMessageProtocol.h>
 #import <ulibsmpp/SmscConnectionReportProtocol.h>
 #import <ulibsmpp/SmscConnectionRouterProtocol.h>
 #import <ulibsmpp/SmscConnectionRouterUserProtocol.h>
@@ -26,11 +26,12 @@
 @end
 
 @protocol SmscConnectionProtocol <SmscConnectionRouterUserProtocol>
-- (id<SmscConnectionUserProtocol>)user;
-- (void)setUser:(id<SmscConnectionUserProtocol>)user;
 
-- (void)  registerMessageRouter:(id<SmscConnectionRouterProtocol>) router; /* returns success */
-- (void)  unregisterMessageRouter:(id<SmscConnectionRouterProtocol>) router;  /* returns success */
+- (UMMessageUser *)user;
+- (void)setUser:(UMMessageUser *)user;
+
+- (void) registerMessageRouter:(id<SmscConnectionRouterProtocol>) router; /* returns success */
+- (void) unregisterMessageRouter:(id<SmscConnectionRouterProtocol>) router;  /* returns success */
 - (BOOL) isConnected;
 - (BOOL) isAuthenticated;
 - (NSString *) getName;

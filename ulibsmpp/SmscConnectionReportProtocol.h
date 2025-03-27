@@ -7,8 +7,9 @@
 //
 
 #import <ulibsmpp/UniversalSMSUtilities.h>
-#import <ulibsmpp/SmscConnectionMessageProtocol.h>
+//#import <ulibsmpp/SmscConnectionMessageProtocol.h>
 #import <ulibsmpp/SmscRouterError.h>
+#import <um/um.h>
 
 typedef enum DeliveryReportType
 {
@@ -42,7 +43,7 @@ typedef enum DeliveryReportType
 @property(readwrite,strong,atomic)  NSString        *mcc;
 @property(readwrite,strong,atomic)  NSString        *mnc;
 @property(readwrite,assign,atomic)  int             responseCode;
-@property(readwrite,strong,atomic)  id<SmscConnectionMessageProtocol>  reportToMsg;
+@property(readwrite,strong,atomic)  UMMessageReport *  reportToMsg;
 @property(readwrite,strong,atomic)  NSString        *reportTypeAsString;
 
 @optional

@@ -29,10 +29,8 @@
 		A6BCC8972AE6DF0800C34D40 /* SigAddr.h in Headers */ = {isa = PBXBuildFile; fileRef = A6BCC87F2AE6DF0700C34D40 /* SigAddr.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		A6BCC8982AE6DF0800C34D40 /* UMSigAddr.h in Headers */ = {isa = PBXBuildFile; fileRef = A6BCC8802AE6DF0700C34D40 /* UMSigAddr.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		A6BCC89A2AE6DF0800C34D40 /* NSString+HexFunctions.m in Sources */ = {isa = PBXBuildFile; fileRef = A6BCC8822AE6DF0700C34D40 /* NSString+HexFunctions.m */; };
-		A6BCC89B2AE6DF0800C34D40 /* PriorityQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = A6BCC8832AE6DF0700C34D40 /* PriorityQueue.m */; };
 		A6BCC89D2AE6DF0800C34D40 /* UMSigAddrWithHistory.h in Headers */ = {isa = PBXBuildFile; fileRef = A6BCC8852AE6DF0700C34D40 /* UMSigAddrWithHistory.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		A6BCC89E2AE6DF0800C34D40 /* GsmCharSet.h in Headers */ = {isa = PBXBuildFile; fileRef = A6BCC8862AE6DF0700C34D40 /* GsmCharSet.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		A6BCC89F2AE6DF0800C34D40 /* PriorityQueue.h in Headers */ = {isa = PBXBuildFile; fileRef = A6BCC8872AE6DF0800C34D40 /* PriorityQueue.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		A6BCC8A12AE6DF0800C34D40 /* PointCode.h in Headers */ = {isa = PBXBuildFile; fileRef = A6BCC8892AE6DF0800C34D40 /* PointCode.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		A6BCC8A52AE6DF0800C34D40 /* NSData+HexFunctions.h in Headers */ = {isa = PBXBuildFile; fileRef = A6BCC88D2AE6DF0800C34D40 /* NSData+HexFunctions.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		A6BCC8C42AE6DF2600C34D40 /* UniversalSMSC.h in Headers */ = {isa = PBXBuildFile; fileRef = A6BCC8A62AE6DF2600C34D40 /* UniversalSMSC.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -113,10 +111,8 @@
 		A6BCC87F2AE6DF0700C34D40 /* SigAddr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SigAddr.h; sourceTree = "<group>"; };
 		A6BCC8802AE6DF0700C34D40 /* UMSigAddr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UMSigAddr.h; sourceTree = "<group>"; };
 		A6BCC8822AE6DF0700C34D40 /* NSString+HexFunctions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+HexFunctions.m"; sourceTree = "<group>"; };
-		A6BCC8832AE6DF0700C34D40 /* PriorityQueue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PriorityQueue.m; sourceTree = "<group>"; };
 		A6BCC8852AE6DF0700C34D40 /* UMSigAddrWithHistory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UMSigAddrWithHistory.h; sourceTree = "<group>"; };
 		A6BCC8862AE6DF0700C34D40 /* GsmCharSet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GsmCharSet.h; sourceTree = "<group>"; };
-		A6BCC8872AE6DF0800C34D40 /* PriorityQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PriorityQueue.h; sourceTree = "<group>"; };
 		A6BCC8892AE6DF0800C34D40 /* PointCode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PointCode.h; sourceTree = "<group>"; };
 		A6BCC88D2AE6DF0800C34D40 /* NSData+HexFunctions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+HexFunctions.h"; sourceTree = "<group>"; };
 		A6BCC8A62AE6DF2600C34D40 /* UniversalSMSC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UniversalSMSC.h; sourceTree = "<group>"; };
@@ -275,14 +271,12 @@
 			children = (
 				A6DDD9C816361D92002FA7CC /* ulibsmpp.h */,
 				A6DB3E73191E41810090FC94 /* ulibsmpp.m */,
+				A6BCC8E52AE6DF3900C34D40 /* UniversalSMPP.h */,
+				A6BCC8F62AE6DF5300C34D40 /* UniversalEMIUCP.h */,
 				A6DDD9D0163621FD002FA7CC /* NSString+UniversalSMPP.h */,
 				A6DDD9D1163621FD002FA7CC /* NSString+UniversalSMPP.m */,
 				A6DDD9D51636221A002FA7CC /* NSMutableString+UniversalSMPP.h */,
 				A6DDD9D61636221A002FA7CC /* NSMutableString+UniversalSMPP.m */,
-				A6BCC8F62AE6DF5300C34D40 /* UniversalEMIUCP.h */,
-				A6BCC8F72AE6DF5300C34D40 /* SmscConnectionEMIUCP.h */,
-				A6BCC8F82AE6DF5300C34D40 /* SmscConnectionEMIUCP.m */,
-				A6BCC8E52AE6DF3900C34D40 /* UniversalSMPP.h */,
 				A6BCC8E32AE6DF3900C34D40 /* SmppErrorCode.h */,
 				A6BCC8EA2AE6DF3900C34D40 /* SmppMultiResult.h */,
 				A6BCC8E42AE6DF3900C34D40 /* SmppMultiResult.m */,
@@ -290,35 +284,37 @@
 				A6BCC8E62AE6DF3900C34D40 /* SmppPdu.m */,
 				A6BCC8E72AE6DF3900C34D40 /* SmppTlv.h */,
 				A6BCC8E92AE6DF3900C34D40 /* SmppTlv.m */,
-				A6BCC8E22AE6DF3900C34D40 /* SmscConnectionSMPP.h */,
-				A6BCC8E82AE6DF3900C34D40 /* SmscConnectionSMPP.m */,
-				A6BCC8A92AE6DF2600C34D40 /* DeliveryReportErrorCode.h */,
-				A6BCC8BD2AE6DF2600C34D40 /* GSMErrorCode.h */,
 				A6BCC8BF2AE6DF2600C34D40 /* SmscConnection.h */,
 				A6BCC8BB2AE6DF2600C34D40 /* SmscConnection.m */,
+				A6BCC8E22AE6DF3900C34D40 /* SmscConnectionSMPP.h */,
+				A6BCC8E82AE6DF3900C34D40 /* SmscConnectionSMPP.m */,
 				A6BCC8AC2AE6DF2600C34D40 /* SmscConnectionFAIL.h */,
 				A6BCC8A82AE6DF2600C34D40 /* SmscConnectionFAIL.m */,
-				A6BCC8C32AE6DF2600C34D40 /* SmscConnectionMessagePassingProtocol.h */,
-				A6BCC8A72AE6DF2600C34D40 /* SmscConnectionMessageProtocol.h */,
 				A6BCC8AA2AE6DF2600C34D40 /* SmscConnectionNACK.h */,
 				A6BCC8B52AE6DF2600C34D40 /* SmscConnectionNACK.m */,
 				A6BCC8BA2AE6DF2600C34D40 /* SmscConnectionNULL.h */,
 				A6BCC8B32AE6DF2600C34D40 /* SmscConnectionNULL.m */,
+				A6BCC8F72AE6DF5300C34D40 /* SmscConnectionEMIUCP.h */,
+				A6BCC8F82AE6DF5300C34D40 /* SmscConnectionEMIUCP.m */,
+				A6BCC8A92AE6DF2600C34D40 /* DeliveryReportErrorCode.h */,
+				A6BCC8BD2AE6DF2600C34D40 /* GSMErrorCode.h */,
 				A6BCC8C12AE6DF2600C34D40 /* SmscConnectionProtocol.h */,
+				A6BCC8AF2AE6DF2600C34D40 /* SmscRouterUserProtocol.h */,
+				A6BCC8C32AE6DF2600C34D40 /* SmscConnectionMessagePassingProtocol.h */,
+				A6BCC8A72AE6DF2600C34D40 /* SmscConnectionMessageProtocol.h */,
+				A6BCC8B42AE6DF2600C34D40 /* SmscConnectionTransactionProtocol.h */,
+				A6BCC8B72AE6DF2600C34D40 /* SmscConnectionUserProtocol.h */,
+				A6BCC8AB2AE6DF2600C34D40 /* SmscMessageWellProtocol.h */,
 				A6BCC8B62AE6DF2600C34D40 /* SmscConnectionReadyProtocol.h */,
 				A6BCC8C02AE6DF2600C34D40 /* SmscConnectionReportProtocol.h */,
 				A6BCC8B12AE6DF2600C34D40 /* SmscConnectionRouterProtocol.h */,
 				A6BCC8BC2AE6DF2600C34D40 /* SmscConnectionRouterUserProtocol.h */,
 				A6BCC8B92AE6DF2600C34D40 /* SmscConnectionTransaction.h */,
 				A6BCC8B22AE6DF2600C34D40 /* SmscConnectionTransaction.m */,
-				A6BCC8B42AE6DF2600C34D40 /* SmscConnectionTransactionProtocol.h */,
-				A6BCC8B72AE6DF2600C34D40 /* SmscConnectionUserProtocol.h */,
-				A6BCC8AB2AE6DF2600C34D40 /* SmscMessageWellProtocol.h */,
 				A6BCC8C22AE6DF2600C34D40 /* SmscReportWellProtocoll.h */,
 				A6BCC8AD2AE6DF2600C34D40 /* SmscRouterError.h */,
 				A6BCC8AE2AE6DF2600C34D40 /* SmscRouterError.m */,
 				A6BCC8B82AE6DF2600C34D40 /* SmscRouterProtocol.h */,
-				A6BCC8AF2AE6DF2600C34D40 /* SmscRouterUserProtocol.h */,
 				A6BCC8B02AE6DF2600C34D40 /* SmscStandardReport.h */,
 				A6BCC8BE2AE6DF2600C34D40 /* SmscStandardReport.m */,
 				A6BCC8A62AE6DF2600C34D40 /* UniversalSMSC.h */,
@@ -331,8 +327,6 @@
 				A6BCC8822AE6DF0700C34D40 /* NSString+HexFunctions.m */,
 				A6BCC8892AE6DF0800C34D40 /* PointCode.h */,
 				A6BCC87D2AE6DF0700C34D40 /* PointCode.m */,
-				A6BCC8872AE6DF0800C34D40 /* PriorityQueue.h */,
-				A6BCC8832AE6DF0700C34D40 /* PriorityQueue.m */,
 				A6BCC87F2AE6DF0700C34D40 /* SigAddr.h */,
 				A6BCC8782AE6DF0700C34D40 /* UMPrefs.h */,
 				A6BCC8762AE6DF0700C34D40 /* UMPrefs.m */,
@@ -377,7 +371,6 @@
 				A6BCC8A12AE6DF0800C34D40 /* PointCode.h in Headers */,
 				A6793DA91934AAAD0090FC94 /* UniversalSMSUtilities.h in Headers */,
 				A6BCC8972AE6DF0800C34D40 /* SigAddr.h in Headers */,
-				A6BCC89F2AE6DF0800C34D40 /* PriorityQueue.h in Headers */,
 				A6BCC8ED2AE6DF3900C34D40 /* SmppErrorCode.h in Headers */,
 				A6BCC8D72AE6DF2600C34D40 /* SmscConnectionTransaction.h in Headers */,
 				A6BCC8CB2AE6DF2600C34D40 /* SmscRouterError.h in Headers */,
@@ -521,7 +514,6 @@
 			files = (
 				A6BCC88F2AE6DF0800C34D40 /* UMSigAddrWithHistory.m in Sources */,
 				A6BCC8CC2AE6DF2600C34D40 /* SmscRouterError.m in Sources */,
-				A6BCC89B2AE6DF0800C34D40 /* PriorityQueue.m in Sources */,
 				A6BCC88E2AE6DF0800C34D40 /* UMPrefs.m in Sources */,
 				A6BCC8D12AE6DF2600C34D40 /* SmscConnectionNULL.m in Sources */,
 				A6BCC8F02AE6DF3900C34D40 /* SmppPdu.m in Sources */,

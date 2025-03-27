@@ -476,7 +476,7 @@
 	return pdu;
 }
 
-+ (SmppPdu *)OutgoingSubmitSm:(id<SmscConnectionMessageProtocol>)msg
++ (SmppPdu *)OutgoingSubmitSm:(UMMessage *)msg
 {
     return [SmppPdu OutgoingSubmitSm:msg
                             esmClass:SMPP_PDU_ESM_CLASS_SUBMIT_DEFAULT_SMSC_MODE
@@ -484,7 +484,7 @@
                              options:@{}];
 }
 
-+ (SmppPdu *)OutgoingSubmitSm:(id<SmscConnectionMessageProtocol>)msg
++ (SmppPdu *)OutgoingSubmitSm:(UMMessage *)msg
                       options:(NSDictionary *)options
 {
     if (options[@"CMT"])
@@ -500,12 +500,12 @@
                              options:options];
 }
 
-+ (SmppPdu *)OutgoingSubmitSm:(id<SmscConnectionMessageProtocol>)msg esmClass:(int)esmclass serviceType:(NSString *)servicetype
++ (SmppPdu *)OutgoingSubmitSm:(UMMessage *)msg esmClass:(int)esmclass serviceType:(NSString *)servicetype
 {
     return [SmppPdu OutgoingSubmitSm:msg esmClass:esmclass serviceType:servicetype options:@{}];
 }
         
-+ (SmppPdu *)OutgoingSubmitSm:(id<SmscConnectionMessageProtocol>)msg esmClass:(int)esmclass serviceType:(NSString *)servicetype options:(NSDictionary *)options
++ (SmppPdu *)OutgoingSubmitSm:(UMMessage *)msg esmClass:(int)esmclass serviceType:(NSString *)servicetype options:(NSDictionary *)options
 {
 	SmppPdu *pdu;
 	NSData *data;
@@ -626,7 +626,7 @@
 }
 
 
-+ (void)appendMessageMoverTlvsFromMsg:(id<SmscConnectionMessageProtocol>)msg toPdu:(SmppPdu *)pdu
++ (void)appendMessageMoverTlvsFromMsg:(UMMessage *)msg toPdu:(SmppPdu *)pdu
 {
     if([msg respondsToSelector:@selector(smsc_srism_gt)])
     {
@@ -785,7 +785,7 @@
     }
 }
     
-+ (SmppPdu *)OutgoingSubmitSmRespOK:(id<SmscConnectionMessageProtocol>)msg
++ (SmppPdu *)OutgoingSubmitSmRespOK:(UMMessage *)msg
 							 withId:(NSString *)msgId
 {
 	SmppPdu *pdu;
@@ -802,7 +802,7 @@
 	return pdu;
 }
 
-+ (SmppPdu *)OutgoingSubmitMulti:(id<SmscConnectionMessageProtocol>)msg distributionList:(NSString *) distributionListName
++ (SmppPdu *)OutgoingSubmitMulti:(UMMessage *)msg distributionList:(NSString *) distributionListName
 {
 	SmppPdu *pdu;
 	int	esmclass = 0;
@@ -930,17 +930,17 @@
 	return pdu;
 }
 
-+ (SmppPdu *)OutgoingDeliverSm:(id<SmscConnectionMessageProtocol>)msg
++ (SmppPdu *)OutgoingDeliverSm:(UMMessage *)msg
 {
 	return [SmppPdu OutgoingDeliverSm:msg esmClass:SMPP_PDU_ESM_CLASS_DELIVER_DEFAULT_TYPE serviceType:NULL];
 }
 
-+ (SmppPdu *)OutgoingDeliverSm:(id<SmscConnectionMessageProtocol>)msg options:(NSDictionary *)options
++ (SmppPdu *)OutgoingDeliverSm:(UMMessage *)msg options:(NSDictionary *)options
 {
     return [SmppPdu OutgoingDeliverSm:msg esmClass:SMPP_PDU_ESM_CLASS_DELIVER_DEFAULT_TYPE serviceType:NULL options:options];
 }
 
-+ (SmppPdu *)OutgoingDeliverSm:(id<SmscConnectionMessageProtocol>)msg esmClass:(int)esmclass serviceType:(NSString *)servicetype
++ (SmppPdu *)OutgoingDeliverSm:(UMMessage *)msg esmClass:(int)esmclass serviceType:(NSString *)servicetype
 {
     return [SmppPdu OutgoingDeliverSm:msg
                              esmClass:esmclass
@@ -948,7 +948,7 @@
                               options:@{}];
 }
 
-+ (SmppPdu *)OutgoingDeliverSm:(id<SmscConnectionMessageProtocol>)msg
++ (SmppPdu *)OutgoingDeliverSm:(UMMessage *)msg
                       esmClass:(int)esmclass
                    serviceType:(NSString *)servicetype
                        options:(NSDictionary *)options;
@@ -1019,28 +1019,28 @@
         NSInteger type = msg.messageStateCode;
 		switch(type)
 		{
-			case MESSAGE_STATE_ENROUTE:
+			case UMMESSAGE_STATE_ENROUTE:
                 ms = @"ENROUTE";
 				break;
-			case MESSAGE_STATE_ACCEPTED:
+			case UMMESSAGE_STATE_ACCEPTED:
 				ms = @"ACCEPTD";
 				break;
-			case MESSAGE_STATE_DELIVERED:
+			case UMMESSAGE_STATE_DELIVERED:
 				ms = @"DELIVRD";
 				break;
-			case MESSAGE_STATE_EXPIRED:
+			case UMMESSAGE_STATE_EXPIRED:
                 ms = @"EXPIRED";
 				break;
-			case MESSAGE_STATE_DELETED:
+			case UMMESSAGE_STATE_DELETED:
                 ms = @"DELETED";
 				break;
-			case MESSAGE_STATE_UNDELIVERABLE:
+			case UMMESSAGE_STATE_UNDELIVERABLE:
                 ms = @"UNDELIV";
 				break;
-			case MESSAGE_STATE_REJECTED:
+			case UMMESSAGE_STATE_REJECTED:
 				ms = @"REJECTD";
 				break;
-			case MESSAGE_STATE_UNKNOWN:
+			case UMMESSAGE_STATE_UNKNOWN:
 			default:
 				ms = @"UNKNOWN";
 		}
@@ -1127,7 +1127,7 @@
 	return pdu;
 }
 
-+ (SmppPdu *)OutgoingSubmitSmReport:(id<SmscConnectionMessageProtocol>)msg
++ (SmppPdu *)OutgoingSubmitSmReport:(UMMessage *)msg
                     reportingEntity:(SmppReportingEntity)re
 {
     int esmclass;
@@ -1150,7 +1150,7 @@
                          serviceType:@""];
 }
 
-+ (SmppPdu *)OutgoingDeliverSmReport:(id<SmscConnectionMessageProtocol>)msg
++ (SmppPdu *)OutgoingDeliverSmReport:(UMMessage *)msg
                      reportingEntity:(SmppReportingEntity)re
 {
 	int esmclass;
@@ -1173,7 +1173,7 @@
                           serviceType:@""];
 }
 
-+ (SmppPdu *)OutgoingDeliverSmRespOK:(id<SmscConnectionMessageProtocol>)msg
++ (SmppPdu *)OutgoingDeliverSmRespOK:(UMMessage *)msg
 							  withId:(NSString *)msg_id
 {
 	SmppPdu *pdu;
@@ -1192,7 +1192,7 @@
 	return pdu;
 }
 
-+ (SmppPdu *)OutgoingDeliverSmReportRespOK:(id<SmscConnectionReportProtocol>)report
++ (SmppPdu *)OutgoingDeliverSmReportRespOK:(UMMessageReport *)report
                                     withId:(NSString *)submit_id
 {
 	SmppPdu *pdu;
@@ -1204,12 +1204,12 @@
 }
 
 
-+ (SmppPdu *)OutgoingDataSm:(id<SmscConnectionMessageProtocol>)msg
++ (SmppPdu *)OutgoingDataSm:(UMMessage *)msg
 {
 	return [SmppPdu OutgoingDataSm:msg esmClass:SMPP_PDU_ESM_CLASS_SUBMIT_DEFAULT_SMSC_MODE serviceType:@""];
 }
 
-+ (SmppPdu *)OutgoingDataSm:(id<SmscConnectionMessageProtocol>)msg esmClass:(int)esmclass serviceType:(NSString *)servicetype
++ (SmppPdu *)OutgoingDataSm:(UMMessage *)msg esmClass:(int)esmclass serviceType:(NSString *)servicetype
 {
 	SmppPdu *pdu;
 	NSData *data;
@@ -1298,7 +1298,7 @@
 }
 
 
-+ (SmppPdu *)OutgoingDataSmRespOK:(id<SmscConnectionMessageProtocol>)msg
++ (SmppPdu *)OutgoingDataSmRespOK:(UMMessage *)msg
                            withId:(NSString *)msgId
 {
 	SmppPdu *pdu;
@@ -1328,7 +1328,7 @@
 	return pdu;
 }
 
-+ (SmppPdu *)OutgoingQueryRespOK:(id<SmscConnectionMessageProtocol>)msg
++ (SmppPdu *)OutgoingQueryRespOK:(UMMessage *)msg
 						  withId:(NSString *)msg_id
 {
 	SmppPdu *pdu;
@@ -1444,19 +1444,19 @@
 {
 	switch(ms)
 	{
-		case MESSAGE_STATE_ENROUTE:
+		case UMMESSAGE_STATE_ENROUTE:
 			return SMPP_MESSAGE_STATE_ENROUTE;
-		case MESSAGE_STATE_DELIVERED:
+		case UMMESSAGE_STATE_DELIVERED:
 			return SMPP_MESSAGE_STATE_DELIVERED;
-		case MESSAGE_STATE_EXPIRED:
+		case UMMESSAGE_STATE_EXPIRED:
 			return SMPP_MESSAGE_STATE_EXPIRED;
-		case MESSAGE_STATE_DELETED:
+		case UMMESSAGE_STATE_DELETED:
 			return SMPP_MESSAGE_STATE_DELETED;
-		case MESSAGE_STATE_UNDELIVERABLE:
+		case UMMESSAGE_STATE_UNDELIVERABLE:
 			return SMPP_MESSAGE_STATE_UNDELIVERABLE;
-		case MESSAGE_STATE_ACCEPTED:
+		case UMMESSAGE_STATE_ACCEPTED:
 			return SMPP_MESSAGE_STATE_ACCEPTED;
-		case MESSAGE_STATE_REJECTED:
+		case UMMESSAGE_STATE_REJECTED:
 			return SMPP_MESSAGE_STATE_REJECTED;
 	}
 	return SMPP_MESSAGE_STATE_UNKNOWN;

@@ -6,7 +6,7 @@
 //  Created by Andreas Fink on 01.03.09.
 //  Copyright 2008-2014 Andreas Fink, Paradieshofstrasse 101, 4054 Basel, Switzerland
 //
-
+#if 0
 #import <ulib/ulib.h>
 #import <ulibsmpp/UniversalSMSUtilities.h>
 #import <ulibsmpp/SmscConnectionUserProtocol.h>
@@ -65,31 +65,6 @@ typedef enum SmscMessageState
     MESSAGE_STATE_UNKNOWN       = 8,
 } SmscMessageState;
 
-typedef enum UMReportMaskValue
-{
-    UMDLR_MASK_REPORT_SUBMITTED = 1,
-    UMDLR_MASK_REPORT_ENROUTE = 2,
-    UMDLR_MASK_REPORT_DELIVERED = 4,
-    UMDLR_MASK_REPORT_EXPIRED = 8,
-    UMDLR_MASK_REPORT_DELETED = 16,
-    UMDLR_MASK_REPORT_UNDELIVERABLE = 32,
-    UMDLR_MASK_REPORT_ACCEPTED = 64,
-    UMDLR_MASK_REPORT_UNKNOWN = 128,
-    UMDLR_MASK_REPORT_REJECTED = 256,
-
-    UMDLR_MASK_SUCCESS  = (UMDLR_MASK_REPORT_DELIVERED),
-    UMDLR_MASK_FAIL     = (UMDLR_MASK_REPORT_EXPIRED | UMDLR_MASK_REPORT_DELETED | UMDLR_MASK_REPORT_UNDELIVERABLE | UMDLR_MASK_REPORT_REJECTED),
-    UMDLR_MASK_BUFFERED = (UMDLR_MASK_REPORT_ENROUTE),
-    UMDLR_MASK_SUBMIT   = (UMDLR_MASK_REPORT_SUBMITTED),
-    UMDLR_MASK_FINAL    = (UMDLR_MASK_SUCCESS | UMDLR_MASK_FAIL),
-} UMReportMaskValue;
-
-typedef enum UMRequestMaskValue
-{
-    REQUEST_MASK_SUCCESS_OR_FAIL = 1,
-    REQUEST_MASK_FAIL            = 2,
-    REQUEST_MASK_INTERMEDIATE    = 16,
-} UMRequestMaskValue;
 
 @class SRMessageState;
 
@@ -160,3 +135,5 @@ typedef enum UMRequestMaskValue
 
 
 @end
+#endif
+

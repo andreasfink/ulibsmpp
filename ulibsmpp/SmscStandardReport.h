@@ -5,7 +5,7 @@
 //  Created by Andreas Fink on 14.11.14.
 //
 //
-
+#if 0
 #import <ulib/ulib.h>
 #import <ulibsmpp/SmscConnectionReportProtocol.h>
 
@@ -25,9 +25,9 @@
     NSString    *_mcc;
     NSString    *_mnc;
     int         _responseCode;
-    id<SmscConnectionMessageProtocol>   _reportToMsg;
+    UMMessageReport *   _reportToMsg;
     NSString    *_reportTypeAsString;
-    DeliveryReportType _reportType;
+    UMDeliveryReportType _reportType;
     id          _currentTransaction;
 }
 
@@ -45,10 +45,12 @@
 @property(readwrite,strong)  NSString    *mcc;
 @property(readwrite,strong)  NSString    *mnc;
 @property(readwrite,assign)  int         responseCode;
-@property(readwrite,strong)  id<SmscConnectionMessageProtocol>   reportToMsg;
+@property(readwrite,strong)  UMMessageReport *   reportToMsg;
 @property(readwrite,strong)  NSString    *reportTypeAsString;
 @property(readwrite,assign) DeliveryReportType reportType;
 @property(readwrite,strong) id          currentTransaction;
 
 
 @end
+#endif
+

@@ -10,7 +10,7 @@
 #import <ulib/ulib.h>
 #import <ulibsmpp/UniversalSMSUtilities.h>
 
-#import <ulibsmpp/SmscConnectionMessageProtocol.h>
+//#import <ulibsmpp/SmscConnectionMessageProtocol.h>
 #import <ulibsmpp/SmscConnectionReportProtocol.h>
 //#import "SmscConnectionRouterProtocol.h"
 #import <ulibsmpp/SmscConnectionUserProtocol.h>
@@ -21,9 +21,9 @@
 @protocol SmscConnectionRouterProtocol<NSObject,SmscConnectionRouterUserProtocol>
 
 /* asking the router to provide a new message object */
-- (id<SmscConnectionMessageProtocol>)createMessage;
+- (UMMessage *)createMessage;
 /* asking the router to provide a new report object */
-- (id<SmscConnectionReportProtocol>)createReport;
+- (UMMessageReport *)createReport;
 
 /* asking the router to provide a new error object */
 - (SmscRouterError *)createError;
@@ -52,8 +52,8 @@
 
 @optional
 
-- (id<SmscConnectionMessageProtocol>)queryMessage:(NSString *)msgid;
-- (id<SmscConnectionMessageProtocol>)queryMessage:(NSString *)msgid withNumber:(NSString *)msisdn;
+- (UMMessage *)queryMessage:(NSString *)msgid;
+- (UMMessage *)queryMessage:(NSString *)msgid withNumber:(NSString *)msisdn;
 
 - (BOOL) isAddressWhitelisted:(NSString *)remoteIpAddress
                    remotePort:(NSNumber *)remotePort

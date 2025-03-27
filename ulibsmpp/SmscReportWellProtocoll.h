@@ -6,8 +6,8 @@
 //
 //
 
-@protocol SmscConnectionMessageProtocol;
+//@protocol SmscConnectionMessageProtocol;
 
 @protocol SmscReportWellProtocoll<NSObject>
-- (id<SmscConnectionReportProtocol>)createReport;
+- (UMMessage *)createReport;
 @end

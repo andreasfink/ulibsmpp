@@ -12,17 +12,17 @@
 
 @protocol SmscConnectionTransactionProtocol<NSObject>
 
-- (void)set_Message:(id<SmscConnectionMessageProtocol>)msg;
-- (id<SmscConnectionMessageProtocol>)_message;
+- (void)setMessage:(UMMessage *)msg;
+- (UMMessage *)message;
 
-- (void)setReport:(id<SmscConnectionReportProtocol>)report;
-- (id<SmscConnectionReportProtocol>)report;
+- (void)setReport:(UMMessageReport *)report;
+- (UMMessageReport *)report;
 
 - (void) setReference:(NSString *)refe;
-- (NSString *) reference;
+- (NSString *)reference;
 
 - (void) setStatus:(SmscRouterError *)status;
-- (SmscRouterError *) status;
+- (SmscRouterError *)status;
 
 - (void) setType:(int)type;
 - (int)type;

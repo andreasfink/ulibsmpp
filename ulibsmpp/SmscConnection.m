@@ -6,6 +6,7 @@
 //  Copyright 2008-2014 Andreas Fink, Paradieshofstrasse 101, 4054 Basel, Switzerland
 //
 
+#import <um/UMMessage.h>
 #import "SmscConnection.h"
 #import "SmscConnectionTransaction.h"
 #include <uuid/uuid.h>
@@ -24,19 +25,11 @@
         _logLevel = UMLOG_MAJOR;
         _outgoingTransactions    = [[UMSynchronizedDictionary alloc] init];
         _incomingTransactions    = [[UMSynchronizedDictionary alloc] init];
-#ifdef USE_SMPP_PRIORITY_QUEUES
-        submitMessageQueue      = [[PriorityQueue alloc] init];
-        submitReportQueue       = [[PriorityQueue alloc] init];
-        deliverMessageQueue     = [[PriorityQueue alloc] init];
-        deliverReportQueue      = [[PriorityQueue alloc] init];
-        ackNackQueue            = [[PriorityQueue alloc] init];
-#else
         _submitMessageQueue      = [[UMQueueSingle alloc] init];
         _submitReportQueue       = [[UMQueueSingle alloc] init];
         _deliverMessageQueue     = [[UMQueueSingle alloc] init];
         _deliverReportQueue      = [[UMQueueSingle alloc] init];
         _ackNackQueue            = [[UMQueueSingle alloc] init];
-#endif
         _inboundMessagesThroughput = [[UMThroughputCounter alloc]initWithResolutionInSeconds: 1.0 maxDuration: 1260.0];
         _outboundMessagesThroughput = [[UMThroughputCounter alloc]initWithResolutionInSeconds: 1.0 maxDuration: 1260.0];
         _inboundReportsThroughput = [[UMThroughputCounter alloc]initWithResolutionInSeconds: 1.0 maxDuration: 1260.0];
@@ -76,7 +69,7 @@
 }
 
 /* submit Message: router->outbound TX connection */
-- (void) submitMessage:(id<SmscConnectionMessageProtocol>)msg
+- (void) submitMessage:(UMMessage *)msg
              forObject:(id)sendingObject
            synchronous:(BOOL)sync
 {
@@ -93,7 +86,7 @@
 }
 
 /* deliverMessage: router->inbound RX connection */
-- (void) deliverMessage:(id<SmscConnectionMessageProtocol>)msg
+- (void) deliverMessage:(UMMessage *)msg
               forObject:(id)sendingObject
             synchronous:(BOOL)sync
 {
@@ -110,7 +103,7 @@
 }
 
 /* deliver_sm to proxy for testing purposes*/
-- (void) proxyDeliverMessage:(id<SmscConnectionMessageProtocol>)msg forObject:(id)sendingObject
+- (void) proxyDeliverMessage:(UMMessage *)msg forObject:(id)sendingObject
 {
 #ifdef USE_SMPP_PRIORITY_QUEUES
     [deliverMessageQueue   addToQueue:msg priority:[msg priority]];
@@ -122,7 +115,7 @@
 
 
 /* submitReport: router->outbound TX connection */
-- (void) submitReport:(id<SmscConnectionReportProtocol>)report
+- (void) submitReport:(UMMessageReport *)report
             forObject:(id)sendingObject
           synchronous:(BOOL)sync
 {
@@ -140,7 +133,7 @@
 }
 
 /* deliverReport: router->inbound RX connection */
-- (void) deliverReport:(id<SmscConnectionReportProtocol>)report
+- (void) deliverReport:(UMMessageReport *)report
              forObject:(id)sendingObject
            synchronous:(BOOL)sync
 {
@@ -158,7 +151,7 @@
 }
 
 /* submitMessageSent: router->inbound TX connection */
-- (void) submitMessageSent:(id<SmscConnectionMessageProtocol>)msg
+- (void) submitMessageSent:(UMMessage *)msg
                  forObject:(id)reportingObject
                synchronous:(BOOL)sync
 {
@@ -177,7 +170,7 @@
 
 
 /* submitMessageFailed: router->inbound TX connection */
-- (void) submitMessageFailed:(id<SmscConnectionMessageProtocol>)msg
+- (void) submitMessageFailed:(UMMessage *)msg
                    withError:(SmscRouterError *)code
                    forObject:(id)reportingObject
                  synchronous:(BOOL)sync
@@ -197,7 +190,7 @@
     }
 }
 
-- (void) submitReportSent:(id<SmscConnectionReportProtocol>)rep
+- (void) submitReportSent:(UMMessageReport *)rep
                 forObject:(id)reportingObject
               synchronous:(BOOL)sync
 {
@@ -215,7 +208,7 @@
     }
 }
 
-- (void) submitReportFailed:(id<SmscConnectionReportProtocol>)rep
+- (void) submitReportFailed:(UMMessageReport *)rep
                   withError:(SmscRouterError *)code
                   forObject:(id)reportingObject
                 synchronous:(BOOL)sync
@@ -233,7 +226,7 @@
     }
 }
 
-- (void) deliverMessageSent:(id<SmscConnectionMessageProtocol>)msg
+- (void) deliverMessageSent:(UMMessage *)msg
                   forObject:(id)reportingObject
                 synchronous:(BOOL)sync
 {
@@ -250,7 +243,7 @@
     }
 }
 
-- (void) deliverMessageFailed:(id<SmscConnectionMessageProtocol>)msg
+- (void) deliverMessageFailed:(UMMessage *)msg
                     withError:(SmscRouterError *)code
                     forObject:(id)reportingObject
                   synchronous:(BOOL)sync
@@ -270,7 +263,7 @@
 }
 
 /* we get a deliverReport inbound and acknowledge it outbount */
-- (void) deliverReportSent:(id<SmscConnectionReportProtocol>)rep
+- (void) deliverReportSent:(UMMessageReport *)rep
                  forObject:(id)reportingObject
                synchronous:(BOOL)sync
 {
@@ -287,7 +280,7 @@
     }
 }
 
-- (void) deliverReportFailed:(id<SmscConnectionReportProtocol>)rep
+- (void) deliverReportFailed:(UMMessageReport *)rep
                    withError:(SmscRouterError *)code
                    forObject:(id)reportingObject
                  synchronous:(BOOL)sync
@@ -479,9 +472,9 @@
     return transaction;
 }
 
-- (id) findIncomingTransactionByMessage:(id<SmscConnectionMessageProtocol>)msg
+- (id) findIncomingTransactionByMessage:(UMMessage *)msg
 {
-    return [msg userTransaction];
+    return msg.userTransaction;
 
     /* 
      SmscConnectionTransaction *transaction = NULL;
@@ -504,7 +497,7 @@
     */
 }
 
-- (id) findOutgoingTransactionByMessage:(id<SmscConnectionMessageProtocol>)msg
+- (id) findOutgoingTransactionByMessage:(UMMessage *)msg
 {
     SmscConnectionTransaction * transaction = NULL;
     NSString *key;

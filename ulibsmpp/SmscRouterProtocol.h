@@ -22,19 +22,19 @@
                                         SmscConnectoinMessagePassingProtocol>
 
 
-//- (SmscConnectionErrorCode) submitMessage:(id<SmscConnectionMessageProtocol>)msg;
-//- (SmscConnectionErrorCode) submitReport:(id<SmscConnectionReportProtocol>)report;
+//- (SmscConnectionErrorCode) submitMessage:(UMMessageReport * *)msg;
+//- (SmscConnectionErrorCode) submitReport:(UMMessageReport * *)report;
 
-//- (SmscConnectionErrorCode) deliverMessage:(id<SmscConnectionMessageProtocol>)msg;
-//- (SmscConnectionErrorCode) deliverReport:(id<SmscConnectionReportProtocol>)report;
+//- (SmscConnectionErrorCode) deliverMessage:(UMMessageReport * *)msg;
+//- (SmscConnectionErrorCode) deliverReport:(UMMessageReport * *)report;
 
 /* upon reception of deliverReport, the Router user calls back those methods */
-//- (int) reportSent:(id<SmscConnectionReportProtocol>)report;
-//- (int) reportFailed:(id<SmscConnectionReportProtocol>)report withError:(int)code;
+//- (int) reportSent:(UMMessageReport * *)report;
+//- (int) reportFailed:(UMMessageReport * *)report withError:(int)code;
 
 /* upon reception of deliverMessage, the Router user calls back those methods */
-//- (int) messageSent:(id<SmscConnectionMessageProtocol>)msg;
-//- (int) messageFailed:(id<SmscConnectionMessageProtocol>)msg withError:(int)code;
+//- (int) messageSent:(UMMessageReport * *)msg;
+//- (int) messageFailed:(UMMessageReport * *)msg withError:(int)code;
 
 /* generic stuff */
 - (int) registerRouterUser:(id) routerUser;

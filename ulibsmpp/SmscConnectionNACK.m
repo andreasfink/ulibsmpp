@@ -111,7 +111,7 @@
 }
 
 /* submit Message: router->outbound TX connection */
-- (void) submitMessage:(id<SmscConnectionMessageProtocol>)msg
+- (void) submitMessage:(UMMessage *)msg
              forObject:(id)sendingObject
            synchronous:(BOOL)sync
 {
@@ -127,7 +127,7 @@
                            synchronous:NO];
 }
 
-- (void) submitReport:(id<SmscConnectionReportProtocol>)report
+- (void) submitReport:(UMMessageReport *)report
             forObject:(id)sendingObject
           synchronous:(BOOL)sync
 {
@@ -143,13 +143,13 @@
                           synchronous:NO];
 }
 
-- (void) submitReportSent:(id<SmscConnectionReportProtocol>)report
+- (void) submitReportSent:(UMMessageReport *)report
                 forObject:(id)reportingObject
               synchronous:(BOOL)sync
 {
 }
 
-- (void) submitReportFailed:(id<SmscConnectionReportProtocol>)report
+- (void) submitReportFailed:(UMMessageReport * *)report
                   withError:(SmscRouterError *)code
                   forObject:(id)reportingObject
                 synchronous:(BOOL)sync
@@ -158,7 +158,7 @@
 }
 
 /* deliverMessage: router->inbound RX connection */
-- (void) deliverMessage:(id<SmscConnectionMessageProtocol>)msg
+- (void) deliverMessage:(UMMessage *)msg
               forObject:(id)sendingObject
             synchronous:(BOOL)sync
 {
@@ -175,7 +175,7 @@
                             synchronous:NO];
 }
 
-- (void) deliverReport:(id<SmscConnectionReportProtocol>)report
+- (void) deliverReport:(UMMessageReport *)report
              forObject:(id)sendingObject
 {
     SmscRouterError *err = [_router createError];
@@ -191,13 +191,13 @@
                            synchronous:NO];
 }
 
-- (void) deliverReportSent:(id<SmscConnectionReportProtocol>)report
+- (void) deliverReportSent:(UMMessageReport * *)report
                  forObject:(id)reportingObject
                synchronous:(BOOL)sync
 {
 }
 
-- (void) deliverReportFailed:(id<SmscConnectionReportProtocol>)report
+- (void) deliverReportFailed:(UMMessageReport * *)report
                    withError:(SmscRouterError *)code
                    forObject:(id)reportingObject
                  synchronous:(BOOL)sync

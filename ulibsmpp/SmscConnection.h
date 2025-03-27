@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import <ulib/ulib.h>
+#import <um/um.h>
 #import <ulibsmpp/UniversalSMSUtilities.h>
 
 #import <ulibsmpp/SmscConnectionProtocol.h>
@@ -72,19 +73,11 @@ enum SmppAlphaCoding;
 	NSString			*_routerName;
 	UMSocket			*_uc;
     UMLogLevel          _logLevel;
-#ifdef  USE_SMPP_PRIORITY_QUEUES
-	PriorityQueue		*_submitMessageQueue;
-	PriorityQueue		*_submitReportQueue;
-	PriorityQueue		*_deliverMessageQueue;
-	PriorityQueue		*_deliverReportQueue;
-	PriorityQueue		*_ackNackQueue;
-#else
     UMQueueSingle             *_submitMessageQueue;
     UMQueueSingle             *_submitReportQueue;
     UMQueueSingle             *_deliverMessageQueue;
     UMQueueSingle             *_deliverReportQueue;
     UMQueueSingle             *_ackNackQueue;
-#endif
     
 	UMSynchronizedDictionary *_outgoingTransactions;
 	UMSynchronizedDictionary *_incomingTransactions;
@@ -132,11 +125,6 @@ enum SmppAlphaCoding;
 @property(readwrite,strong)		UMSocket			*uc;
 @property(readwrite,assign)     UMLogLevel          logLevel;
 @property(readwrite,strong)		id<SmscConnectionUserProtocol> user;
-//@property(readwrite,strong)		PriorityQueue		*submitMessageQueue;
-//@property(readwrite,strong)		PriorityQueue		*submitReportQueue;
-//@property(readwrite,strong)		PriorityQueue		*deliverMessageQueue;
-//@property(readwrite,strong)		PriorityQueue		*deliverReportQueue;
-//@property(readwrite,strong)		PriorityQueue       *ackNackQueue;
 @property(readwrite,weak)		id<SmscConnectionRouterProtocol>	router;
 @property(readwrite,strong)		UMHost				*localHost;
 @property(readwrite,assign)		int					localPort;
@@ -201,7 +189,7 @@ enum SmppAlphaCoding;
 
 
 - (void)transactionDone:(id<SmscConnectionTransactionProtocol>) t;
-- (void) proxyDeliverMessage:(id<SmscConnectionMessageProtocol>)msg forObject:(id)sendingObject;
+- (void) proxyDeliverMessage:(UMMessage *)msg forObject:(id)sendingObject;
 - (BOOL)hasOption:(NSString *)n;
 - (void)setOption:(NSString *)n;
 - (void)clearOption:(NSString *)n;

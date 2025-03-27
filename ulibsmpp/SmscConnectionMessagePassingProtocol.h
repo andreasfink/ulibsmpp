@@ -33,63 +33,62 @@
  
  */
  
-#import <ulibsmpp/SmscConnectionMessageProtocol.h>
+//#import <ulibsmpp/SmscConnectionMessageProtocol.h>
 #import <ulibsmpp/SmscConnectionReportProtocol.h>
+#import <um/um.h>
 
 @protocol SmscConnectionMessagePassingProtocol<NSObject>
 
-
-- (void) submitMessage:(id<SmscConnectionMessageProtocol>)msg
+- (void) submitMessage:(UMMessage *)msg
              forObject:(id)sendingObject
            synchronous:(BOOL)sync;
 
-- (void) submitMessageSent:(id<SmscConnectionMessageProtocol>)msg
+- (void) submitMessageSent:(UMMessage *)msg
                  forObject:(id)reportingObject
                synchronous:(BOOL)sync;
 
-- (void) submitMessageFailed:(id<SmscConnectionMessageProtocol>)msg
+- (void) submitMessageFailed:(UMMessage *)msg
                    withError:(SmscRouterError *)err
                    forObject:(id)reportingObject
                  synchronous:(BOOL)sync;
 
 
-- (void) submitReport:(id<SmscConnectionReportProtocol>)r
+- (void) submitReport:(UMMessageReport *)r
             forObject:(id)sendingObject
           synchronous:(BOOL)sync;
 
-- (void) submitReportSent:(id<SmscConnectionReportProtocol>)r
+- (void) submitReportSent:(UMMessageReport *)r
                 forObject:(id)reportingObject
               synchronous:(BOOL)sync;
 
-- (void) submitReportFailed:(id<SmscConnectionReportProtocol>)r
+- (void) submitReportFailed:(UMMessageReport *)r
                   withError:(SmscRouterError *)err
                   forObject:(id)reportingObject
                 synchronous:(BOOL)sync;
 
-
-- (void) deliverMessage:(id<SmscConnectionMessageProtocol>)msg
+- (void) deliverMessage:(UMMessage *)msg
               forObject:(id)sendingObject
             synchronous:(BOOL)sync;
 
-- (void) deliverMessageSent:(id<SmscConnectionMessageProtocol>)msg
+- (void) deliverMessageSent:(UMMessage *)msg
                   forObject:(id)reportingObject
                 synchronous:(BOOL)sync;
 
-- (void) deliverMessageFailed:(id<SmscConnectionMessageProtocol>)msg
+- (void) deliverMessageFailed:(UMMessage *)msg
                     withError:(SmscRouterError *)err
                     forObject:(id)reportingObject
                   synchronous:(BOOL)sync;
 
 
-- (void) deliverReport:(id<SmscConnectionReportProtocol>)report
+- (void) deliverReport:(UMMessageReport *)report
              forObject:(id)sendingObject
            synchronous:(BOOL)sync;
 
-- (void) deliverReportSent:(id<SmscConnectionReportProtocol>)report
+- (void) deliverReportSent:(UMMessageReport *)report
                  forObject:(id)reportingObject
                synchronous:(BOOL)sync;
 
-- (void) deliverReportFailed:(id<SmscConnectionReportProtocol>)report
+- (void) deliverReportFailed:(UMMessageReport *)report
                    withError:(SmscRouterError *)err
                    forObject:(id)reportingObject
                  synchronous:(BOOL)sync;

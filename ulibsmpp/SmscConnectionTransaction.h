@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-#import <ulibsmpp/SmscConnectionMessageProtocol.h>
+//#import <ulibsmpp/SmscConnectionMessageProtocol.h>
 #import <ulibsmpp/SmscConnectionTransactionProtocol.h>
 #import <ulibsmpp/SmscConnectionReportProtocol.h>
 
@@ -24,8 +24,8 @@ typedef enum SmscConnectionTransactionType
 @interface SmscConnectionTransaction : UMObject
 {
     NSString *sequenceNumber;
-    id<SmscConnectionMessageProtocol>	_message;
-    id<SmscConnectionReportProtocol>	report;
+    UMMessage *	_message;
+    UMMessageReport *	report;
     id  upperObject;
     id  lowerObject;
     NSDate *created;
@@ -37,8 +37,8 @@ typedef enum SmscConnectionTransactionType
 }
 
 @property(readwrite,strong)			NSString *sequenceNumber;
-@property(readwrite,strong)			id<SmscConnectionMessageProtocol>  message;   //Transaction retains the message; it will released when no more needed
-@property(readwrite,strong)			id<SmscConnectionReportProtocol> report;
+@property(readwrite,strong)			UMMessage       *message;   //Transaction retains the message; it will released when no more needed
+@property(readwrite,strong)			UMMessageReport *report;
 @property(readwrite,strong)			id upperObject;
 @property(readwrite,strong)			id lowerObject;
 @property(readwrite,assign)			NSTimeInterval timeout;

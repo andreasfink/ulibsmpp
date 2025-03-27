@@ -6,6 +6,8 @@
 //
 //
 
+#if 0
+
 #import "SmscStandardReport.h"
 
 @implementation SmscStandardReport
@@ -17,4 +19,6 @@
 
 
 @end
+
+#endif
 
