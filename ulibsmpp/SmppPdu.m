@@ -2310,7 +2310,7 @@
     @autoreleasepool
     {
         const char *ts = str.UTF8String;
-        int microsec = 0;
+        int microsec;
         time_t theTime;
         
         if(strlen(ts) != 16)
