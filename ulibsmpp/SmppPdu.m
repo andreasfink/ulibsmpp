@@ -10,7 +10,9 @@
 #import "ulib/ulib.h"
 #import "NSData+HexFunctions.h"
 #import "SmscConnectionSMPP.h"
+#import "UMSmppError.h"
 
+static UMSmppError SMPP_outgoingErrorCodeMapping(UMSmppError e);
 
 @implementation SmppPdu
 
@@ -23,22 +25,22 @@
     return self;
 }
 
-- (SmppPdu *)initWithType:(SmppPduType)t err:(SmppErrorCode)e;
+- (SmppPdu *)initWithType:(SmppPduType)t err:(UMSmppError)e
 {
     self = [super init];
     if(self)
     {
         _pdulen     = 0;
-        _type	= t;
-        _err		= e;
+        _type	    = t;
+        _err		= SMPP_outgoingErrorCodeMapping(e);
         _seq		= 0;
-        _cursor	= 0;
-        _payload = [[NSMutableData alloc] init];
+        _cursor 	= 0;
+        _payload    = [[NSMutableData alloc] init];
     }
 	return self;
 }
 
-- (SmppPdu *)initFromData:(NSData *)d;
+- (SmppPdu *)initFromData:(NSData *)d
 {
 	unsigned char header[16];
 	unsigned char *ptr;
@@ -77,7 +79,7 @@
 
 - (SmppPdu *)initWithType:(SmppPduType)t
 {
-	return [self initWithType:t err:ESME_ROK];
+	return [self initWithType:t err:UM_NO_ERROR];
 }
 
 - (void) appendNSStringMax:(NSString *)s  maxLength: (NSInteger) maxlen
@@ -276,12 +278,12 @@
 	return [self OutgoingBindTransmitterRespOK:systemId supportedVersion:version];
 }
 
-+ (SmppPdu *)OutgoingBindRespError:(SmppErrorCode) err rx:(BOOL)rx tx:(BOOL)tx
++ (SmppPdu *)OutgoingBindRespError:(UMSmppError) err rx:(BOOL)rx tx:(BOOL)tx
 {
     return [SmppPdu OutgoingBindRespError:err rx:rx tx:tx status:NULL];
 }
 
-+ (SmppPdu *)OutgoingBindRespError:(SmppErrorCode) err rx:(BOOL)rx tx:(BOOL)tx status:(NSString *)status_text
++ (SmppPdu *)OutgoingBindRespError:(UMSmppError) err rx:(BOOL)rx tx:(BOOL)tx status:(NSString *)status_text
 {
 	if((rx==YES) && (tx==YES))
     {
@@ -294,12 +296,12 @@
 	return [self OutgoingBindTransmitterRespError:err status:status_text];
 }
 
-+ (SmppPdu *)OutgoingBindTransmitterRespError:(SmppErrorCode) err
++ (SmppPdu *)OutgoingBindTransmitterRespError:(UMSmppError) err
 {
     return [SmppPdu OutgoingBindTransmitterRespError:err status:NULL];
 }
 
-+ (SmppPdu *)OutgoingBindTransmitterRespError:(SmppErrorCode) err status:(NSString *)status
++ (SmppPdu *)OutgoingBindTransmitterRespError:(UMSmppError) err status:(NSString *)status
 {
 	SmppPdu *pdu;
 	pdu = [[SmppPdu alloc] initWithType:SMPP_PDU_BIND_TRANSMITTER_RESP err:err];
@@ -314,7 +316,7 @@
 						  supportedVersion:(NSInteger)version
 {
 	SmppPdu *pdu;
-	pdu = [[SmppPdu alloc] initWithType:SMPP_PDU_BIND_TRANSMITTER_RESP err:ESME_ROK];
+	pdu = [[SmppPdu alloc] initWithType:SMPP_PDU_BIND_TRANSMITTER_RESP err:UM_NO_ERROR];
 	[pdu appendNSStringMax:systemId maxLength: 16];
 	[pdu appendTLVByte:0x34 withTag: SMPP_TLV_SC_INTERFACE_VERSION];
 	return pdu;
@@ -328,7 +330,7 @@
 							  npi:(NSInteger)npi
 							range:(NSString *)range
 {
-	SmppPdu *pdu = [[SmppPdu alloc] initWithType:SMPP_PDU_BIND_RECEIVER err:ESME_ROK];
+	SmppPdu *pdu = [[SmppPdu alloc] initWithType:SMPP_PDU_BIND_RECEIVER err:UM_NO_ERROR];
 	[pdu appendNSStringMax:systemId maxLength:16];
 	[pdu appendNSStringMax:password maxLength:9];
 	[pdu appendNSStringMax:stype    maxLength:13];
@@ -340,12 +342,12 @@
 }
 
 
-+ (SmppPdu *)OutgoingBindReceiverRespError:(SmppErrorCode) err
++ (SmppPdu *)OutgoingBindReceiverRespError:(UMSmppError) err
 {
     return [SmppPdu OutgoingBindReceiverRespError:err status:NULL];
 }
 
-+ (SmppPdu *)OutgoingBindReceiverRespError:(SmppErrorCode) err status:(NSString *)status
++ (SmppPdu *)OutgoingBindReceiverRespError:(UMSmppError) err status:(NSString *)status
 {
 	SmppPdu *pdu;
 	pdu = [[SmppPdu alloc] initWithType:SMPP_PDU_BIND_RECEIVER_RESP err:err];
@@ -360,7 +362,7 @@
 					   supportedVersion:(NSInteger)version
 {
 	SmppPdu *pdu;
-	pdu = [[SmppPdu alloc] initWithType:SMPP_PDU_BIND_RECEIVER_RESP err:ESME_ROK];
+	pdu = [[SmppPdu alloc] initWithType:SMPP_PDU_BIND_RECEIVER_RESP err:UM_NO_ERROR];
 	[pdu appendNSStringMax:systemId maxLength: 16];
 	[pdu appendTLVByte:0x34 withTag: SMPP_TLV_SC_INTERFACE_VERSION];
 	return pdu;
@@ -386,12 +388,12 @@
 	return pdu;
 }
 
-+ (SmppPdu *)OutgoingBindTransceiverRespError:(SmppErrorCode) err
++ (SmppPdu *)OutgoingBindTransceiverRespError:(UMSmppError) err
 {
     return [SmppPdu OutgoingBindTransceiverRespError:err status:NULL];
 }
             
-+ (SmppPdu *)OutgoingBindTransceiverRespError:(SmppErrorCode) err status:(NSString *)status
++ (SmppPdu *)OutgoingBindTransceiverRespError:(UMSmppError) err status:(NSString *)status
 {
 	SmppPdu *pdu;
 	pdu = [[SmppPdu alloc] initWithType:SMPP_PDU_BIND_TRANSCEIVER_RESP err:err];
@@ -406,7 +408,7 @@
 						  supportedVersion:(NSInteger)version
 {
 	SmppPdu *pdu;
-	pdu = [[SmppPdu alloc] initWithType:SMPP_PDU_BIND_TRANSCEIVER_RESP err:ESME_ROK];
+	pdu = [[SmppPdu alloc] initWithType:SMPP_PDU_BIND_TRANSCEIVER_RESP err:UM_NO_ERROR];
 	[pdu appendNSStringMax:systemId maxLength: 16];
 	[pdu appendTLVByte:0x34 withTag: SMPP_TLV_SC_INTERFACE_VERSION];
 	return pdu;
@@ -416,7 +418,7 @@
 					password:(NSString *)password
 {
 	SmppPdu *pdu;
-	pdu = [[SmppPdu alloc] initWithType:SMPP_PDU_OUTBIND err:ESME_ROK];
+	pdu = [[SmppPdu alloc] initWithType:SMPP_PDU_OUTBIND err:UM_NO_ERROR];
 	[pdu appendNSStringMax:systemId maxLength:16];
 	[pdu appendNSStringMax:password maxLength:9];
 	return pdu;
@@ -425,25 +427,25 @@
 + (SmppPdu *)OutgoingUnbind
 {
 	SmppPdu *pdu;
-	pdu = [[SmppPdu alloc] initWithType:SMPP_PDU_UNBIND err:ESME_ROK];
+	pdu = [[SmppPdu alloc] initWithType:SMPP_PDU_UNBIND err:UM_NO_ERROR];
 	return pdu;
 }
 
 + (SmppPdu *)OutgoingUnbindRespOK
 {
 	SmppPdu *pdu;
-	pdu = [[SmppPdu alloc] initWithType:SMPP_PDU_UNBIND_RESP err:ESME_ROK];
+	pdu = [[SmppPdu alloc] initWithType:SMPP_PDU_UNBIND_RESP err:UM_NO_ERROR];
 	return pdu;
 }
 
-+ (SmppPdu *)OutgoingUnbindRespErr:(SmppErrorCode) err
++ (SmppPdu *)OutgoingUnbindRespErr:(UMSmppError) err
 {
 	SmppPdu *pdu;
 	pdu = [[SmppPdu alloc] initWithType:SMPP_PDU_UNBIND_RESP err:err];
 	return pdu;
 }
 
-+ (SmppPdu *)OutgoingGenericNack:(SmppErrorCode) err
++ (SmppPdu *)OutgoingGenericNack:(UMSmppError) err
 {
 	SmppPdu *pdu;
 	pdu = [[SmppPdu alloc] initWithType:SMPP_PDU_GENERIC_NACK err:err];
@@ -494,7 +496,7 @@
     {
 		esmclass |= SMPP_PDU_ESM_CLASS_SUBMIT_RPI;
     }
-	pdu = [[SmppPdu alloc] initWithType:SMPP_PDU_SUBMIT_SM err:ESME_ROK];
+	pdu = [[SmppPdu alloc] initWithType:SMPP_PDU_SUBMIT_SM err:UM_NO_ERROR];
     
 	[pdu appendNSStringMax:servicetype maxLength: 6];
     UMSigAddr *from = [[UMSigAddr alloc]initWithString:msg.fromNumber.stringValue];
@@ -763,13 +765,13 @@
 							 withId:(NSString *)msgId
 {
 	SmppPdu *pdu;
-	pdu = [[SmppPdu alloc] initWithType:SMPP_PDU_SUBMIT_SM_RESP err:ESME_ROK];
+	pdu = [[SmppPdu alloc] initWithType:SMPP_PDU_SUBMIT_SM_RESP err:UM_NO_ERROR];
 	// TODO: verify if id is better a NSData
 	[pdu appendNSStringMax:msgId maxLength: 65];
 	return pdu;
 }
 
-+ (SmppPdu *)OutgoingSubmitSmRespErr:(SmppErrorCode) err
++ (SmppPdu *)OutgoingSubmitSmRespErr:(UMSmppError) err
 {
 	SmppPdu *pdu;
 	pdu = [[SmppPdu alloc] initWithType:SMPP_PDU_SUBMIT_SM_RESP err:err];
@@ -784,7 +786,7 @@
 	NSUInteger len;
 	int use_message_payload;
     
-	pdu = [[SmppPdu alloc] initWithType:SMPP_PDU_SUBMIT_SM_MULTI err:ESME_ROK];
+	pdu = [[SmppPdu alloc] initWithType:SMPP_PDU_SUBMIT_SM_MULTI err:UM_NO_ERROR];
     
 	esmclass = SMPP_PDU_ESM_CLASS_SUBMIT_STORE_AND_FORWARD_MODE;
     if (msg.pduUdhIndicator.integerValue )
@@ -880,7 +882,7 @@
 								withId:(NSString *)msgid
 {
 	SmppPdu *pdu;
-	pdu = [[SmppPdu alloc] initWithType:SMPP_PDU_SUBMIT_SM_MULTI err:ESME_ROK];
+	pdu = [[SmppPdu alloc] initWithType:SMPP_PDU_SUBMIT_SM_MULTI err:UM_NO_ERROR];
 	// TODO: what about message ID?
 	[pdu appendNSStringMax: msgid  maxLength:65];
 	[pdu appendInt8: [unsuccessfulDeliveries count]];
@@ -894,7 +896,7 @@
 	return pdu;
 }
 
-+ (SmppPdu *)OutgoingSubmitMultiRespErr:(SmppErrorCode) err
++ (SmppPdu *)OutgoingSubmitMultiRespErr:(UMSmppError) err
 {
 	SmppPdu *pdu;
 	pdu = [[SmppPdu alloc] init];
@@ -949,7 +951,7 @@
     {
 		esmclass |= SMPP_PDU_ESM_CLASS_SUBMIT_RPI;
     }
-	pdu = [[SmppPdu alloc] initWithType:SMPP_PDU_DELIVER_SM err:ESME_ROK];
+	pdu = [[SmppPdu alloc] initWithType:SMPP_PDU_DELIVER_SM err:UM_NO_ERROR];
 	
 	[pdu appendNSStringMax:servicetype maxLength: 6];
 	if(we_are_delivery_report)
@@ -1152,13 +1154,13 @@
 {
 	SmppPdu *pdu;
     
-	pdu = [[SmppPdu alloc] initWithType:SMPP_PDU_DELIVER_SM_RESP err:ESME_ROK];
+	pdu = [[SmppPdu alloc] initWithType:SMPP_PDU_DELIVER_SM_RESP err:UM_NO_ERROR];
 //    [pdu appendNSStringMax: msg_id maxLength:65];
     [pdu appendNSStringMax: @"" maxLength:65];
 	return pdu;
 }
 
-+ (SmppPdu *)OutgoingDeliverSmRespErr:(SmppErrorCode) err
++ (SmppPdu *)OutgoingDeliverSmRespErr:(UMSmppError) err
 {
 	SmppPdu *pdu;
 	pdu = [[SmppPdu alloc] initWithType:SMPP_PDU_DELIVER_SM_RESP err:err];
@@ -1171,7 +1173,7 @@
 {
 	SmppPdu *pdu;
     
-	pdu = [[SmppPdu alloc] initWithType:SMPP_PDU_DELIVER_SM_RESP err:ESME_ROK];
+	pdu = [[SmppPdu alloc] initWithType:SMPP_PDU_DELIVER_SM_RESP err:UM_NO_ERROR];
     //    [pdu appendNSStringMax: submit_id maxLength:65];
     [pdu appendNSStringMax: @"" maxLength:65];
 	return pdu;
@@ -1195,7 +1197,7 @@
     if(msg.pduReplyPathIndicator.integerValue)
 		esmclass |= SMPP_PDU_ESM_CLASS_SUBMIT_RPI;
 	
-	pdu = [[SmppPdu alloc] initWithType:SMPP_PDU_DATA_SM err:ESME_ROK];
+	pdu = [[SmppPdu alloc] initWithType:SMPP_PDU_DATA_SM err:UM_NO_ERROR];
 	
 	[pdu appendNSStringMax:servicetype maxLength: 6];
     
@@ -1276,16 +1278,16 @@
                            withId:(NSString *)msgId
 {
 	SmppPdu *pdu;
-	pdu = [[SmppPdu alloc] initWithType:SMPP_PDU_DATA_SM_RESP err:ESME_ROK];
+	pdu = [[SmppPdu alloc] initWithType:SMPP_PDU_DATA_SM_RESP err:UM_NO_ERROR];
 	// TODO: verify if id is better a NSData
 	[pdu appendNSStringMax:msgId maxLength: 65];
 	return pdu;
 }
 
-+ (SmppPdu *)OutgoingDataSmRespErr:(SmppErrorCode) err messageId:(NSString *)msgid networkType:(SmppNetworkType)nt
++ (SmppPdu *)OutgoingDataSmRespErr:(UMSmppError) err messageId:(NSString *)msgid networkType:(SmppNetworkType)nt
 {
 	SmppPdu *pdu;
-	pdu = [[SmppPdu alloc] initWithType:SMPP_PDU_DATA_SM_RESP err:ESME_ROK];
+	pdu = [[SmppPdu alloc] initWithType:SMPP_PDU_DATA_SM_RESP err:UM_NO_ERROR];
 	// TODO: verify if id is better a NSData
 	[pdu appendNSStringMax:msgid maxLength: 65];
 	[pdu appendTLVNetworkErrorCode:err networkType:nt withTag:SMPP_TLV_NETWORK_ERROR_CODE];
@@ -1295,7 +1297,7 @@
 + (SmppPdu *)OutgoingQuerySm
 {
 	SmppPdu *pdu;
-    pdu = [[SmppPdu alloc] initWithType:SMPP_PDU_QUERY_SM err:ESME_ROK];
+    pdu = [[SmppPdu alloc] initWithType:SMPP_PDU_QUERY_SM err:UM_NO_ERROR];
 	if(pdu)
 	{
 	}
@@ -1306,14 +1308,14 @@
 						  withId:(NSString *)msg_id
 {
 	SmppPdu *pdu;
-    pdu = [[SmppPdu alloc] initWithType:SMPP_PDU_QUERY_SM_RESP err:ESME_ROK];
+    pdu = [[SmppPdu alloc] initWithType:SMPP_PDU_QUERY_SM_RESP err:UM_NO_ERROR];
 	if(pdu)
 	{
 	}
 	return pdu;
 }
 
-+ (SmppPdu *)OutgoingQuerySmRespErr:(SmppErrorCode) err
++ (SmppPdu *)OutgoingQuerySmRespErr:(UMSmppError) err
 {
 	SmppPdu *pdu;
     pdu = [[SmppPdu alloc] initWithType:SMPP_PDU_QUERY_SM_RESP err:err];
@@ -1326,7 +1328,7 @@
 + (SmppPdu *)OutgoingCancelSm
 {
 	SmppPdu *pdu;
-    pdu = [[SmppPdu alloc] initWithType:SMPP_PDU_CANCEL_SM err:ESME_ROK];
+    pdu = [[SmppPdu alloc] initWithType:SMPP_PDU_CANCEL_SM err:UM_NO_ERROR];
 	if(pdu)
 	{
 	}
@@ -1336,14 +1338,14 @@
 + (SmppPdu *)OutgoingCancelSmRespOK
 {
 	SmppPdu *pdu;
-    pdu = [[SmppPdu alloc] initWithType:SMPP_PDU_CANCEL_SM_RESP err:ESME_ROK];
+    pdu = [[SmppPdu alloc] initWithType:SMPP_PDU_CANCEL_SM_RESP err:UM_NO_ERROR];
 	if(pdu)
 	{
 	}
 	return pdu;
 }
 
-+ (SmppPdu *)OutgoingCancelSmRespErr:(SmppErrorCode) err
++ (SmppPdu *)OutgoingCancelSmRespErr:(UMSmppError) err
 {
 	SmppPdu *pdu;
     pdu = [[SmppPdu alloc] initWithType:SMPP_PDU_CANCEL_SM_RESP err:err];
@@ -1356,7 +1358,7 @@
 + (SmppPdu *)OutgoingReplaceSm
 {
 	SmppPdu *pdu;
-    pdu = [[SmppPdu alloc] initWithType:SMPP_PDU_REPLACE_SM err:ESME_ROK];
+    pdu = [[SmppPdu alloc] initWithType:SMPP_PDU_REPLACE_SM err:UM_NO_ERROR];
 	if(pdu)
 	{
 	}
@@ -1366,14 +1368,14 @@
 + (SmppPdu *)OutgoingReplaceSmRespOK
 {
 	SmppPdu *pdu;
-    pdu = [[SmppPdu alloc] initWithType:SMPP_PDU_REPLACE_SM_RESP err:ESME_ROK];
+    pdu = [[SmppPdu alloc] initWithType:SMPP_PDU_REPLACE_SM_RESP err:UM_NO_ERROR];
 	if(pdu)
 	{
 	}
 	return pdu;
 }
 
-+ (SmppPdu *)OutgoingReplaceSmRespErr:(SmppErrorCode) err
++ (SmppPdu *)OutgoingReplaceSmRespErr:(UMSmppError) err
 {
 	SmppPdu *pdu;
     pdu = [[SmppPdu alloc] initWithType:SMPP_PDU_REPLACE_SM_RESP err:err];
@@ -1386,7 +1388,7 @@
 + (SmppPdu *)OutgoingEnquireLink
 {
 	SmppPdu *pdu;
-    pdu = [[SmppPdu alloc] initWithType:SMPP_PDU_ENQUIRE_LINK err:ESME_ROK];
+    pdu = [[SmppPdu alloc] initWithType:SMPP_PDU_ENQUIRE_LINK err:UM_NO_ERROR];
 	if(pdu)
 	{
 	}
@@ -1396,7 +1398,7 @@
 + (SmppPdu *)OutgoingEnquireLinkResp
 {
 	SmppPdu *pdu;
-    pdu = [[SmppPdu alloc] initWithType:SMPP_PDU_ENQUIRE_LINK_RESP err:ESME_ROK];
+    pdu = [[SmppPdu alloc] initWithType:SMPP_PDU_ENQUIRE_LINK_RESP err:UM_NO_ERROR];
 	if(pdu)
 	{
 	}
@@ -1905,9 +1907,9 @@
     }
 }
 
-+ (NSString *)errorToString:(SmppErrorCode)err
++ (NSString *)errorToString:(UMSmppError)err
 {
-    return [SmscConnectionSMPP smppErrorToString:err];
+    return UMSmppErrorAsString(err);
 }
 
 + (NSString *)pduTypeToString:(SmppPduType)type
@@ -2374,3 +2376,9 @@
 
 
 @end
+
+
+static UMSmppError SMPP_outgoingErrorCodeMapping(UMSmppError e)
+{
+    return e;
+}

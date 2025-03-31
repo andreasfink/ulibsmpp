@@ -9,9 +9,10 @@
 #import <Foundation/Foundation.h>
 
 #import <ulibsmpp/UniversalSMSC.h>
-#import <ulibsmpp/SmppErrorCode.h>
+//#import <ulibsmpp/SmppErrorCode.h>
 #import <ulibsmpp/SmppTlv.h>
 #import <ulibsmpp/SmppMultiResult.h>
+#import <ulibsmpp/UMSmppError.h>
 
 typedef    enum SmppReportingEntity
 {
@@ -176,7 +177,7 @@ typedef unsigned long        SmppPduSequence;
 {
     size_t              _pdulen;
     SmppPduType         _type;          /* a.k.a. command id */
-    SmppErrorCode       _err;           /* a.k.a. command status */
+    UMSmppError         _err;           /* a.k.a. command status */
     SmppPduSequence     _seq;           /* a.k.a. sequence number */
     NSMutableData       *_payload;
     int                 _cursor;
@@ -266,8 +267,8 @@ typedef unsigned long        SmppPduSequence;
 
 @property(readonly,assign)    size_t            pdulen;
 @property(readonly,assign)    SmppPduType       type;
-@property(readonly,assign)    SmppErrorCode     err;
-@property(readwrite,assign)    SmppPduSequence  seq;
+@property(readonly,assign)    UMSmppError       err;
+@property(readwrite,assign)   SmppPduSequence  seq;
 @property(readwrite,assign)    int              cursor;
 @property(readonly,strong)    NSMutableData     *payload;
 @property(readwrite,assign) long                source_addr_ton;
@@ -294,7 +295,8 @@ typedef unsigned long        SmppPduSequence;
 - (void)setSequenceString:(NSString *)s;
 - (NSString *)sequenceString;
 
-- (SmppPdu *)initWithType:(SmppPduType)t err:(SmppErrorCode)e;
+- (SmppPdu *)initWithType:(SmppPduType)t err:(UMSmppError)e;
+
 - (SmppPdu *)initWithType:(SmppPduType)t;
 - (SmppPdu *)initFromData:(NSData *)d;
 
@@ -307,8 +309,8 @@ typedef unsigned long        SmppPduSequence;
                                  ton:(NSInteger)ton
                                  npi:(NSInteger)npi
                                range:(NSString *)range;
-+ (SmppPdu *)OutgoingBindTransmitterRespError:(SmppErrorCode) err;
-+ (SmppPdu *)OutgoingBindTransmitterRespError:(SmppErrorCode) err status:(NSString *)status;
++ (SmppPdu *)OutgoingBindTransmitterRespError:(UMSmppError) err;
++ (SmppPdu *)OutgoingBindTransmitterRespError:(UMSmppError) err status:(NSString *)status;
 + (SmppPdu *)OutgoingBindTransmitterRespOK:(NSString *)systemId
                           supportedVersion:(NSInteger)version;
 + (SmppPdu *)OutgoingBindReceiver:(NSString *)systemId
@@ -319,8 +321,8 @@ typedef unsigned long        SmppPduSequence;
                               npi:(NSInteger)npi
                             range:(NSString *)range;
 
-+ (SmppPdu *)OutgoingBindReceiverRespError:(SmppErrorCode) err;
-+ (SmppPdu *)OutgoingBindReceiverRespError:(SmppErrorCode) err status:(NSString *)status;
++ (SmppPdu *)OutgoingBindReceiverRespError:(UMSmppError) err;
++ (SmppPdu *)OutgoingBindReceiverRespError:(UMSmppError) err status:(NSString *)status;
 + (SmppPdu *)OutgoingBindReceiverRespOK:(NSString *)systemId
                        supportedVersion:(NSInteger)version;
 
@@ -332,16 +334,16 @@ typedef unsigned long        SmppPduSequence;
                                  npi:(NSInteger)npi
                                range:(NSString *)range;
 
-+ (SmppPdu *)OutgoingBindTransceiverRespError:(SmppErrorCode) err;
-+ (SmppPdu *)OutgoingBindTransceiverRespError:(SmppErrorCode) err status:(NSString *)status;
++ (SmppPdu *)OutgoingBindTransceiverRespError:(UMSmppError) err;
++ (SmppPdu *)OutgoingBindTransceiverRespError:(UMSmppError) err status:(NSString *)status;
 + (SmppPdu *)OutgoingBindTransceiverRespOK:(NSString *)systemId supportedVersion:(NSInteger)version;
 
 + (SmppPdu *)OutgoingOutbind:(NSString *)systemId
                     password:(NSString *)password;
 + (SmppPdu *)OutgoingUnbind;
 + (SmppPdu *)OutgoingUnbindRespOK;
-+ (SmppPdu *)OutgoingUnbindRespErr:(SmppErrorCode) err;
-+ (SmppPdu *)OutgoingGenericNack:(SmppErrorCode) err;
++ (SmppPdu *)OutgoingUnbindRespErr:(UMSmppError) err;
++ (SmppPdu *)OutgoingGenericNack:(UMSmppError) err;
 + (SmppPdu *)OutgoingSubmitSm:(UMMessage *)msg;
 + (SmppPdu *)OutgoingSubmitSm:(UMMessage *)msg options:(NSDictionary *)options;
 + (SmppPdu *)OutgoingSubmitSm:(UMMessage *)msg esmClass:(int)esmclass serviceType:(NSString *)servicetype;
@@ -349,11 +351,11 @@ typedef unsigned long        SmppPduSequence;
 + (SmppPdu *)OutgoingSubmitSmReport:(UMMessage *)msg reportingEntity:(SmppReportingEntity)re;
 + (SmppPdu *)OutgoingSubmitSmRespOK:(UMMessage *)msg
                              withId:(NSString *)id;
-+ (SmppPdu *)OutgoingSubmitSmRespErr:(SmppErrorCode) err;
++ (SmppPdu *)OutgoingSubmitSmRespErr:(UMSmppError) err;
 + (SmppPdu *)OutgoingSubmitMulti:(UMMessage *)msg distributionList:(NSString *) distributionListName;
 + (SmppPdu *)OutgoingSubmitMultiRespOK:(NSArray *)unsuccessfulDeliveries /* array of  SmppMultiResult */
                                 withId:(NSString *)msgid;
-+ (SmppPdu *)OutgoingSubmitMultiRespErr:(SmppErrorCode) err;
++ (SmppPdu *)OutgoingSubmitMultiRespErr:(UMSmppError) err;
 
 
 + (SmppPdu *)OutgoingDeliverSm:(UMMessage *)msg;
@@ -373,30 +375,30 @@ typedef unsigned long        SmppPduSequence;
                               withId:(NSString *)msg_id;
 + (SmppPdu *)OutgoingDeliverSmReportRespOK:(UMMessageReport *)msg
                               withId:(NSString *)msg_id;
-+ (SmppPdu *)OutgoingDeliverSmRespErr:(SmppErrorCode) err;
++ (SmppPdu *)OutgoingDeliverSmRespErr:(UMSmppError) err;
 + (SmppPdu *)OutgoingDataSm:(UMMessage *)msg;
 + (SmppPdu *)OutgoingDataSm:(UMMessage *)msg esmClass:(int)esmclass serviceType:(NSString *)servicetype;
 
 + (SmppPdu *)OutgoingDataSmRespOK:(UMMessage *)msg
                            withId:(NSString *)msg_id;
-+ (SmppPdu *)OutgoingDataSmRespErr:(SmppErrorCode) err messageId:(NSString *)msgid networkType:(SmppNetworkType)nt;
++ (SmppPdu *)OutgoingDataSmRespErr:(UMSmppError) err messageId:(NSString *)msgid networkType:(SmppNetworkType)nt;
 + (SmppPdu *)OutgoingQuerySm;
 + (SmppPdu *)OutgoingQueryRespOK:(UMMessage *)msg
                           withId:(NSString *)msg_id;
-+ (SmppPdu *)OutgoingQuerySmRespErr:(SmppErrorCode) err;
++ (SmppPdu *)OutgoingQuerySmRespErr:(UMSmppError) err;
 + (SmppPdu *)OutgoingCancelSm;
 + (SmppPdu *)OutgoingCancelSmRespOK;
-+ (SmppPdu *)OutgoingCancelSmRespErr:(SmppErrorCode) err;
++ (SmppPdu *)OutgoingCancelSmRespErr:(UMSmppError) err;
 + (SmppPdu *)OutgoingReplaceSm;
 + (SmppPdu *)OutgoingReplaceSmRespOK;
-+ (SmppPdu *)OutgoingReplaceSmRespErr:(SmppErrorCode) err;
++ (SmppPdu *)OutgoingReplaceSmRespErr:(UMSmppError) err;
 + (SmppPdu *)OutgoingEnquireLink;
 + (SmppPdu *)OutgoingEnquireLinkResp;
 + (SmppPdu *)OutgoingAlertNotification:(UMSigAddr *)source
                                   esme:(UMSigAddr *)esme;
 
-+ (SmppPdu *)OutgoingBindRespError:(SmppErrorCode)err rx:(BOOL)rx tx:(BOOL)tx;
-+ (SmppPdu *)OutgoingBindRespError:(SmppErrorCode)err rx:(BOOL)rx tx:(BOOL)tx status:(NSString *)status;
++ (SmppPdu *)OutgoingBindRespError:(UMSmppError)err rx:(BOOL)rx tx:(BOOL)tx;
++ (SmppPdu *)OutgoingBindRespError:(UMSmppError)err rx:(BOOL)rx tx:(BOOL)tx status:(NSString *)status;
 + (SmppPdu *)OutgoingBindRespOK:(NSString *)systemId supportedVersion:(NSInteger)version rx:(BOOL)rx tx:(BOOL)tx;
 
 - (void) appendNSStringMax:(NSString *)s  maxLength: (NSInteger) maxlen;

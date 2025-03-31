@@ -26,15 +26,17 @@
     SmscConnectionTransactionType       _type;
 }
 
-@property(readwrite,strong)			NSString *sequenceNumber;
-@property(readwrite,strong)			UMMessage       *message;   //Transaction retains the message; it will released when no more needed
-@property(readwrite,strong)			UMMessageReport *report;
-@property(readwrite,strong)			id              upperObject;
-@property(readwrite,strong)			id              lowerObject;
-@property(readwrite,assign)			NSTimeInterval  timeout;
-@property(readwrite,strong)         NSNumber        *error;
-@property(readwrite,assign)			BOOL            incoming;
-@property(readwrite,assign)			SmscConnectionTransactionType type; /* SmscConnectionTransactionType */
+@property(readwrite,atomic,strong)			NSString *sequenceNumber;
+
+@property(readwrite,atomic,strong)  UMMessage                       *message;   //Transaction retains the message; it will released when no more needed
+@property(readwrite,atomic,strong)  UMMessageReport                 *report;
+@property(readwrite,atomic,strong)  NSNumber                        *error;
+@property(readwrite,atomic,strong)  NSString                        *reference;
+@property(readwrite,atomic,assign)  BOOL                            incoming;
+@property(readwrite,atomic,assign)  SmscConnectionTransactionType   type;
+@property(readwrite,strong)            id              upperObject;
+@property(readwrite,strong)            id              lowerObject;
+@property(readwrite,assign)            NSTimeInterval  timeout;
 
 
 - (id) init;

@@ -285,13 +285,6 @@ typedef enum SMPPConnectionMode
 -(void) logOutgoingPdu:(SmppPdu *)pdu;
 
 /* helper functions */
-+ (NSString *)smppErrorToString:(SmppErrorCode) err;
-
-//+ (NSString *)smppErrorToString:(SmppErrorCode) err;
-//+ (int) errorFromNetworkErrorCode:(NSData *)networkErrorCode;
-
-//+ (SmscConnectionErrorCode) smppErrToGlobal:(SmppErrorCode)err;
-//+ (SmppErrorCode) globalToSmppErr:(SmscConnectionErrorCode)err;
 
 - (NSString *)stringStatus;
 

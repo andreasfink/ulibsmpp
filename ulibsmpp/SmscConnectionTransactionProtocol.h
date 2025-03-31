@@ -23,10 +23,7 @@ typedef enum SmscConnectionTransactionType
 @property(readwrite,atomic,strong)  UMMessage       *message;
 @property(readwrite,atomic,strong)  UMMessageReport *report;
 @property(readwrite,atomic,strong)  NSString        *reference;
-@property(readwrite,atomic,strong)  NSString        *errorString;
-@property(readwrite,atomic,strong)  NSNumber        *internalError;
-@property(readwrite,atomic,strong)  NSNumber        *smppError;
-@property(readwrite,atomic,strong)  NSNumber        *networkError;
+@property(readwrite,atomic,strong)  NSNumber        *error;
 @property(readwrite,atomic,assign)  BOOL             incoming;
 @property(readwrite,atomic,assign)  SmscConnectionTransactionType             type;
 
