@@ -2310,7 +2310,7 @@
     @autoreleasepool
     {
         const char *ts = str.UTF8String;
-        int microsec = 0;
+        //int microsec;
         time_t theTime;
         
         if(strlen(ts) != 16)
@@ -2344,7 +2344,7 @@
         else if (p == '+')
         {
             trec.tm_gmtoff = -(15 * 60 * n);
-            microsec = t * 100000;
+            //microsec = t * 100000;
             theTime = timegm(&trec);
         }
         else if (p == 'R')
