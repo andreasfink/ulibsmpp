@@ -20,12 +20,9 @@
 @protocol SmscConnectionSubmitterProtocol
 
 - (void) ackIncomingTransaction:(id<SmscConnectionTransactionProtocol>)transaction;
-- (void) nackIncomingTransaction:(id<SmscConnectionTransactionProtocol>)transaction
-                             internalError:(NSNumber *)code
-                                 smppError:(NSNumber *)smppError
-                              networkError:(NSNumber *)networkError
-                               errorString:(NSString *)errorString;
-
+- (void) nackIncomingTransaction:(id<SmscConnectionTransactionProtocol>)transaction;
+- (void) nackIncomingTransaction:(SmscConnectionTransaction *)t
+                           error:(NSNumber *)err;
 @end
 
 @protocol SmscConnectionProtocol <SmscConnectionRouterUserProtocol>

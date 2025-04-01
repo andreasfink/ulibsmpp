@@ -1875,7 +1875,7 @@ end:
                 else
                 {
                     _lastStatus = [NSString stringWithFormat:@"User '%@' is not in whitelis for '%@'",usr,_uc.connectedRemoteAddress];
-                    pdu2	= [SmppPdu OutgoingBindRespError:ESME_RBINDFAIL rx:rx tx:tx status:@"IP not in whitelist"];
+                    pdu2	= [SmppPdu OutgoingBindRespError:UM_ESME_RBINDFAIL rx:rx tx:tx status:@"IP not in whitelist"];
                     [self sendPdu: pdu2 asResponseTo:pdu];
                     _endThisConnection = YES;
                     _endPermanently = YES;
@@ -1884,7 +1884,7 @@ end:
             else
             {
                 _lastStatus = [NSString stringWithFormat:@"User '%@' is out of credit (bind failed)",usr];
-                pdu2	= [SmppPdu OutgoingBindRespError:ESME_RBINDFAIL rx:rx tx:tx status:@"out of credit"];
+                pdu2	= [SmppPdu OutgoingBindRespError:UM_ESME_RBINDFAIL rx:rx tx:tx status:@"out of credit"];
                 [self sendPdu: pdu2 asResponseTo:pdu];
                 _endThisConnection = YES;
                 _endPermanently = YES;
