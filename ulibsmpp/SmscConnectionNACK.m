@@ -138,8 +138,8 @@
 {
 }
 
-- (void) submitReportFailed:(UMMessageReport * *)report
-                  withError:(SmscRouterError *)code
+- (void) submitReportFailed:(UMMessageReport *)report
+                      error:(NSNumber *)error
                   forObject:(id)reportingObject
                 synchronous:(BOOL)sync
 {
@@ -173,7 +173,7 @@
 }
 
 - (void) deliverReportFailed:(UMMessageReport *)report
-                   withError:(SmscRouterError *)code
+                       error:(NSNumber *)error
                    forObject:(id)reportingObject
                  synchronous:(BOOL)sync
 {

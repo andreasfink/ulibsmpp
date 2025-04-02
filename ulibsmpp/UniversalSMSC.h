@@ -29,5 +29,4 @@
 #import <ulibsmpp/SmscConnectionNACK.h>
 #import <ulibsmpp/UMDeliveryReportErrorCode.h>
 #import <ulibsmpp/GSMErrorCode.h>
-#import <ulibsmpp/SmscRouterError.h>
 #import <ulibsmpp/SmscConnectionReadyProtocol.h>

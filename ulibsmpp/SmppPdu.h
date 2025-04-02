@@ -9,7 +9,6 @@
 #import <Foundation/Foundation.h>
 
 #import <ulibsmpp/UniversalSMSC.h>
-//#import <ulibsmpp/SmppErrorCode.h>
 #import <ulibsmpp/SmppTlv.h>
 #import <ulibsmpp/SmppMultiResult.h>
 #import <ulibsmpp/UMSmppError.h>

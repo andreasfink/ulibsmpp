@@ -21,7 +21,7 @@
 
 - (void) ackIncomingTransaction:(id<SmscConnectionTransactionProtocol>)transaction;
 - (void) nackIncomingTransaction:(id<SmscConnectionTransactionProtocol>)transaction;
-- (void) nackIncomingTransaction:(SmscConnectionTransaction *)t
+- (void) nackIncomingTransaction:(id<SmscConnectionTransactionProtocol>)t
                            error:(NSNumber *)err;
 @end
 

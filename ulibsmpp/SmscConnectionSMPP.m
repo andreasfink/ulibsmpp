@@ -61,10 +61,6 @@ struct  SmppPduTableEntry	SmppPDUTable[] =
 #import "NSMutableString+UniversalSMPP.h"
 #import "NSString+UniversalSMPP.h"
 
-//#include "utils.h"
-static NSNumber * smppErrorFromInternalError(NSNumber *internalError);
-
-
 @implementation SmscConnectionSMPP
 
 #pragma mark -
@@ -272,7 +268,7 @@ static NSNumber * smppErrorFromInternalError(NSNumber *internalError);
 {
 	NSUInteger      l;
 	SmppPduType     t;
-	SmppErrorCode	e;
+    UMSmppError 	e;
 	NSUInteger      s;
 	int             err;
 	NSMutableData	*d;
@@ -281,8 +277,8 @@ static NSNumber * smppErrorFromInternalError(NSNumber *internalError);
 	l	= pdu.pdulen;
     [self logOutgoingPdu:pdu];
 
-	t	= (SmppPduType)pdu.type;
-	e	= (SmppErrorCode)pdu.err;
+	t	= pdu.type;
+    e	= pdu.err;
 	s	= pdu.seq;
 
 	header[0] = (l & 0xFF000000) >> 24;
@@ -1493,7 +1489,7 @@ end:
                                              userInfo:@{
                                                         @"sysmsg" : @"ESME_ROPTPARNOTALLWD",
                                                         @"func": @(__func__),
-                                                        @"err": @(ESME_ROPTPARNOTALLWD)
+                                                        @"err": @(UM_ESME_ROPTPARNOTALLWD)
                                                         }]);
 
                 break;
@@ -1993,7 +1989,7 @@ end:
     }
     else
     {
-        pdu2 = [SmppPdu OutgoingGenericNack:ESME_RQUERYFAIL];
+        pdu2 = [SmppPdu OutgoingGenericNack:UM_ESME_RQUERYFAIL];
     }
     [self sendPdu: pdu2 asResponseTo:pdu];
 }
@@ -2522,7 +2518,7 @@ length_error:
                     {
                         _bindExpires = NULL;
                         _lastStatus = @"timeout waiting for bind";
-                        SmppPdu *pdu = [SmppPdu OutgoingGenericNack:ESME_RBINDFAIL];
+                        SmppPdu *pdu = [SmppPdu OutgoingGenericNack:UM_ESME_RBINDFAIL];
                         [_readyForServiceDelegate readyForMessages:NO connection:self];
                         [self sendPduWithNewSeq:pdu];
                         _incomingStatus = SMPP_STATUS_INCOMING_MAJOR_FAILURE;
@@ -4022,13 +4018,4 @@ length_error:
     return out;
 }
 @end
-
-
-static NSNumber * smppErrorFromInternalError(NSNumber *internalError)
-{
-    if(internalError==NULL)
-    {
-        return NULL;
-    }
-}
 

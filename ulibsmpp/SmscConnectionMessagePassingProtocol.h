@@ -59,7 +59,7 @@
               synchronous:(BOOL)sync;
 
 - (void) submitReportFailed:(UMMessageReport *)r
-                      error:(NSNumber *)error /* UMSmppError */
+                      error:(NSNumber *)error
                   forObject:(id)reportingObject
                 synchronous:(BOOL)sync;
 

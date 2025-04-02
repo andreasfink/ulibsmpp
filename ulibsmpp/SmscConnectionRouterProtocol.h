@@ -13,7 +13,6 @@
 #import <ulibsmpp/SmscConnectionUserProtocol.h>
 #import <ulibsmpp/SmscConnectionProtocol.h>
 #import <ulibsmpp/SmscConnectionRouterUserProtocol.h>
-#import <ulibsmpp/SmscRouterError.h>
 
 @protocol SmscConnectionRouterProtocol<NSObject,SmscConnectionRouterUserProtocol>
 
@@ -21,9 +20,6 @@
 - (UMMessage *)createMessage;
 /* asking the router to provide a new report object */
 - (UMMessageReport *)createReport;
-
-/* asking the router to provide a new error object */
-- (SmscRouterError *)createError;
 
 /* generic stuff */
 

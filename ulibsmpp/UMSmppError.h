@@ -172,6 +172,7 @@ typedef     enum UMSmppError
     UM_ESME_VENDOR_SPECIFIC_TIMEOUT                                             = 0x10000202,
     UM_ESME_VENDOR_SPECIFIC_INVALID_GROUP                                       = 0x10000203,
     UM_ESME_VENDOR_SPECIFIC_EXCEPTION_ENCOUNTERED                               = 0x10000204,
+    UM_ESME_VENDOR_SPECIFIC_SPLITTING_FAILED                                    = 0x10000205,
 } UMSmppError;
 
 NSString *UMSmppErrorAsString(UMSmppError e);

@@ -44,10 +44,7 @@
 #define	PREFS_CON_SHORT_ID		@"short-id"
 #define	PREFS_CON_LOGIN			@"login"
 #define	PREFS_CON_PASSWORD		@"password"
-#define	PREFS_CON_GSM_ERRCODE       @"gsm-error-code"
-#define	PREFS_CON_SMPP_ERRCODE      @"smpp-error-code"
-#define	PREFS_CON_DLR_ERRCODE       @"dlr-error-code"
-#define	PREFS_CON_INTERNAL_ERRCODE  @"internal-error-code"
+#define	PREFS_CON_ERRCODE       @"error-code"
 #define PREFS_CON_TCP_MSS       @"max-tcp-segment-size"
 
 /* preference names of listeners */

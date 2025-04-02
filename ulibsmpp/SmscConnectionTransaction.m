@@ -26,7 +26,7 @@
         [desc appendFormat:@" lowerObject has name %@\n",           [_lowerObject name]];
         if(_error)
         {
-            [desc appendFormat:@" error %@ (%@)\n",             _error, UMSmppErrorAsString(_error.integerValue)];
+            [desc appendFormat:@" error %@ (%@)\n",             _error, UMSmppErrorAsString((UMSmppError)_error.integerValue)];
         }
         [desc appendFormat:@"transaction was %@\n",                 _incoming ? @"incoming" : @"outgoing"];
         switch(_type)

@@ -6,7 +6,6 @@
 //
 
 #import <ulib/ulib.h>
-#import <ulibsmpp/SmppErrorCode.h>
 #import <ulibsmpp/UniversalSMSUtilities.h>
 #import <ulibsmpp/UniversalSMSC.h>
 

@@ -40,8 +40,6 @@
 		A6BCC8C82AE6DF2600C34D40 /* SmscConnectionNACK.h in Headers */ = {isa = PBXBuildFile; fileRef = A6BCC8AA2AE6DF2600C34D40 /* SmscConnectionNACK.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		A6BCC8C92AE6DF2600C34D40 /* SmscMessageWellProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = A6BCC8AB2AE6DF2600C34D40 /* SmscMessageWellProtocol.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		A6BCC8CA2AE6DF2600C34D40 /* SmscConnectionFAIL.h in Headers */ = {isa = PBXBuildFile; fileRef = A6BCC8AC2AE6DF2600C34D40 /* SmscConnectionFAIL.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		A6BCC8CB2AE6DF2600C34D40 /* SmscRouterError.h in Headers */ = {isa = PBXBuildFile; fileRef = A6BCC8AD2AE6DF2600C34D40 /* SmscRouterError.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		A6BCC8CC2AE6DF2600C34D40 /* SmscRouterError.m in Sources */ = {isa = PBXBuildFile; fileRef = A6BCC8AE2AE6DF2600C34D40 /* SmscRouterError.m */; };
 		A6BCC8CD2AE6DF2600C34D40 /* SmscRouterUserProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = A6BCC8AF2AE6DF2600C34D40 /* SmscRouterUserProtocol.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		A6BCC8CE2AE6DF2600C34D40 /* SmscStandardReport.h in Headers */ = {isa = PBXBuildFile; fileRef = A6BCC8B02AE6DF2600C34D40 /* SmscStandardReport.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		A6BCC8CF2AE6DF2600C34D40 /* SmscConnectionRouterProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = A6BCC8B12AE6DF2600C34D40 /* SmscConnectionRouterProtocol.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -127,8 +125,6 @@
 		A6BCC8AA2AE6DF2600C34D40 /* SmscConnectionNACK.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SmscConnectionNACK.h; sourceTree = "<group>"; };
 		A6BCC8AB2AE6DF2600C34D40 /* SmscMessageWellProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SmscMessageWellProtocol.h; sourceTree = "<group>"; };
 		A6BCC8AC2AE6DF2600C34D40 /* SmscConnectionFAIL.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SmscConnectionFAIL.h; sourceTree = "<group>"; };
-		A6BCC8AD2AE6DF2600C34D40 /* SmscRouterError.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SmscRouterError.h; sourceTree = "<group>"; };
-		A6BCC8AE2AE6DF2600C34D40 /* SmscRouterError.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SmscRouterError.m; sourceTree = "<group>"; };
 		A6BCC8AF2AE6DF2600C34D40 /* SmscRouterUserProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SmscRouterUserProtocol.h; sourceTree = "<group>"; };
 		A6BCC8B02AE6DF2600C34D40 /* SmscStandardReport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SmscStandardReport.h; sourceTree = "<group>"; };
 		A6BCC8B12AE6DF2600C34D40 /* SmscConnectionRouterProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SmscConnectionRouterProtocol.h; sourceTree = "<group>"; };
@@ -327,8 +323,6 @@
 				A6BCC8B92AE6DF2600C34D40 /* SmscConnectionTransaction.h */,
 				A6BCC8B22AE6DF2600C34D40 /* SmscConnectionTransaction.m */,
 				A6BCC8C22AE6DF2600C34D40 /* SmscReportWellProtocoll.h */,
-				A6BCC8AD2AE6DF2600C34D40 /* SmscRouterError.h */,
-				A6BCC8AE2AE6DF2600C34D40 /* SmscRouterError.m */,
 				A6BCC8B82AE6DF2600C34D40 /* SmscRouterProtocol.h */,
 				A6BCC8B02AE6DF2600C34D40 /* SmscStandardReport.h */,
 				A6BCC8BE2AE6DF2600C34D40 /* SmscStandardReport.m */,
@@ -390,7 +384,6 @@
 				A6BCC8972AE6DF0800C34D40 /* SigAddr.h in Headers */,
 				A6BCC8ED2AE6DF3900C34D40 /* SmppErrorCode.h in Headers */,
 				A6BCC8D72AE6DF2600C34D40 /* SmscConnectionTransaction.h in Headers */,
-				A6BCC8CB2AE6DF2600C34D40 /* SmscRouterError.h in Headers */,
 				A6BCC8D82AE6DF2600C34D40 /* SmscConnectionNULL.h in Headers */,
 				A6BCC8D42AE6DF2600C34D40 /* SmscConnectionReadyProtocol.h in Headers */,
 				A6BCC8CD2AE6DF2600C34D40 /* SmscRouterUserProtocol.h in Headers */,
@@ -530,7 +523,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				A6BCC88F2AE6DF0800C34D40 /* UMSigAddrWithHistory.m in Sources */,
-				A6BCC8CC2AE6DF2600C34D40 /* SmscRouterError.m in Sources */,
 				A6BCC88E2AE6DF0800C34D40 /* UMPrefs.m in Sources */,
 				A6BCC8D12AE6DF2600C34D40 /* SmscConnectionNULL.m in Sources */,
 				A6BCC8F02AE6DF3900C34D40 /* SmppPdu.m in Sources */,

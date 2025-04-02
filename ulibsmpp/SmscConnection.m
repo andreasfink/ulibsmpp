@@ -10,7 +10,6 @@
 #import "SmscConnection.h"
 #import "SmscConnectionTransaction.h"
 #include <uuid/uuid.h>
-#import "SmscRouterError.h"
 #import <ulibsmpp/UMSmppError.h>
 
 #define	EMPTYSTRINGFORNIL(a)	(a?a:@"")
@@ -196,19 +195,17 @@
     }
 }
 
-- (void) submitReportFailed:(UMMessageReport *)rep
-              internalError:(NSNumber *)internalErr
-                  smppError:(NSNumber *)smppErr
-               networkError:(NSNumber *)networkErr
-                  errorString:(NSString *)errorString
-                  forObject:(id)reportingObject
-                synchronous:(BOOL)sync
+
+- (void)submitReportFailed:(UMMessageReport *)r
+                     error:(NSNumber *)error
+                 forObject:(id)reportingObject
+               synchronous:(BOOL)sync
 {
     /* router is telling us that a submit report we sent to him has failed */
-    SmscConnectionTransaction * transaction = [self findIncomingTransactionByReport:rep];
+    SmscConnectionTransaction * transaction = [self findIncomingTransactionByReport:reportingObject];
     if(transaction)
     {
-        transaction.error   = @(UM_NO_ERROR);
+        transaction.error   = error;
         [_ackNackQueue append:transaction];
     }
 }
@@ -226,19 +223,17 @@
     }
 }
 
-- (void) deliverMessageFailed:(UMMessage *)msg
-                internalError:(NSNumber *)internalErr
-                    smppError:(NSNumber *)smppErr
-                 networkError:(NSNumber *)networkErr
-                    errorString:(NSString *)errorString
-                    forObject:(id)reportingObject
-                  synchronous:(BOOL)sync
+
+- (void)deliverMessageFailed:(UMMessage *)msg
+                       error:(NSNumber *)error
+                   forObject:(id)reportingObject
+                 synchronous:(BOOL)sync
 {
     /* router is telling us that a deliverMessage we sent to him has failed */
     SmscConnectionTransaction * transaction = [self findOutgoingTransactionByMessage:msg];
     if(transaction)
     {
-        transaction.error   = @(UM_NO_ERROR);
+        transaction.error =  error;
         [_ackNackQueue append:transaction];
     }
 }
@@ -270,6 +265,9 @@
         [_ackNackQueue append:transaction];
     }
 }
+
+
+
 
 #pragma mark Router Registration
 

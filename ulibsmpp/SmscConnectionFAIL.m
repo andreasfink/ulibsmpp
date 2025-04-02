@@ -12,8 +12,6 @@
 #import <ulibsmpp/SmscConnectionFAIL.h>
 #import <ulibsmpp/NSMutableString+UniversalSMPP.h>
 #import <ulibsmpp/NSString+UniversalSMPP.h>
-#import <ulibsmpp/SmppErrorCode.h>
-#import <ulibsmpp/SmscRouterError.h>
 #import <ulibsmpp/UMSmppError.h>
 
 @implementation SmscConnectionFAIL
@@ -28,7 +26,7 @@
     {
         [super setVersion: @"1.0"];
         [super setType: @"fail"];
-        self.errorToReturn = NULL;
+        self.errorToReturn = UM_ESME_RSYSERR;
         self.lastActivity =[NSDate new];
     }
     return self;
@@ -58,50 +56,15 @@
 
 - (int) setConfig: (NSDictionary *) dict
 {
-    errorToReturn = [_router createError];
-    if(errorToReturn==NULL)
-    {
-        errorToReturn = [[SmscRouterError alloc]init];
-    }
-
+    errorToReturn = UM_ESME_RSYSERR;
     
-    if([dict[PREFS_CON_GSM_ERRCODE] isKindOfClass:[NSNumber class]])
+    if([dict[PREFS_CON_ERRCODE] isKindOfClass:[NSNumber class]])
     {
         
-        NSNumber *v = dict[PREFS_CON_GSM_ERRCODE];
-        [errorToReturn setGsmErrorCode:[v intValue]];
+        NSNumber *v = dict[PREFS_CON_ERRCODE];
+        errorToReturn = [v intValue];
     }
-    if([dict[PREFS_CON_SMPP_ERRCODE] isKindOfClass:[NSNumber class]])
-    {
-        
-        NSNumber *v = dict[PREFS_CON_SMPP_ERRCODE];
-        [errorToReturn setSmppErrorCode:[v intValue]];
-    }
-    if([dict[PREFS_CON_DLR_ERRCODE] isKindOfClass:[NSNumber class]])
-    {
-        
-        NSNumber *v = dict[PREFS_CON_DLR_ERRCODE];
-        [errorToReturn setDeliveryReportErrorCode:[v intValue]];
-    }
-    /*
-    if([dict[PREFS_CON_SMSC_ERRCODE] isKindOfClass:[NSNumber class]])
-    {
-        
-        NSNumber *v = dict[PREFS_CON_SMSC_ERRCODE];
-        [errorToReturn setSmscConnectionErrorCode:[v intValue]];
-    }
-     */
-    if([dict[PREFS_CON_INTERNAL_ERRCODE] isKindOfClass:[NSNumber class]])
-    {
-        
-        NSNumber *v = dict[PREFS_CON_INTERNAL_ERRCODE];
-        [errorToReturn setInternalErrorCode:[v intValue]];
-    }
-    if(errorToReturn.errorTypes == SmscRouterError_TypeNONE)
-    {
-        [errorToReturn setSmppErrorCode:ESME_RSYSERR];
-    }
-    return -1;
+    return 0;
 }
 
 - (NSDictionary *) getConfig
@@ -110,26 +73,7 @@
     
     dict = [NSMutableDictionary dictionaryWithDictionary: [super getConfig]];
     dict[PREFS_CON_PROTO] = @"fail";
-    
-    if(errorToReturn)
-    {
-        if(errorToReturn.errorTypes & SmscRouterError_TypeSMPP)
-        {
-            dict[PREFS_CON_SMPP_ERRCODE] = @(errorToReturn.smppError);
-        }
-        if(errorToReturn.errorTypes & SmscRouterError_TypeGSM)
-        {
-            dict[PREFS_CON_GSM_ERRCODE] = @(errorToReturn.gsmError);
-        }
-        if(errorToReturn.errorTypes & SmscRouterError_TypeDLR)
-        {
-            dict[PREFS_CON_DLR_ERRCODE] = @(errorToReturn.dlrError);
-        }
-        if(errorToReturn.errorTypes & SmscRouterError_TypeINTERNAL)
-        {
-            dict[PREFS_CON_INTERNAL_ERRCODE] = @(errorToReturn.internalError);
-        }
-    }
+    dict[PREFS_CON_ERRCODE] = @(errorToReturn);
     return dict;
 }
 
@@ -141,25 +85,7 @@
     
     dict = [[NSMutableDictionary alloc] init];
     dict[PREFS_CON_NAME] = @"fail";
-    if(errorToReturn)
-    {
-        if(errorToReturn.errorTypes & SmscRouterError_TypeSMPP)
-        {
-            dict[PREFS_CON_SMPP_ERRCODE] = @(errorToReturn.smppError);
-        }
-        if(errorToReturn.errorTypes & SmscRouterError_TypeGSM)
-        {
-            dict[PREFS_CON_GSM_ERRCODE] = @(errorToReturn.gsmError);
-        }
-        if(errorToReturn.errorTypes & SmscRouterError_TypeDLR)
-        {
-            dict[PREFS_CON_DLR_ERRCODE] = @(errorToReturn.dlrError);
-        }
-        if(errorToReturn.errorTypes & SmscRouterError_TypeINTERNAL)
-        {
-            dict[PREFS_CON_INTERNAL_ERRCODE] = @(errorToReturn.internalError);
-        }
-    }
+    dict[PREFS_CON_ERRCODE] = @(errorToReturn);
     return dict;
 }
 
@@ -168,14 +94,14 @@
     NSDictionary *smppConnectionDict;
     
     smppConnectionDict = @{ PREFS_CON_NAME : @"fail",
-                            PREFS_CON_SMPP_ERRCODE : @(ESME_RSYSERR)};
+                            PREFS_CON_ERRCODE : @(UM_ESME_RSYSERR)};
     return smppConnectionDict;
 }
 
 + (NSDictionary *) getDefaultListenerConfig
 {
     return @{ PREFS_CON_NAME : @"fail",
-              PREFS_CON_SMPP_ERRCODE : @(ESME_RSYSERR)};
+              PREFS_CON_ERRCODE : @(UM_ESME_RSYSERR)};
 }
 
 #pragma mark sendingPDUs
@@ -239,7 +165,7 @@
                                                          :[formatter stringFromDate:[NSDate date]],
                             msg.messageAttemptedTimestamp ? [formatter stringFromDate:msg.messageAttemptedTimestamp.dateValue]
                                                           :[formatter stringFromDate:[NSDate date]],
-                            errorToReturn.dlrError];
+                            errorToReturn];
     report.reportType               = UMMESSAGE_STATE_UNDELIVERABLE;
     report.error                    = @(UM_ESME_RSUBMITFAIL);
     msg.submitErrorCode = [[UMDirtyInteger alloc]initWithInteger:UM_ESME_RSUBMITFAIL];
@@ -273,7 +199,7 @@
 }
 
 - (void) submitReportFailed:(UMMessageReport *)report
-                  withError:(SmscRouterError *)err
+                      error:(NSNumber *)err
                   forObject:(id)reportingObject
                 synchronous:(BOOL)sync
 {
@@ -327,7 +253,7 @@
 }
 
 - (void) deliverReportFailed:(UMMessageReport *)report
-                   withError:(SmscRouterError *)err
+                       error:(NSNumber *)error
                    forObject:(id)reportingObject
                  synchronous:(BOOL)sync
 {

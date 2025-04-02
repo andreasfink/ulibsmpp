@@ -8,13 +8,14 @@
 
 #import <ulibsmpp/SmscConnection.h>
 #import <ulibsmpp/SmscConnectionMessagePassingProtocol.h>
+#import <ulibsmpp/UMSmppError.h>
 
 
 @interface SmscConnectionFAIL : SmscConnection
 {
-    SmscRouterError *errorToReturn;
+    UMSmppError errorToReturn;
 }
 
-@property(readwrite,strong)     SmscRouterError *errorToReturn;
+@property(readwrite,assign)     UMSmppError errorToReturn;
 
 @end
