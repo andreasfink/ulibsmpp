@@ -103,7 +103,7 @@ typedef enum SmscMessageState
 @property(readwrite)    UMDirtyDate *submitTimestamp;
 @property(readwrite)    UMDirtyDate *submitAckTimestamp;
 @property(readwrite)    UMDirtyDate *submitErrorTimestamp;
-@property(readwrite)    UMDirtyDate *messageAttemptedTimestamp;
+@property(readwrite)    UMDirtyDate *messageAttempted;
 @property(readwrite)    UMDirtyDate *validity;
 @property(readwrite)    UMDirtyDate *deferred;
 @property(readwrite)    UMDirtyString *submitString;

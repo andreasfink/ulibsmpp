@@ -1026,7 +1026,7 @@ static UMSmppError SMPP_outgoingErrorCodeMapping(UMSmppError e);
 		reportText = [NSString stringWithFormat:@"id:%@ sub:001 dlvrd:001 submit date:%@ done date:%@ stat:%@ err:%@ text:Report",
 					  msg.routerReference,
                       msg.submitTimestamp ? [formatter stringFromDate:msg.submitTimestamp.dateValue]:[formatter stringFromDate:[NSDate date]],
-                      msg.messageAttemptedTimestamp ? [formatter stringFromDate:msg.messageAttemptedTimestamp.dateValue]:[formatter stringFromDate:[NSDate date]],
+                      msg.messageAttempted ? [formatter stringFromDate:msg.messageAttempted.dateValue]:[formatter stringFromDate:[NSDate date]],
 					  ms,
                       msg.networkErrorCode ? [NSString stringWithFormat:@"%03ld",msg.networkErrorCode.integerValue] : @"000"];
 		data = [reportText dataUsingEncoding:NSISOLatin1StringEncoding allowLossyConversion:YES];
