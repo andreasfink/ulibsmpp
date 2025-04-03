@@ -6,7 +6,7 @@
 //  Copyright 2008-2014 Andreas Fink, Paradieshofstrasse 101, 4054 Basel, Switzerland
 //
 
-#import <um/UMMessage.h>
+#import <um/um.h>
 #import "SmscConnection.h"
 #import "SmscConnectionTransaction.h"
 #include <uuid/uuid.h>
