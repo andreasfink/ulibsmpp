@@ -131,8 +131,8 @@
                             msg.routerReference.stringValue,
                             msg.submitTimestamp      ? [formatter stringFromDate:msg.submitTimestamp.dateValue]
                                                      : [formatter stringFromDate:[NSDate date]],
-                            msg.messageAttemptedTimestamp ?
-                                                       [formatter stringFromDate:msg.messageAttemptedTimestamp.dateValue]
+                            msg.messageAttempted ?
+                                                       [formatter stringFromDate:msg.messageAttempted.dateValue]
                                                      : [formatter stringFromDate:[NSDate date]]];
     report.reportType               = UMMESSAGE_STATE_DELIVERED;
     report.error                    = NULL;
@@ -188,7 +188,7 @@
                             msg.routerReference,
                             msg.submitTimestamp ?     [formatter stringFromDate:msg.submitTimestamp.dateValue]
                                                      :[formatter stringFromDate:[NSDate date]],
-                            msg.messageAttemptedTimestamp ? [formatter stringFromDate:msg.messageAttemptedTimestamp.dateValue]
+                            msg.messageAttempted ? [formatter stringFromDate:msg.messageAttempted.dateValue]
                                                      :[formatter stringFromDate:[NSDate date]]];
     report.reportType               = UMMESSAGE_STATE_DELIVERED;
     report.error                    = NULL;
