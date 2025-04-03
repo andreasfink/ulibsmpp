@@ -126,8 +126,13 @@
     [formatter setDateFormat:@"yyyyMMddHHmmss"];
     NSString *reportText = [NSString stringWithFormat:@"id:%@ sub:001 dlvrd:001 submit date:%@ done date:%@ stat:DELIVRD err:0",
                             msg.routerReference,
+<<<<<<< HEAD
                             msg.submitTimestamp           ? [formatter stringFromDate:msg.submitTimestamp.dateValue]:[formatter stringFromDate:[NSDate date]],
                             msg.messageAttempted ? [formatter stringFromDate:msg.messageAttempted.dateValue]:[formatter stringFromDate:[NSDate date]]];
+=======
+                            msg.submitTimestamp     ? [formatter stringFromDate:msg.submitTimestamp.dateValue]:[formatter stringFromDate:[NSDate date]],
+                            msg.messageAttempted    ? [formatter stringFromDate:msg.messageAttempted.dateValue]:[formatter stringFromDate:[NSDate date]]];
+>>>>>>> ed4ddbe80980bc8cf0d5095d825b128e0a8e198f
     report.reportType               = UMMESSAGE_STATE_DELIVERED;
     report.error                    = NULL;
     report.routerReference          = msg.routerReference.stringValue;

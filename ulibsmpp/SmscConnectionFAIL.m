@@ -163,7 +163,7 @@
                             msg.routerReference,
                             msg.submitTimestamp     ?    [formatter stringFromDate:msg.submitTimestamp.dateValue]
                                                          :[formatter stringFromDate:[NSDate date]],
-                            msg.messageAttempted ? [formatter stringFromDate:msg.messageAttempted.dateValue]
+                            msg.messageAttempted 	?   [formatter stringFromDate:msg.messageAttempted.dateValue]
                                                           :[formatter stringFromDate:[NSDate date]],
                             errorToReturn];
     report.reportType               = UMMESSAGE_STATE_UNDELIVERABLE;
