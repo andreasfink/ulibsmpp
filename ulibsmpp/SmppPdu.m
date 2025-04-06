@@ -992,31 +992,30 @@ static UMSmppError SMPP_outgoingErrorCodeMapping(UMSmppError e);
 	{
 		NSString *ms;
 		NSString *reportText;
-        NSInteger type = msg.messageStateCode;
+        NSInteger type = msg.smppStateCode;
 		switch(type)
 		{
-			case UMMESSAGE_STATE_ENROUTE:
+			case UMMESSAGE_STATUS_ENROUTE:
                 ms = @"ENROUTE";
 				break;
-			case UMMESSAGE_STATE_ACCEPTED:
+			case UMMESSAGE_STATUS_ACCEPTED:
 				ms = @"ACCEPTD";
 				break;
-			case UMMESSAGE_STATE_DELIVERED:
+			case UMMESSAGE_STATUS_DELIVERED:
 				ms = @"DELIVRD";
 				break;
-			case UMMESSAGE_STATE_EXPIRED:
+			case UMMESSAGE_STATUS_EXPIRED:
                 ms = @"EXPIRED";
 				break;
-			case UMMESSAGE_STATE_DELETED:
+			case UMMESSAGE_STATUS_DELETED:
                 ms = @"DELETED";
 				break;
-			case UMMESSAGE_STATE_UNDELIVERABLE:
+			case UMMESSAGE_STATUS_UNDELIVERABLE:
                 ms = @"UNDELIV";
 				break;
-			case UMMESSAGE_STATE_REJECTED:
+			case UMMESSAGE_STATUS_REJECTED:
 				ms = @"REJECTD";
 				break;
-			case UMMESSAGE_STATE_UNKNOWN:
 			default:
 				ms = @"UNKNOWN";
 		}
@@ -1070,7 +1069,7 @@ static UMSmppError SMPP_outgoingErrorCodeMapping(UMSmppError e);
         }
         [pdu appendTLVStringNullTerminated:msg.routerReference.stringValue withTag:SMPP_TLV_RECEIPTED_MESSAGE_ID];
         [pdu appendTLVNetworkErrorCode:msg.networkErrorCode.integerValue networkType:SMPP_NETWORK_TYPE_GSM  withTag:SMPP_TLV_NETWORK_ERROR_CODE];
-		[pdu appendTLVByte: [SmppPdu messageState:msg.messageStateCode] withTag: SMPP_TLV_MESSAGE_STATE];
+		[pdu appendTLVByte: [SmppPdu messageState:msg.smppStateCode] withTag: SMPP_TLV_MESSAGE_STATE];
 	}
 	/*
 	 ADDITIONAL TLV'S POSSIBLE HERE:
@@ -1420,19 +1419,19 @@ static UMSmppError SMPP_outgoingErrorCodeMapping(UMSmppError e);
 {
 	switch(ms)
 	{
-		case UMMESSAGE_STATE_ENROUTE:
+		case UMMESSAGE_STATUS_ENROUTE:
 			return SMPP_MESSAGE_STATE_ENROUTE;
-		case UMMESSAGE_STATE_DELIVERED:
+		case UMMESSAGE_STATUS_DELIVERED:
 			return SMPP_MESSAGE_STATE_DELIVERED;
-		case UMMESSAGE_STATE_EXPIRED:
+		case UMMESSAGE_STATUS_EXPIRED:
 			return SMPP_MESSAGE_STATE_EXPIRED;
-		case UMMESSAGE_STATE_DELETED:
+		case UMMESSAGE_STATUS_DELETED:
 			return SMPP_MESSAGE_STATE_DELETED;
-		case UMMESSAGE_STATE_UNDELIVERABLE:
+		case UMMESSAGE_STATUS_UNDELIVERABLE:
 			return SMPP_MESSAGE_STATE_UNDELIVERABLE;
-		case UMMESSAGE_STATE_ACCEPTED:
+		case UMMESSAGE_STATUS_ACCEPTED:
 			return SMPP_MESSAGE_STATE_ACCEPTED;
-		case UMMESSAGE_STATE_REJECTED:
+		case UMMESSAGE_STATUS_REJECTED:
 			return SMPP_MESSAGE_STATE_REJECTED;
 	}
 	return SMPP_MESSAGE_STATE_UNKNOWN;

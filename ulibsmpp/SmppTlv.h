@@ -112,6 +112,8 @@ typedef enum SMPP_TLV_Tag
     SMPP_TLV_VENDOR_SPECIFIC_FROM_IMSI              = 0x1440,
     SMPP_TLV_VENDOR_SPECIFIC_TO_IMSI                = 0x1441,
     SMPP_TLV_VENDOR_SPECIFIC_HLR                    = 0x1442,
+    SMPP_TLV_VENDOR_SPECIFIC_INTERNAL_STATE         = 0x1443,
+
 
 }	SMPP_TLV_Tag;
 

@@ -166,7 +166,7 @@
                             msg.messageAttempted 	?   [formatter stringFromDate:msg.messageAttempted.dateValue]
                                                           :[formatter stringFromDate:[NSDate date]],
                             errorToReturn];
-    report.reportType               = UMMESSAGE_STATE_UNDELIVERABLE;
+    report.reportType               = UMMESSAGE_STATUS_UNDELIVERABLE;
     report.error                    = @(UM_ESME_RSUBMITFAIL);
     msg.submitErrorCode = [[UMDirtyInteger alloc]initWithInteger:UM_ESME_RSUBMITFAIL];
     report.routerReference          = msg.routerReference.stringValue;
@@ -223,7 +223,7 @@
                             msg.routerReference,
                             msg.submitTimestamp  ?    [formatter stringFromDate:msg.submitTimestamp.dateValue]:[formatter stringFromDate:[NSDate date]],
                             msg.messageAttempted ? [formatter stringFromDate:msg.messageAttempted.dateValue]:[formatter stringFromDate:[NSDate date]]];
-    report.reportType               = UMMESSAGE_STATE_DELIVERED;
+    report.reportType               = UMMESSAGE_STATUS_DELIVERED;
     report.error                    = NULL;
     report.routerReference          = msg.routerReference.stringValue;
     report.providerReference        = msg.providerReference.stringValue;

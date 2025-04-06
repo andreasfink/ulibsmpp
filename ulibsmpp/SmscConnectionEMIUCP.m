@@ -134,7 +134,7 @@
                             msg.messageAttempted ?
                                                        [formatter stringFromDate:msg.messageAttempted.dateValue]
                                                      : [formatter stringFromDate:[NSDate date]]];
-    report.reportType               = UMMESSAGE_STATE_DELIVERED;
+    report.reportType               = UMMESSAGE_STATUS_DELIVERED;
     report.error                    = NULL;
     report.routerReference          = msg.routerReference.stringValue;
     report.providerReference        = msg.providerReference.stringValue;
@@ -190,7 +190,7 @@
                                                      :[formatter stringFromDate:[NSDate date]],
                             msg.messageAttempted ? [formatter stringFromDate:msg.messageAttempted.dateValue]
                                                      :[formatter stringFromDate:[NSDate date]]];
-    report.reportType               = UMMESSAGE_STATE_DELIVERED;
+    report.reportType               = UMMESSAGE_STATUS_DELIVERED;
     report.error                    = NULL;
     report.routerReference          = msg.routerReference.stringValue;
     report.providerReference        = msg.providerReference.stringValue;

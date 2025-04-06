@@ -2125,7 +2125,7 @@ end:
     //NSString *doneDateString =NULL;
     NSData *messagePayload;
     NSData *shortMessage;
-    UMMessageState messageState = UMMESSAGE_STATE_UNDEFINED;
+    UMMessageStatusCode messageState = UMMESSAGE_STATUS_UNDEFINED;
     NSData *networkErrorCode;
     int errInt;
     NSString *tmp;
@@ -2208,37 +2208,37 @@ end:
         {
             if ([value isEqualToString:@"ENROUTE"])
             {
-                messageState = UMMESSAGE_STATE_ENROUTE;
+                messageState = UMMESSAGE_STATUS_ENROUTE;
             }
             else if (([value isEqualToString:@"DELIVRD"]) || ([value isEqualToString:@"DELIVERED"]))
             {
-                messageState = UMMESSAGE_STATE_DELIVERED;
+                messageState = UMMESSAGE_STATUS_DELIVERED;
             }
             else if ([value isEqualToString:@"EXPIRED"])
             {
-                messageState = UMMESSAGE_STATE_EXPIRED;
+                messageState = UMMESSAGE_STATUS_EXPIRED;
             }
             else if ([value isEqualToString:@"DELETED"])
             {
-                messageState = UMMESSAGE_STATE_DELETED;
+                messageState = UMMESSAGE_STATUS_DELETED;
             }
             else if (([value isEqualToString:@"UNDELIV"]) || ([value isEqualToString:@"UNDELIVERABLE"]))
             {
-                messageState = UMMESSAGE_STATE_UNDELIVERABLE;
+                messageState = UMMESSAGE_STATUS_UNDELIVERABLE;
             }
             else if (([value isEqualToString:@"ACCEPTD"]) || ([value isEqualToString:@"ACCEPTED"]))
             {
-                messageState = UMMESSAGE_STATE_ACCEPTED;
+                messageState = UMMESSAGE_STATUS_ACCEPTED;
             }
             else if ( ([value isEqualToString:@"REJECTD"])
                         || ([value isEqualToString:@"REJECTED"])
                         || ([value isEqualToString:@"REJECT"]))
             {
-                messageState = UMMESSAGE_STATE_REJECTED;
+                messageState = UMMESSAGE_STATUS_REJECTED;
             }
             else
             {
-                messageState = UMMESSAGE_STATE_UNKNOWN;
+                messageState = UMMESSAGE_STATUS_UNDEFINED;
                 [self.logFeed minorError:0 withText:[NSString stringWithFormat:@"Unknown message state %@",value]];
             }
         }
@@ -2258,35 +2258,35 @@ end:
     {
         if (([s isEqualToString:@"1"]) || ([s isEqualToString:@"1"]))
         {
-            messageState = UMMESSAGE_STATE_ENROUTE;
+            messageState = UMMESSAGE_STATUS_ENROUTE;
         }
         else if (([s isEqualToString:@"DELIVRD"]) || ([s isEqualToString:@"DELIVERED"]) || ([s isEqualToString:@"2"]))
         {
-            messageState = UMMESSAGE_STATE_DELIVERED;
+            messageState = UMMESSAGE_STATUS_DELIVERED;
         }
         else if ([s isEqualToString:@"EXPIRED"] || ([s isEqualToString:@"3"]))
         {
-            messageState = UMMESSAGE_STATE_EXPIRED;
+            messageState = UMMESSAGE_STATUS_EXPIRED;
         }
         else if ([s isEqualToString:@"DELETED"]|| ([s isEqualToString:@"4"]))
         {
-            messageState = UMMESSAGE_STATE_DELETED;
+            messageState = UMMESSAGE_STATUS_DELETED;
         }
         else if (([s isEqualToString:@"UNDELIV"]) || ([s isEqualToString:@"UNDELIVERABLE"]) || ([s isEqualToString:@"5"]))
         {
-            messageState = UMMESSAGE_STATE_UNDELIVERABLE;
+            messageState = UMMESSAGE_STATUS_UNDELIVERABLE;
         }
         else if (([s isEqualToString:@"ACCEPTD"]) || ([s isEqualToString:@"ACCEPTED"])|| ([s isEqualToString:@"6"]))
         {
-            messageState = UMMESSAGE_STATE_ACCEPTED;
+            messageState = UMMESSAGE_STATUS_ACCEPTED;
         }
         else if (([s isEqualToString:@"REJECTD"]) || ([s isEqualToString:@"REJECTED"])|| ([s isEqualToString:@"8"]))
         {
-            messageState = UMMESSAGE_STATE_REJECTED;
+            messageState = UMMESSAGE_STATUS_REJECTED;
         }
         else
         {
-            messageState = UMMESSAGE_STATE_UNKNOWN;
+            messageState = UMMESSAGE_STATUS_UNDEFINED;
         }
     }
 
@@ -2344,7 +2344,7 @@ end:
     [report setReportText:r];
     [report setReportType:messageState];
 
-    if((errInt==0) && (messageState != UMMESSAGE_STATE_DELIVERED))
+    if((errInt==0) && (messageState != UMMESSAGE_STATUS_DELIVERED))
     {
         report.error = @(UM_ESME_VENDOR_SPECIFIC_NO_ERROR_CODE_PROVIDED);
     }
