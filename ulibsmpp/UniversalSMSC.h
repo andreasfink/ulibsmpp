@@ -9,7 +9,7 @@
 #import <ulib/ulib.h>
 #import <ulibsmpp/UniversalSMSUtilities.h>
 
-@protocol SmscConnectionMessageProtocol;
+//@protocol SmscConnectionMessageProtocol;
 @protocol SmscConnectionReportProtocol;
 @protocol SmscConnectionUserProtocol;
 @protocol SmscConnectionRouterProtocol;
@@ -17,18 +17,16 @@
 @protocol SmscConnectionProtocol;
 
 #import <ulibsmpp/SmscConnectionTransactionProtocol.h>
-#import <ulibsmpp/SmscConnectionMessageProtocol.h>
-#import <ulibsmpp/SmscConnectionReportProtocol.h>
+//#import <ulibsmpp/SmscConnectionMessageProtocol.h>
 #import <ulibsmpp/SmscConnectionUserProtocol.h>
 #import <ulibsmpp/SmscConnectionRouterProtocol.h>
 #import <ulibsmpp/SmscConnectionProtocol.h>
 #import <ulibsmpp/SmscConnectionTransaction.h>
 #import <ulibsmpp/SmscConnection.h>
-#import <ulibsmpp/SmscStandardReport.h>
+//#import <ulibsmpp/SmscStandardReport.h>
 #import <ulibsmpp/SmscConnectionNULL.h>
 #import <ulibsmpp/SmscConnectionFAIL.h>
 #import <ulibsmpp/SmscConnectionNACK.h>
-#import <ulibsmpp/DeliveryReportErrorCode.h>
+#import <ulibsmpp/UMDeliveryReportErrorCode.h>
 #import <ulibsmpp/GSMErrorCode.h>
-#import <ulibsmpp/SmscRouterError.h>
 #import <ulibsmpp/SmscConnectionReadyProtocol.h>

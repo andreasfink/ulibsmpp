@@ -5,7 +5,7 @@
 //  Created by Andreas Fink on 28/03/14.
 //
 //
-
+#if 0
 typedef enum SmppErrorCode
 {
     ESME_ROK                                                               = 0x00000000,
@@ -168,4 +168,6 @@ typedef enum SmppErrorCode
     ESME_VENDOR_SPECIFIC_THIS_OUTGOING_CONNECTION_UNAVAILABLE              = 0x10000201,
 
 } SmppErrorCode;
+
+#endif
 

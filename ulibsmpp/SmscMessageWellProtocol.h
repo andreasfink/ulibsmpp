@@ -6,10 +6,6 @@
 //
 //
 
-
-
-@protocol SmscConnectionMessageProtocol;
-
 @protocol SmscMessageWellProtocol<NSObject>
-- (id<SmscConnectionMessageProtocol>)createMessage;
+- (UMMessage *)createMessage;
 @end

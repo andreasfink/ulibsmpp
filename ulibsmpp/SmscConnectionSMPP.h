@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-
+#import <ulibsmpp/SmscConnection.h>
 #import <ulibsmpp/UniversalSMSC.h>
 #import <ulibsmpp/SmppPdu.h>
 
@@ -268,8 +268,8 @@ typedef enum SMPPConnectionMode
 - (void) checkForSendingKeepalive;
 
 
-- (id<SmscConnectionReportProtocol>)deliverPduToReport:(SmppPdu *)pdu;
-- (id<SmscConnectionMessageProtocol>)deliverPduToMsg:(SmppPdu *)pdu;
+- (UMMessageReport *)deliverPduToReport:(SmppPdu *)pdu;
+- (UMMessage *)deliverPduToMsg:(SmppPdu *)pdu;
 
 - (int) setConfig: (NSDictionary *) dict;
 - (NSDictionary *) getConfig;
@@ -285,13 +285,6 @@ typedef enum SMPPConnectionMode
 -(void) logOutgoingPdu:(SmppPdu *)pdu;
 
 /* helper functions */
-+ (NSString *)smppErrorToString:(SmppErrorCode) err;
-
-//+ (NSString *)smppErrorToString:(SmppErrorCode) err;
-//+ (int) errorFromNetworkErrorCode:(NSData *)networkErrorCode;
-
-//+ (SmscConnectionErrorCode) smppErrToGlobal:(SmppErrorCode)err;
-//+ (SmppErrorCode) globalToSmppErr:(SmscConnectionErrorCode)err;
 
 - (NSString *)stringStatus;
 

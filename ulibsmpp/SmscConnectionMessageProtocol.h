@@ -6,7 +6,7 @@
 //  Created by Andreas Fink on 01.03.09.
 //  Copyright 2008-2014 Andreas Fink, Paradieshofstrasse 101, 4054 Basel, Switzerland
 //
-
+#if 0
 #import <ulib/ulib.h>
 #import <ulibsmpp/UniversalSMSUtilities.h>
 #import <ulibsmpp/SmscConnectionUserProtocol.h>
@@ -65,31 +65,6 @@ typedef enum SmscMessageState
     MESSAGE_STATE_UNKNOWN       = 8,
 } SmscMessageState;
 
-typedef enum UMReportMaskValue
-{
-    UMDLR_MASK_REPORT_SUBMITTED = 1,
-    UMDLR_MASK_REPORT_ENROUTE = 2,
-    UMDLR_MASK_REPORT_DELIVERED = 4,
-    UMDLR_MASK_REPORT_EXPIRED = 8,
-    UMDLR_MASK_REPORT_DELETED = 16,
-    UMDLR_MASK_REPORT_UNDELIVERABLE = 32,
-    UMDLR_MASK_REPORT_ACCEPTED = 64,
-    UMDLR_MASK_REPORT_UNKNOWN = 128,
-    UMDLR_MASK_REPORT_REJECTED = 256,
-
-    UMDLR_MASK_SUCCESS  = (UMDLR_MASK_REPORT_DELIVERED),
-    UMDLR_MASK_FAIL     = (UMDLR_MASK_REPORT_EXPIRED | UMDLR_MASK_REPORT_DELETED | UMDLR_MASK_REPORT_UNDELIVERABLE | UMDLR_MASK_REPORT_REJECTED),
-    UMDLR_MASK_BUFFERED = (UMDLR_MASK_REPORT_ENROUTE),
-    UMDLR_MASK_SUBMIT   = (UMDLR_MASK_REPORT_SUBMITTED),
-    UMDLR_MASK_FINAL    = (UMDLR_MASK_SUCCESS | UMDLR_MASK_FAIL),
-} UMReportMaskValue;
-
-typedef enum UMRequestMaskValue
-{
-    REQUEST_MASK_SUCCESS_OR_FAIL = 1,
-    REQUEST_MASK_FAIL            = 2,
-    REQUEST_MASK_INTERMEDIATE    = 16,
-} UMRequestMaskValue;
 
 @class SRMessageState;
 
@@ -100,61 +75,65 @@ typedef enum UMRequestMaskValue
 @property(readwrite)    id providerTransaction;
 @property(readwrite)    id originalSendingObject;
 
-@property(readwrite)    NSString *instance;
-@property(readwrite)    NSString *deliveryMethod;
-@property(readwrite)    NSString *inboundMethod;
-@property(readwrite)    NSString *inboundType;
-@property(readwrite)    NSString *fromIp;
-@property(readwrite)    NSString *routerReference;
-@property(readwrite)    NSString *userReference;
-@property(readwrite)    NSString *providerReference;
-@property(readwrite)    NSData *userMessageReference;
 @property(readwrite)    id<SmscConnectionUserProtocol>user;
-@property(readwrite)    NSString *fromNumber;
-@property(readwrite)    NSString *toNumber;
-@property(readwrite)    NSString *deliveryReportNumber;
-@property(readwrite)    NSNumber *deliveryReportMask;
-@property(readwrite)    NSNumber *esmClass;
-@property(readwrite)    NSNumber *messageClass;
-@property(readwrite)    NSNumber *pduDcs;
-@property(readwrite)    NSString *pduCoding;
-@property(readwrite)    NSNumber *pduPid;
-@property(readwrite)    NSNumber *pduReplyPathIndicator;
-@property(readwrite)    NSNumber *pduUdhIndicator;
-@property(readwrite)    NSData *pduUdh;
-@property(readwrite)    NSData *pduContent;
-@property(readwrite)    NSString *plaintextContent;
-@property(readwrite)    NSDate *submitTimestamp;
-@property(readwrite)    NSDate *submitAckTimestamp;
-@property(readwrite)    NSDate *submitErrorTimestamp;
-@property(readwrite)    NSDate *messageAttemptedTimestamp;
-@property(readwrite)    NSDate *validity;
-@property(readwrite)    NSDate *deferred;
-@property(readwrite)    NSString *submitString;
-@property(readwrite)    NSNumber *networkErrorCode;
+
+@property(readwrite)    UMDirtyString *instance;
+@property(readwrite)    UMDirtyString *deliveryMethod;
+@property(readwrite)    UMDirtyString *inboundMethod;
+@property(readwrite)    UMDirtyString *inboundType;
+@property(readwrite)    UMDirtyString *fromIp;
+@property(readwrite)    UMDirtyString *routerReference;
+@property(readwrite)    UMDirtyString *userReference;
+@property(readwrite)    UMDirtyString *providerReference;
+@property(readwrite)    UMDirtyData *userMessageReference;
+@property(readwrite)    UMDirtyString *fromNumber;
+@property(readwrite)    UMDirtyString *toNumber;
+@property(readwrite)    UMDirtyString *deliveryReportNumber;
+@property(readwrite)    UMDirtyInteger *deliveryReportMask;
+@property(readwrite)    UMDirtyInteger *esmClass;
+@property(readwrite)    UMDirtyInteger *messageClass;
+@property(readwrite)    UMDirtyInteger *pduDcs;
+@property(readwrite)    UMDirtyString *pduCoding;
+@property(readwrite)    UMDirtyInteger *pduPid;
+@property(readwrite)    UMDirtyInteger *pduReplyPathIndicator;
+@property(readwrite)    UMDirtyInteger *pduUdhIndicator;
+@property(readwrite)    UMDirtyData *pduUdh;
+@property(readwrite)    UMDirtyData *pduContent;
+@property(readwrite)    UMDirtyString *plaintextContent;
+@property(readwrite)    UMDirtyDate *submitTimestamp;
+@property(readwrite)    UMDirtyDate *submitAckTimestamp;
+@property(readwrite)    UMDirtyDate *submitErrorTimestamp;
+@property(readwrite)    UMDirtyDate *messageAttempted;
+@property(readwrite)    UMDirtyDate *validity;
+@property(readwrite)    UMDirtyDate *deferred;
+@property(readwrite)    UMDirtyString *submitString;
+@property(readwrite)    UMDirtyInteger *networkErrorCode;
 @property(readwrite)    SmscMessageState messageStateCode;
-@property(readwrite)    NSNumber *messagePriority;
-@property(readwrite)    NSNumber *replaceIfPresentFlag;
+@property(readwrite)    UMDirtyInteger *messagePriority;
+@property(readwrite)    UMDirtyInteger *replaceIfPresentFlag;
 
 @optional
-@property(readwrite)     NSString *smsc_srism_gt;
-@property(readwrite)     NSString *smsc_srism_map;
-@property(readwrite)     NSString *smsc_fsm_gt;
-@property(readwrite)     NSString *smsc_fsm_map;
-@property(readwrite)     NSString *opc_srism;
-@property(readwrite)     NSString *dpc_srism;
-@property(readwrite)     NSString *opc_fsm;
-@property(readwrite)     NSString *dpc_fsm;
-@property(readwrite)     NSNumber *userFlags;
-@property(readwrite)     NSString *toMsc;
-@property(readwrite)     NSString *fromMsc;
-@property(readwrite)     NSString *toImsi;
-@property(readwrite)     NSString *fromImsi;
-@property(readwrite)     NSString *hlr;
-@property(readwrite)     NSString *hlrOverride;
-@property(readwrite)     NSString *mcc;
-@property(readwrite)     NSString *mnc;
+@property(readwrite)     UMDirtyString *smsc_srism_gt;
+@property(readwrite)     UMDirtyString *smsc_srism_map;
+@property(readwrite)     UMDirtyString *smsc_fsm_gt;
+@property(readwrite)     UMDirtyString *smsc_fsm_map;
+@property(readwrite)     UMDirtyString *opc_srism;
+@property(readwrite)     UMDirtyString *dpc_srism;
+@property(readwrite)     UMDirtyString *opc_fsm;
+@property(readwrite)     UMDirtyString *dpc_fsm;
+@property(readwrite)     UMDirtyInteger *userFlags;
+@property(readwrite)     UMDirtyString *toMsc;
+@property(readwrite)     UMDirtyString *fromMsc;
+@property(readwrite)     UMDirtyString *toImsi;
+@property(readwrite)     UMDirtyString *fromImsi;
+@property(readwrite)     UMDirtyString *hlr;
+@property(readwrite)     UMDirtyString *hlrOverride;
+@property(readwrite)     UMDirtyString *mcc;
+@property(readwrite)     UMDirtyString *mnc;
+
 @property(readwrite)     NSMutableDictionary *tlvs;
 
 
 @end
+#endif
+
