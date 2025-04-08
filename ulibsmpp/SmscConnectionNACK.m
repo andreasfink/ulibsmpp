@@ -12,7 +12,6 @@
 #import <ulibsmpp/SmscConnectionNACK.h>
 #import <ulibsmpp/NSMutableString+UniversalSMPP.h>
 #import <ulibsmpp/NSString+UniversalSMPP.h>
-#import <ulibsmpp/UMSmppError.h>
 
 @implementation SmscConnectionNACK
 
@@ -112,34 +111,46 @@
 }
 
 /* submit Message: router->outbound TX connection */
-- (void) submitMessage:(UMMessage *)msg
+- (void) submitMessage:(id<SmscConnectionMessageProtocol>)msg
              forObject:(id)sendingObject
            synchronous:(BOOL)sync
 {
+    SmscRouterError *err = [_router createError];
+    if(err==NULL)
+    {
+        err = [[SmscRouterError alloc]init];
+    }
+    [err setSmppErrorCode:ESME_RUNKNOWNERR];
     [sendingObject submitMessageFailed:msg
-                                 error:@(UM_ESME_RUNKNOWNERR)
+                             withError:err
                              forObject:self
                            synchronous:NO];
 }
 
-- (void) submitReport:(UMMessageReport *)report
+- (void) submitReport:(id<SmscConnectionReportProtocol>)report
             forObject:(id)sendingObject
           synchronous:(BOOL)sync
 {
+    SmscRouterError *err = [_router createError];
+    if(err==NULL)
+    {
+        err = [[SmscRouterError alloc]init];
+    }
+    [err setSmppErrorCode:ESME_RUNKNOWNERR];
     [sendingObject submitReportFailed:report
-                                error:@(UM_ESME_RUNKNOWNERR)
+                            withError:err
                             forObject:self
                           synchronous:NO];
 }
 
-- (void) submitReportSent:(UMMessageReport *)report
+- (void) submitReportSent:(id<SmscConnectionReportProtocol>)report
                 forObject:(id)reportingObject
               synchronous:(BOOL)sync
 {
 }
 
-- (void) submitReportFailed:(UMMessageReport *)report
-                      error:(NSNumber *)error
+- (void) submitReportFailed:(id<SmscConnectionReportProtocol>)report
+                  withError:(SmscRouterError *)code
                   forObject:(id)reportingObject
                 synchronous:(BOOL)sync
 {
@@ -147,33 +158,47 @@
 }
 
 /* deliverMessage: router->inbound RX connection */
-- (void) deliverMessage:(UMMessage *)msg
+- (void) deliverMessage:(id<SmscConnectionMessageProtocol>)msg
               forObject:(id)sendingObject
             synchronous:(BOOL)sync
 {
+    SmscRouterError *err = [_router createError];
+    if(err==NULL)
+    {
+        err = [[SmscRouterError alloc]init];
+    }
+    [err setSmppErrorCode:ESME_RUNKNOWNERR];
+
     [sendingObject deliverMessageFailed:msg
-                                  error:@(UM_ESME_RUNKNOWNERR)
+                              withError:err
                               forObject:self
                             synchronous:NO];
 }
 
-- (void) deliverReport:(UMMessageReport *)report
+- (void) deliverReport:(id<SmscConnectionReportProtocol>)report
              forObject:(id)sendingObject
 {
+    SmscRouterError *err = [_router createError];
+    if(err==NULL)
+    {
+        err = [[SmscRouterError alloc]init];
+    }
+    [err setSmppErrorCode:ESME_RUNKNOWNERR];
+
     [sendingObject deliverReportFailed:report
-                                 error:@(UM_ESME_RUNKNOWNERR)
+                             withError:err
                              forObject:self
                            synchronous:NO];
 }
 
-- (void) deliverReportSent:(UMMessageReport *)report
+- (void) deliverReportSent:(id<SmscConnectionReportProtocol>)report
                  forObject:(id)reportingObject
                synchronous:(BOOL)sync
 {
 }
 
-- (void) deliverReportFailed:(UMMessageReport *)report
-                       error:(NSNumber *)error
+- (void) deliverReportFailed:(id<SmscConnectionReportProtocol>)report
+                   withError:(SmscRouterError *)code
                    forObject:(id)reportingObject
                  synchronous:(BOOL)sync
 {

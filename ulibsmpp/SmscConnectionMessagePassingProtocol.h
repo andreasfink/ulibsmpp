@@ -5,6 +5,7 @@
 //  Created by Andreas Fink on 26/03/15.
 //
 //
+
 /*  the message passing protocol specifies the minimum
     methods to send/receive messages
     between SMSC layers
@@ -32,63 +33,65 @@
  
  */
  
-#import <um/um.h>
+#import <ulibsmpp/SmscConnectionMessageProtocol.h>
+#import <ulibsmpp/SmscConnectionReportProtocol.h>
 
 @protocol SmscConnectionMessagePassingProtocol<NSObject>
 
-- (void) submitMessage:(UMMessage *)msg
+
+- (void) submitMessage:(id<SmscConnectionMessageProtocol>)msg
              forObject:(id)sendingObject
            synchronous:(BOOL)sync;
 
-- (void) submitMessageSent:(UMMessage *)msg
+- (void) submitMessageSent:(id<SmscConnectionMessageProtocol>)msg
                  forObject:(id)reportingObject
                synchronous:(BOOL)sync;
 
-- (void) submitMessageFailed:(UMMessage *)msg
-                       error:(NSNumber *)error /* UMSmppError */
+- (void) submitMessageFailed:(id<SmscConnectionMessageProtocol>)msg
+                   withError:(SmscRouterError *)err
                    forObject:(id)reportingObject
                  synchronous:(BOOL)sync;
 
 
-- (void) submitReport:(UMMessageReport *)r
+- (void) submitReport:(id<SmscConnectionReportProtocol>)r
             forObject:(id)sendingObject
           synchronous:(BOOL)sync;
 
-- (void) submitReportSent:(UMMessageReport *)r
+- (void) submitReportSent:(id<SmscConnectionReportProtocol>)r
                 forObject:(id)reportingObject
               synchronous:(BOOL)sync;
 
-- (void) submitReportFailed:(UMMessageReport *)r
-                      error:(NSNumber *)error
+- (void) submitReportFailed:(id<SmscConnectionReportProtocol>)r
+                  withError:(SmscRouterError *)err
                   forObject:(id)reportingObject
                 synchronous:(BOOL)sync;
 
-- (void) deliverMessage:(UMMessage *)msg
+
+- (void) deliverMessage:(id<SmscConnectionMessageProtocol>)msg
               forObject:(id)sendingObject
             synchronous:(BOOL)sync;
 
-- (void) deliverMessageSent:(UMMessage *)msg
+- (void) deliverMessageSent:(id<SmscConnectionMessageProtocol>)msg
                   forObject:(id)reportingObject
                 synchronous:(BOOL)sync;
 
-- (void) deliverMessageFailed:(UMMessage *)msg
-                        error:(NSNumber *)error /* UMSmppError */
+- (void) deliverMessageFailed:(id<SmscConnectionMessageProtocol>)msg
+                    withError:(SmscRouterError *)err
                     forObject:(id)reportingObject
                   synchronous:(BOOL)sync;
 
 
-- (void) deliverReport:(UMMessageReport *)report
+- (void) deliverReport:(id<SmscConnectionReportProtocol>)report
              forObject:(id)sendingObject
            synchronous:(BOOL)sync;
 
-- (void) deliverReportSent:(UMMessageReport *)report
+- (void) deliverReportSent:(id<SmscConnectionReportProtocol>)report
                  forObject:(id)reportingObject
                synchronous:(BOOL)sync;
 
-- (void) deliverReportFailed:(UMMessageReport *)report
-                       error:(NSNumber *)error /* UMSmppError */
+- (void) deliverReportFailed:(id<SmscConnectionReportProtocol>)report
+                   withError:(SmscRouterError *)err
                    forObject:(id)reportingObject
                  synchronous:(BOOL)sync;
 
 @end
-

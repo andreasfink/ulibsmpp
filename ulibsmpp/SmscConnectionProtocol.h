@@ -11,6 +11,7 @@
 #import <ulib/ulib.h>
 
 #import <ulibsmpp/SmscConnectionMessageProtocol.h>
+#import <ulibsmpp/SmscConnectionReportProtocol.h>
 #import <ulibsmpp/SmscConnectionRouterProtocol.h>
 #import <ulibsmpp/SmscConnectionRouterUserProtocol.h>
 #import <ulibsmpp/SmscConnectionTransactionProtocol.h>
@@ -20,18 +21,16 @@
 @protocol SmscConnectionSubmitterProtocol
 
 - (void) ackIncomingTransaction:(id<SmscConnectionTransactionProtocol>)transaction;
-- (void) nackIncomingTransaction:(id<SmscConnectionTransactionProtocol>)transaction;
-- (void) nackIncomingTransaction:(id<SmscConnectionTransactionProtocol>)t
-                           error:(NSNumber *)err;
+- (void) nackIncomingTransaction:(id<SmscConnectionTransactionProtocol>)transaction err:(SmscRouterError *)code;
+
 @end
 
 @protocol SmscConnectionProtocol <SmscConnectionRouterUserProtocol>
+- (id<SmscConnectionUserProtocol>)user;
+- (void)setUser:(id<SmscConnectionUserProtocol>)user;
 
-- (UMMessageUser *)user;
-- (void)setUser:(UMMessageUser *)user;
-
-- (void) registerMessageRouter:(id<SmscConnectionRouterProtocol>) router; /* returns success */
-- (void) unregisterMessageRouter:(id<SmscConnectionRouterProtocol>) router;  /* returns success */
+- (void)  registerMessageRouter:(id<SmscConnectionRouterProtocol>) router; /* returns success */
+- (void)  unregisterMessageRouter:(id<SmscConnectionRouterProtocol>) router;  /* returns success */
 - (BOOL) isConnected;
 - (BOOL) isAuthenticated;
 - (NSString *) getName;

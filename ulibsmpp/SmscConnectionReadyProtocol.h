@@ -7,7 +7,9 @@
 
 #import <ulib/ulib.h>
 
+@class SmscConnection;
+
 @protocol SmscConnectionReadyProtocol<NSObject>
-- (void)readyForMessages:(BOOL)isReady connection:(id)con;
+- (void)readyForMessages:(BOOL)isReady connection:(SmscConnection *)con;
 @end
 

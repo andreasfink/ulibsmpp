@@ -7,17 +7,17 @@
 //
 
 #import <ulib/ulib.h>
-#import <ulibsmpp/UMSmppError.h>
+#import <ulibsmpp/SmppErrorCode.h>
 
 @class UMSigAddr;
 
 @interface SmppMultiResult : UMObject
 {
 	UMSigAddr				*dst;
-    UMSmppError		    err;
+	SmppErrorCode		    err;
 }
 @property(readwrite,strong)	UMSigAddr				*dst;
-@property(readwrite,assign)	UMSmppError		err;
+@property(readwrite,assign)	SmppErrorCode		err;
 
 @end
 

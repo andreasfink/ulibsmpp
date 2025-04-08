@@ -10,16 +10,23 @@
 #import <ulib/ulib.h>
 #import <ulibsmpp/UniversalSMSUtilities.h>
 
+#import <ulibsmpp/SmscConnectionMessageProtocol.h>
+#import <ulibsmpp/SmscConnectionReportProtocol.h>
+//#import "SmscConnectionRouterProtocol.h"
 #import <ulibsmpp/SmscConnectionUserProtocol.h>
 #import <ulibsmpp/SmscConnectionProtocol.h>
 #import <ulibsmpp/SmscConnectionRouterUserProtocol.h>
+#import <ulibsmpp/SmscRouterError.h>
 
 @protocol SmscConnectionRouterProtocol<NSObject,SmscConnectionRouterUserProtocol>
 
 /* asking the router to provide a new message object */
-- (UMMessage *)createMessage;
+- (id<SmscConnectionMessageProtocol>)createMessage;
 /* asking the router to provide a new report object */
-- (UMMessageReport *)createReport;
+- (id<SmscConnectionReportProtocol>)createReport;
+
+/* asking the router to provide a new error object */
+- (SmscRouterError *)createError;
 
 /* generic stuff */
 
@@ -43,11 +50,9 @@
 - (id<SmscConnectionUserProtocol>) authenticateUser:(NSString *)username withPassword:(NSString *)password;
 - (BOOL) userExists:(NSString *)username;
 
+- (id<SmscConnectionMessageProtocol>)queryMessage:(NSString *)msgid;
+
 @optional
-
-- (UMMessage *)queryMessage:(NSString *)msgid;
-- (UMMessage *)queryMessage:(NSString *)msgid withNumber:(NSString *)msisdn;
-
 - (BOOL) isAddressWhitelisted:(NSString *)remoteIpAddress
                    remotePort:(NSNumber *)remotePort
                localIpAddress:(NSString *)localIpAddress

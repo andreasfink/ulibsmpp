@@ -55,11 +55,11 @@ typedef	enum UMNaiType
     NSString	    *_debugString;
 }
 
-@property (readwrite,assign,atomic)	UMTonType		ton;
-@property (readwrite,assign,atomic)	UMNpiType		npi;
-@property (readwrite,strong,atomic) NSNumber        *pointcode;
-@property (readwrite,strong,atomic)	NSString        *addr;
-@property (readwrite,strong,atomic)	NSString        *debugString;
+@property (readwrite,assign)	UMTonType		ton;
+@property (readwrite,assign)	UMNpiType		npi;
+@property (readwrite,strong)    NSNumber        *pointcode;
+@property (readwrite,strong)	NSString        *addr;
+@property (readwrite,strong)	NSString        *debugString;
 
 + (UMSigAddr *) sigAddrFromString:(NSString *)digits;
 - (UMSigAddr *) initWithString: (NSString *)digits;

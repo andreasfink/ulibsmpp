@@ -12,7 +12,8 @@
 #import <ulibsmpp/SmscConnectionFAIL.h>
 #import <ulibsmpp/NSMutableString+UniversalSMPP.h>
 #import <ulibsmpp/NSString+UniversalSMPP.h>
-#import <ulibsmpp/UMSmppError.h>
+#import <ulibsmpp/SmppErrorCode.h>
+#import <ulibsmpp/SmscRouterError.h>
 
 @implementation SmscConnectionFAIL
 
@@ -26,7 +27,7 @@
     {
         [super setVersion: @"1.0"];
         [super setType: @"fail"];
-        self.errorToReturn = UM_ESME_RSYSERR;
+        self.errorToReturn = NULL;
         self.lastActivity =[NSDate new];
     }
     return self;
@@ -56,15 +57,50 @@
 
 - (int) setConfig: (NSDictionary *) dict
 {
-    errorToReturn = UM_ESME_RSYSERR;
+    errorToReturn = [_router createError];
+    if(errorToReturn==NULL)
+    {
+        errorToReturn = [[SmscRouterError alloc]init];
+    }
+
     
-    if([dict[PREFS_CON_ERRCODE] isKindOfClass:[NSNumber class]])
+    if([dict[PREFS_CON_GSM_ERRCODE] isKindOfClass:[NSNumber class]])
     {
         
-        NSNumber *v = dict[PREFS_CON_ERRCODE];
-        errorToReturn = [v intValue];
+        NSNumber *v = dict[PREFS_CON_GSM_ERRCODE];
+        [errorToReturn setGsmErrorCode:[v intValue]];
     }
-    return 0;
+    if([dict[PREFS_CON_SMPP_ERRCODE] isKindOfClass:[NSNumber class]])
+    {
+        
+        NSNumber *v = dict[PREFS_CON_SMPP_ERRCODE];
+        [errorToReturn setSmppErrorCode:[v intValue]];
+    }
+    if([dict[PREFS_CON_DLR_ERRCODE] isKindOfClass:[NSNumber class]])
+    {
+        
+        NSNumber *v = dict[PREFS_CON_DLR_ERRCODE];
+        [errorToReturn setDeliveryReportErrorCode:[v intValue]];
+    }
+    /*
+    if([dict[PREFS_CON_SMSC_ERRCODE] isKindOfClass:[NSNumber class]])
+    {
+        
+        NSNumber *v = dict[PREFS_CON_SMSC_ERRCODE];
+        [errorToReturn setSmscConnectionErrorCode:[v intValue]];
+    }
+     */
+    if([dict[PREFS_CON_INTERNAL_ERRCODE] isKindOfClass:[NSNumber class]])
+    {
+        
+        NSNumber *v = dict[PREFS_CON_INTERNAL_ERRCODE];
+        [errorToReturn setInternalErrorCode:[v intValue]];
+    }
+    if(errorToReturn.errorTypes == SmscRouterError_TypeNONE)
+    {
+        [errorToReturn setSmppErrorCode:ESME_RSYSERR];
+    }
+    return -1;
 }
 
 - (NSDictionary *) getConfig
@@ -73,7 +109,26 @@
     
     dict = [NSMutableDictionary dictionaryWithDictionary: [super getConfig]];
     dict[PREFS_CON_PROTO] = @"fail";
-    dict[PREFS_CON_ERRCODE] = @(errorToReturn);
+    
+    if(errorToReturn)
+    {
+        if(errorToReturn.errorTypes & SmscRouterError_TypeSMPP)
+        {
+            dict[PREFS_CON_SMPP_ERRCODE] = @(errorToReturn.smppError);
+        }
+        if(errorToReturn.errorTypes & SmscRouterError_TypeGSM)
+        {
+            dict[PREFS_CON_GSM_ERRCODE] = @(errorToReturn.gsmError);
+        }
+        if(errorToReturn.errorTypes & SmscRouterError_TypeDLR)
+        {
+            dict[PREFS_CON_DLR_ERRCODE] = @(errorToReturn.dlrError);
+        }
+        if(errorToReturn.errorTypes & SmscRouterError_TypeINTERNAL)
+        {
+            dict[PREFS_CON_INTERNAL_ERRCODE] = @(errorToReturn.internalError);
+        }
+    }
     return dict;
 }
 
@@ -85,7 +140,25 @@
     
     dict = [[NSMutableDictionary alloc] init];
     dict[PREFS_CON_NAME] = @"fail";
-    dict[PREFS_CON_ERRCODE] = @(errorToReturn);
+    if(errorToReturn)
+    {
+        if(errorToReturn.errorTypes & SmscRouterError_TypeSMPP)
+        {
+            dict[PREFS_CON_SMPP_ERRCODE] = @(errorToReturn.smppError);
+        }
+        if(errorToReturn.errorTypes & SmscRouterError_TypeGSM)
+        {
+            dict[PREFS_CON_GSM_ERRCODE] = @(errorToReturn.gsmError);
+        }
+        if(errorToReturn.errorTypes & SmscRouterError_TypeDLR)
+        {
+            dict[PREFS_CON_DLR_ERRCODE] = @(errorToReturn.dlrError);
+        }
+        if(errorToReturn.errorTypes & SmscRouterError_TypeINTERNAL)
+        {
+            dict[PREFS_CON_INTERNAL_ERRCODE] = @(errorToReturn.internalError);
+        }
+    }
     return dict;
 }
 
@@ -94,14 +167,14 @@
     NSDictionary *smppConnectionDict;
     
     smppConnectionDict = @{ PREFS_CON_NAME : @"fail",
-                            PREFS_CON_ERRCODE : @(UM_ESME_RSYSERR)};
+                            PREFS_CON_SMPP_ERRCODE : @(ESME_RSYSERR)};
     return smppConnectionDict;
 }
 
 + (NSDictionary *) getDefaultListenerConfig
 {
     return @{ PREFS_CON_NAME : @"fail",
-              PREFS_CON_ERRCODE : @(UM_ESME_RSYSERR)};
+              PREFS_CON_SMPP_ERRCODE : @(ESME_RSYSERR)};
 }
 
 #pragma mark sendingPDUs
@@ -127,7 +200,7 @@
 }
 
 /* submit Message: router->outbound TX connection */
-- (void) submitMessage:(UMMessage *)msg
+- (void) submitMessage:(id<SmscConnectionMessageProtocol>)msg
              forObject:(id)sendingObject
            synchronous:(BOOL)sync
 {
@@ -147,9 +220,9 @@
             this_msgid_time_trec->tm_sec,
             0);
     
-    UMMessageReport * report = NULL;
+    id<SmscConnectionReportProtocol> report = NULL;
     
-    msg.providerReference = UMDIRTY_STRING([NSString stringWithUTF8String:this_msg_id]);
+    msg.providerReference = [NSString stringWithUTF8String:this_msg_id];
     [sendingObject submitMessageSent:msg
                            forObject:self
                          synchronous:NO];
@@ -161,21 +234,23 @@
     [formatter setDateFormat:@"yyyyMMddHHmmss"];
     NSString *reportText = [NSString stringWithFormat:@"id:%@ sub:001 dlvrd:001 submit date:%@ done date:%@ stat:UNDELVRD err:%03d text:no-route-to-destination",
                             msg.routerReference,
-                            msg.submitTimestamp     ?    [formatter stringFromDate:msg.submitTimestamp.dateValue]
-                                                         :[formatter stringFromDate:[NSDate date]],
-                            msg.messageAttempted 	?   [formatter stringFromDate:msg.messageAttempted.dateValue]
-                                                          :[formatter stringFromDate:[NSDate date]],
-                            errorToReturn];
-    report.reportType               = UMMESSAGE_STATUS_UNDELIVERABLE;
-    report.error                    = @(UM_ESME_RSUBMITFAIL);
-    msg.submitErrorCode = [[UMDirtyInteger alloc]initWithInteger:UM_ESME_RSUBMITFAIL];
-    report.routerReference          = msg.routerReference.stringValue;
-    report.providerReference        = msg.providerReference.stringValue;
-    report.userReference            = msg.userReference.stringValue;
+                            msg.submitDate ?    [formatter stringFromDate:msg.submitDate]:[formatter stringFromDate:[NSDate date]],
+                            msg.messageAttempted ? [formatter stringFromDate:msg.messageAttempted]:[formatter stringFromDate:[NSDate date]],
+                            errorToReturn.dlrError];
+    report.reportType               = SMS_REPORT_UNDELIVERABLE;
+    if(errorToReturn == NULL)
+    {
+        errorToReturn = [_router createError];
+        [errorToReturn setSmppErrorCode:ESME_RSYSERR];
+    }
+    report.error                    = errorToReturn;
+    report.routerReference          = msg.routerReference;
+    report.providerReference      = msg.providerReference;
+    report.userReference            = msg.userReference;
     report.originalSendingObject    = msg.originalSendingObject;
     report.reportText               = reportText;
-    report.fromNumber               = msg.toNumber.stringValue;
-    report.toNumber                 = msg.fromNumber.stringValue;
+    report.source                   = msg.destination;
+    report.destination              = msg.source;
     
     [sendingObject deliverReport:report
                        forObject:self
@@ -183,7 +258,7 @@
     free(this_msg_id);
 }
 
-- (void) submitReport:(UMMessageReport *)report
+- (void) submitReport:(id<SmscConnectionReportProtocol>)report
             forObject:(id)sendingObject
           synchronous:(BOOL)sync
 {
@@ -192,14 +267,14 @@
                         synchronous:!sync];
 }
 
-- (void) submitReportSent:(UMMessageReport *)report
+- (void) submitReportSent:(id<SmscConnectionReportProtocol>)report
                 forObject:(id)reportingObject
               synchronous:(BOOL)sync
 {
 }
 
-- (void) submitReportFailed:(UMMessageReport *)report
-                      error:(NSNumber *)err
+- (void) submitReportFailed:(id<SmscConnectionReportProtocol>)report
+                  withError:(SmscRouterError *)err
                   forObject:(id)reportingObject
                 synchronous:(BOOL)sync
 {
@@ -207,11 +282,11 @@
 }
 
 /* deliverMessage: router->inbound RX connection . we just ack it.*/
-- (void) deliverMessage:(UMMessage *)msg
+- (void) deliverMessage:(id<SmscConnectionMessageProtocol>)msg
               forObject:(id)sendingObject
             synchronous:(BOOL)sync
 {
-    UMMessageReport * report = NULL;
+    id<SmscConnectionReportProtocol> report = NULL;
     
     [sendingObject deliverMessageSent:msg
                             forObject:self
@@ -221,23 +296,23 @@
     [formatter setDateFormat:@"yyyyMMddHHmmss"];
     NSString *reportText = [NSString stringWithFormat:@"id:%@ sub:001 dlvrd:001 submit date:%@ done date:%@ stat:DELIVRD err:000",
                             msg.routerReference,
-                            msg.submitTimestamp  ?    [formatter stringFromDate:msg.submitTimestamp.dateValue]:[formatter stringFromDate:[NSDate date]],
-                            msg.messageAttempted ? [formatter stringFromDate:msg.messageAttempted.dateValue]:[formatter stringFromDate:[NSDate date]]];
-    report.reportType               = UMMESSAGE_STATUS_DELIVERED;
+                            msg.submitDate ?    [formatter stringFromDate:msg.submitDate]:[formatter stringFromDate:[NSDate date]],
+                            msg.messageAttempted ? [formatter stringFromDate:msg.messageAttempted]:[formatter stringFromDate:[NSDate date]]];
+    report.reportType               = SMS_REPORT_DELIVERED;
     report.error                    = NULL;
-    report.routerReference          = msg.routerReference.stringValue;
-    report.providerReference        = msg.providerReference.stringValue;
-    report.userReference            = msg.userReference.stringValue;
+    report.routerReference          = msg.routerReference;
+    report.providerReference        = msg.providerReference;
+    report.userReference            = msg.userReference;
     report.originalSendingObject    = msg.originalSendingObject;
     report.reportText               = reportText;
-    report.fromNumber               = msg.toNumber.stringValue;
-    report.toNumber                 = msg.fromNumber.stringValue;
+    report.source                   = msg.destination;
+    report.destination              = msg.source;
     [sendingObject submitReport:report
                       forObject:self
                     synchronous:NO];
 }
 
-- (void) deliverReport:(UMMessageReport *)report
+- (void) deliverReport:(id<SmscConnectionReportProtocol>)report
              forObject:(id)sendingObject
            synchronous:(BOOL)sync
 {
@@ -246,14 +321,14 @@
                          synchronous:!sync];
 }
 
-- (void) deliverReportSent:(UMMessageReport *)report
+- (void) deliverReportSent:(id<SmscConnectionReportProtocol>)report
                  forObject:(id)reportingObject
                synchronous:(BOOL)sync
 {
 }
 
-- (void) deliverReportFailed:(UMMessageReport *)report
-                       error:(NSNumber *)error
+- (void) deliverReportFailed:(id<SmscConnectionReportProtocol>)report
+                   withError:(SmscRouterError *)err
                    forObject:(id)reportingObject
                  synchronous:(BOOL)sync
 {

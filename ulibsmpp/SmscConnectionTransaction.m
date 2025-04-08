@@ -7,9 +7,19 @@
 //
 
 #import "SmscConnectionTransaction.h"
-#import <ulibsmpp/UMSmppError.h>
 
 @implementation SmscConnectionTransaction
+
+@synthesize type;
+@synthesize incoming;
+@synthesize status;
+@synthesize	sequenceNumber;
+@synthesize	_message;
+@synthesize	report;
+@synthesize upperObject;
+@synthesize lowerObject;
+@synthesize timeout;
+
 
 - (NSString *)description
 {
@@ -18,35 +28,15 @@
     {
         desc = [[NSMutableString alloc] initWithFormat:@"SmscConnectionTransaction %p\n", self];
         [desc appendFormat:@"---\n"];
-        [desc appendFormat:@" sequenceNumber %@\n",                 _sequenceNumber];
-        [desc appendFormat:@" message %@\n",                        _message];
-        [desc appendFormat:@" transaction was created at %@\n",     _created];
-        [desc appendFormat:@" timeout for transaction is %8.4fs\n", _timeout];
-        [desc appendFormat:@" upperObject has name %@\n",           [_upperObject name]];
-        [desc appendFormat:@" lowerObject has name %@\n",           [_lowerObject name]];
-        if(_error)
-        {
-            [desc appendFormat:@" error %@ (%@)\n",             _error, UMSmppErrorAsString((UMSmppError)_error.integerValue)];
-        }
-        [desc appendFormat:@"transaction was %@\n",                 _incoming ? @"incoming" : @"outgoing"];
-        switch(_type)
-        {
-            case TT_SUBMIT_MESSAGE:
-                [desc appendFormat:@"transaction type was TT_SUBMIT_MESSAGE\n"];
-                break;
-            case TT_SUBMIT_REPORT:
-                [desc appendFormat:@"transaction type was TT_SUBMIT_REPORT\n"];
-                break;
-            case TT_DELIVER_MESSAGE:
-                [desc appendFormat:@"transaction type was TT_DELIVER_MESSAGE\n"];
-                break;
-            case TT_DELIVER_REPORT:
-                [desc appendFormat:@"transaction type was TT_DELIVER_REPORT\n"];
-                break;
-            default:
-                [desc appendFormat:@"transaction type was TT_UNDEFINED\n"];
-                break;
-        }
+        [desc appendFormat:@" sequenceNumber %@\n", sequenceNumber];
+        [desc appendFormat:@" message %@\n", _message];
+        [desc appendFormat:@" transaction was created at %@\n", created];
+        [desc appendFormat:@" timeout for transaction is %8.4fs\n", timeout];
+        [desc appendFormat:@" upperObject has name %@\n", [upperObject name]];
+        [desc appendFormat:@" lowerObject has name %@\n", [lowerObject name]];
+        [desc appendFormat:@"we have status %ld\n", (long)status];
+        [desc appendFormat:@"transaction was %@\n", incoming ? @"incoming" : @"outgoing"];
+        [desc appendFormat:@"transaction type was %d\n", type];
         [desc appendString:@"Transaction dump ends"];
         [desc appendFormat:@"---\n"];
     }
@@ -58,8 +48,8 @@
 {
     if((self = [super init]))
     {
-        _created = [[NSDate alloc] init];
-        _timeout = 30.0; /* defaults to 30 seconds */
+        created = [[NSDate alloc] init];
+        timeout = 30.0; /* defaults to 30 seconds */
     }
     return self;
 }
@@ -67,7 +57,7 @@
 
 - (BOOL) isExpired
 {
-    if ((-[_created timeIntervalSinceNow]) > _timeout)
+    if ((-[created timeIntervalSinceNow]) > timeout)
     {
         return YES;
     }
@@ -76,7 +66,7 @@
 
 - (void) touch
 {
-    _created = [[NSDate alloc] init];
+    created = [[NSDate alloc] init];
 }
 
 @end

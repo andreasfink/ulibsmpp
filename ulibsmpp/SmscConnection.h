@@ -8,7 +8,6 @@
 
 #import <Foundation/Foundation.h>
 #import <ulib/ulib.h>
-#import <um/um.h>
 #import <ulibsmpp/UniversalSMSUtilities.h>
 
 #import <ulibsmpp/SmscConnectionProtocol.h>
@@ -44,7 +43,10 @@
 #define	PREFS_CON_SHORT_ID		@"short-id"
 #define	PREFS_CON_LOGIN			@"login"
 #define	PREFS_CON_PASSWORD		@"password"
-#define	PREFS_CON_ERRCODE       @"error-code"
+#define	PREFS_CON_GSM_ERRCODE       @"gsm-error-code"
+#define	PREFS_CON_SMPP_ERRCODE      @"smpp-error-code"
+#define	PREFS_CON_DLR_ERRCODE       @"dlr-error-code"
+#define	PREFS_CON_INTERNAL_ERRCODE  @"internal-error-code"
 #define PREFS_CON_TCP_MSS       @"max-tcp-segment-size"
 
 /* preference names of listeners */
@@ -70,11 +72,19 @@ enum SmppAlphaCoding;
 	NSString			*_routerName;
 	UMSocket			*_uc;
     UMLogLevel          _logLevel;
+#ifdef  USE_SMPP_PRIORITY_QUEUES
+	PriorityQueue		*_submitMessageQueue;
+	PriorityQueue		*_submitReportQueue;
+	PriorityQueue		*_deliverMessageQueue;
+	PriorityQueue		*_deliverReportQueue;
+	PriorityQueue		*_ackNackQueue;
+#else
     UMQueueSingle             *_submitMessageQueue;
     UMQueueSingle             *_submitReportQueue;
     UMQueueSingle             *_deliverMessageQueue;
     UMQueueSingle             *_deliverReportQueue;
     UMQueueSingle             *_ackNackQueue;
+#endif
     
 	UMSynchronizedDictionary *_outgoingTransactions;
 	UMSynchronizedDictionary *_incomingTransactions;
@@ -122,6 +132,11 @@ enum SmppAlphaCoding;
 @property(readwrite,strong)		UMSocket			*uc;
 @property(readwrite,assign)     UMLogLevel          logLevel;
 @property(readwrite,strong)		id<SmscConnectionUserProtocol> user;
+//@property(readwrite,strong)		PriorityQueue		*submitMessageQueue;
+//@property(readwrite,strong)		PriorityQueue		*submitReportQueue;
+//@property(readwrite,strong)		PriorityQueue		*deliverMessageQueue;
+//@property(readwrite,strong)		PriorityQueue		*deliverReportQueue;
+//@property(readwrite,strong)		PriorityQueue       *ackNackQueue;
 @property(readwrite,weak)		id<SmscConnectionRouterProtocol>	router;
 @property(readwrite,strong)		UMHost				*localHost;
 @property(readwrite,assign)		int					localPort;
@@ -174,8 +189,7 @@ enum SmppAlphaCoding;
 - (void) removeOutgoingTransaction:(SmscConnectionTransaction *)transaction;
 
 - (void) ackIncomingTransaction:(SmscConnectionTransaction *)transaction;
-- (void) nackIncomingTransaction:(SmscConnectionTransaction *)t
-                           error:(NSNumber *)err;
+- (void) nackIncomingTransaction:(SmscConnectionTransaction *)transaction err:(SmscRouterError *)code;
 - (void) timeoutOutgoingTransaction:(SmscConnectionTransaction *)transaction;
 - (void) timeoutIncomingTransaction:(SmscConnectionTransaction *)transaction;
 - (SmscConnectionTransaction *) findIncomingTransaction:(NSString *)trn;
@@ -187,7 +201,7 @@ enum SmppAlphaCoding;
 
 
 - (void)transactionDone:(id<SmscConnectionTransactionProtocol>) t;
-- (void) proxyDeliverMessage:(UMMessage *)msg forObject:(id)sendingObject;
+- (void) proxyDeliverMessage:(id<SmscConnectionMessageProtocol>)msg forObject:(id)sendingObject;
 - (BOOL)hasOption:(NSString *)n;
 - (void)setOption:(NSString *)n;
 - (void)clearOption:(NSString *)n;

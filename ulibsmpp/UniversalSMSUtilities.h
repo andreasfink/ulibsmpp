@@ -13,4 +13,5 @@
 #import <ulibsmpp/PointCode.h>
 #import <ulibsmpp/UMSigAddr.h>
 #import <ulibsmpp/UMPrefs.h>
+#import <ulibsmpp/PriorityQueue.h>
 #import <ulibsmpp/UMSigAddrWithHistory.h>

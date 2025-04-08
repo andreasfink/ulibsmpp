@@ -9,14 +9,10 @@
 #import <Foundation/Foundation.h>
 
 #import <ulib/ulib.h>
-#import <um/um.h>
 #import <ulibsmpp/UniversalSMSC.h>
 #import <ulibsmpp/UniversalSMPP.h>
 #import <ulibsmpp/UniversalEMIUCP.h>
 #import <ulibsmpp/UniversalSMSUtilities.h>
-#import <ulibsmpp/UMSmppError.h>
-#import <ulibsmpp/UMDeliveryReportType.h>
-
 
 @interface ulibsmpp : NSObject
 {

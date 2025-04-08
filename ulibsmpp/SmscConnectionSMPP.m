@@ -7,14 +7,12 @@
 //
 
 #import <ulib/ulib.h>
-#import <ulibsms/ulibsms.h>
 #import "SmscConnectionSMPP.h"
 #import "SmppPdu.h"
 #import "NSMutableString+UniversalSMPP.h"
 #import "NSString+UniversalSMPP.h"
 #include <sys/signal.h>
 #import "SmscConnectionUserProtocol.h"
-#import <ulibsmpp/UMSmppError.h>
 
 #define SMPP_RECONNECT_DELAY                 30
 #define SMPP_WAIT_FOR_BIND_RESPONSE_DELAY    30
@@ -55,11 +53,71 @@ struct  SmppPduTableEntry	SmppPDUTable[] =
 #define	EMPTYSTRINGFORNIL(a)	(a?a:@"")
 #define	EMPTYIPFORNIL(a)        (a?a:@"0.0.0.0")
 
-;
+typedef struct SmppErrorCodeListEntry
+{
+	SmppErrorCode	code;
+	const char      *text;
+	const char      *description;
+} SmppErrorCodeListEntry;
+
+const SmppErrorCodeListEntry SmppErrorCodeList[] =
+{
+	{ ESME_ROK,"ESME_ROK","No Error" },
+	{ ESME_RINVMSGLEN,"ESME_RINVMSGLEN","Message Length is invalid" },
+	{ ESME_RINVCMDLEN,"ESME_RINVCMDLEN","Command Length is invalid" },
+	{ ESME_RINVCMDID,"ESME_RINVCMDID","Invalid Command ID" },
+	{ ESME_RINVBNDSTS,"ESME_RINVBNDSTS","Incorrect BIND Status for given command" },
+	{ ESME_RALYBND,"ESME_RALYBND","ESME Already in Bound State" },
+	{ ESME_RINVPRTFLG,"ESME_RINVPRTFLG","Invalid Priority Flag" },
+	{ ESME_RINVREGDLVFLG,"ESME_RINVREGDLVFLG","Invalid Registered Delivery Flag" },
+	{ ESME_RSYSERR,"ESME_RSYSERR","System Error" },
+	{ ESME_RINVSRCADR,"ESME_RINVSRCADR","Invalid Source Address" },
+	{ ESME_RINVDSTADR,"ESME_RINVDSTADR","Invalid Dest Addr" },
+	{ ESME_RINVMSGID,"ESME_RINVMSGID","Message ID is invalid" },
+	{ ESME_RBINDFAIL,"ESME_RBINDFAIL","Bind Failed" },
+	{ ESME_RINVPASWD,"ESME_RINVPASWD","Invalid Password" },
+	{ ESME_RINVSYSID,"ESME_RINVSYSID","Invalid System ID" },
+	{ ESME_RCANCELFAIL,"ESME_RCANCELFAIL","Cancel SM Failed" },
+	{ ESME_RREPLACEFAIL,"ESME_RREPLACEFAIL","Replace SM Failed" },
+	{ ESME_RMSGQFUL,"ESME_RMSGQFUL","Message Queue Full" },
+	{ ESME_RINVSERTYP,"ESME_RINVSERTYP","Invalid Service Type" },
+	{ ESME_RINVNUMDESTS,"ESME_RINVNUMDESTS","Invalid number of destinations" },
+	{ ESME_RINVDLNAME,"ESME_RINVDLNAME","Invalid Distribution List name" },
+	{ ESME_RINVDESTFLAG,"ESME_RINVDESTFLAG","Destination flag is invalid" },
+	{ ESME_RINVSUBREP,"ESME_RINVSUBREP","Invalid 'submit with replace' request" },
+	{ ESME_RINVESMCLASS,"ESME_RINVESMCLASS","Invalid esm_class field data" },
+	{ ESME_RCNTSUBDL,"ESME_RCNTSUBDL","Cannot Submit to Distribution List" },
+	{ ESME_RSUBMITFAIL,"ESME_RSUBMITFAIL","submit_sm or submit_multi failed" },
+	{ ESME_RINVSRCTON,"ESME_RINVSRCTON","Invalid Source address TON" },
+	{ ESME_RINVSRCNPI,"ESME_RINVSRCNPI","Invalid Source address NPI" },
+	{ ESME_RINVDSTTON,"ESME_RINVDSTTON","Invalid Destination address TON" },
+	{ ESME_RINVDSTNPI,"ESME_RINVDSTNPI","Invalid Destination address NPI" },
+	{ ESME_RINVSYSTYP,"ESME_RINVSYSTYP","Invalid system_type field" },
+	{ ESME_RINVREPFLAG,"ESME_RINVREPFLAG","Invalid replace_if_present flag" },
+	{ ESME_RINVNUMMSGS,"ESME_RINVNUMMSGS","Invalid number of messages" },
+	{ ESME_RTHROTTLED,"ESME_RTHROTTLED","Throttling error (ESME has exceeded" },
+	{ ESME_RINVSCHED,"ESME_RINVSCHED","Invalid Scheduled Delivery Time" },
+	{ ESME_RINVEXPIRY,"ESME_RINVEXPIRY","Invalid message validity period" },
+	{ ESME_RINVDFTMSGID,"ESME_RINVDFTMSGID","Predefined Message Invalid or Not" },
+	{ ESME_RX_T_APPN,"ESME_RX_T_APPN","ESME Receiver Temporary App" },
+	{ ESME_RX_P_APPN,"ESME_RX_P_APPN","ESME Receiver Permanent App Error" },
+	{ ESME_RX_R_APPN,"ESME_RX_R_APPN","ESME Receiver Reject Message Error" },
+	{ ESME_RQUERYFAIL,"ESME_RQUERYFAIL","query_sm request failed" },
+	{ ESME_RINVOPTPARSTREAM,"ESME_RINVOPTPARSTREAM","Error in the optional part of the PDU" },
+	{ ESME_ROPTPARNOTALLWD,"ESME_ROPTPARNOTALLWD","Optional Parameter not allowed" },
+	{ ESME_RINVPARLEN,"ESME_RINVPARLEN","Invalid Parameter Length." },
+	{ ESME_RMISSINGOPTPARAM,"ESME_RMISSINGOPTPARAM","Expected Optional Parameter missing" },
+	{ ESME_RINVOPTPARAMVAL,"ESME_RINVOPTPARAMVAL","Invalid Optional Parameter Value" },
+	{ ESME_RDELIVERYFAILURE,"ESME_RDELIVERYFAILURE","Delivery Failure" },
+	{ ESME_RUNKNOWNERR,"ESME_RUNKNOWNERR","Unknown Error" },
+};
 
 
 #import "NSMutableString+UniversalSMPP.h"
 #import "NSString+UniversalSMPP.h"
+
+//#include "utils.h"
+
 
 @implementation SmscConnectionSMPP
 
@@ -80,7 +138,6 @@ struct  SmppPduTableEntry	SmppPDUTable[] =
         _trnLock = [[UMMutex alloc] initWithName:@"smpp-trn-lock"];
         _smppMessageIdType = -1;
         _tlvDefs = [[NSDictionary alloc] init];
-        _transmissionMode = SMPP_CONNECTION_MODE_TRX;
         self.lastActivity = [NSDate new];
     }
     return self;
@@ -118,7 +175,7 @@ struct  SmppPduTableEntry	SmppPDUTable[] =
             return YES;
         }
     }
-    if ((_outgoingStatus == SMPP_STATUS_OUTGOING_ACTIVE) && (_login != NULL) && (_password!=NULL))
+    if ((_outgoingStatus == SMPP_STATUS_OUTGOING_ACTIVE) && (_user != NULL))
     {
         return YES;
     }
@@ -234,7 +291,7 @@ struct  SmppPduTableEntry	SmppPDUTable[] =
     {
         _lastSeq = 1;
     }
-    pdu.seq =_lastSeq;
+	[pdu setSeq:_lastSeq];
 	int ret = [self _sendPdu:pdu];
     ummutex_unlock(_sendLock);
     return ret;
@@ -253,7 +310,7 @@ struct  SmppPduTableEntry	SmppPDUTable[] =
 - (UMSocketError) sendPdu:(SmppPdu *)pdu withSeq:(SmppPduSequence)seq
 {
     ummutex_lock(_sendLock);
-    pdu.seq = seq;
+	[pdu setSeq:seq];
     int ret = [self _sendPdu:pdu];
     ummutex_unlock(_sendLock);
     return ret;
@@ -261,25 +318,25 @@ struct  SmppPduTableEntry	SmppPDUTable[] =
 
 - (UMSocketError) sendPdu:(SmppPdu *)pdu asResponseTo:(SmppPdu *)pdu1
 {
-	return [self sendPdu:pdu withSeq:pdu1.seq];
+	return [self sendPdu:pdu withSeq:[pdu1 seq]];
 }
 
 - (UMSocketError) _sendPdu:(SmppPdu *)pdu
 {
 	NSUInteger      l;
 	SmppPduType     t;
-    UMSmppError 	e;
+	SmppErrorCode	e;
 	NSUInteger      s;
 	int             err;
 	NSMutableData	*d;
 	unsigned char header[16];
 	
-	l	= pdu.pdulen;
+	l	= [pdu pdulen];
     [self logOutgoingPdu:pdu];
 
-	t	= pdu.type;
-    e	= pdu.err;
-	s	= pdu.seq;
+	t	= (SmppPduType)[pdu type];
+	e	= (SmppErrorCode)[pdu err];
+	s	= [pdu seq];
 
 	header[0] = (l & 0xFF000000) >> 24;
 	header[1] = (l & 0x00FF0000) >> 16;
@@ -302,7 +359,7 @@ struct  SmppPduTableEntry	SmppPDUTable[] =
 	header[15] = (s & 0x000000FF) >> 0;
 
 	d = [[NSMutableData alloc] initWithBytes:header length:16];
-	[d appendData:pdu.payload];
+	[d appendData:[pdu payload]];
      
 	err = [_uc sendMutableData: d];
 	if(err)
@@ -334,15 +391,14 @@ struct  SmppPduTableEntry	SmppPDUTable[] =
 
 	if(transaction.type == TT_SUBMIT_MESSAGE)
 	{
-        if(transaction.error.intValue == UM_NO_ERROR)
+		if(transaction.status.internalError == SMSError_none)
 		{
-            pdu2 = [SmppPdu OutgoingSubmitSmRespOK:transaction.message
-                                            withId:transaction.message.routerReference.stringValue];
+			pdu2 = [SmppPdu OutgoingSubmitSmRespOK:transaction._message withId:[transaction._message routerReference]];
 			err = [self sendPdu: pdu2 withSequenceString:transaction.sequenceNumber];
 		}
 		else 
 		{
-            pdu2 = [SmppPdu OutgoingSubmitSmRespErr:transaction.error.intValue];
+			pdu2 = [SmppPdu OutgoingSubmitSmRespErr:transaction.status.smppError];
 			err = [self sendPdu: pdu2 withSequenceString:transaction.sequenceNumber];
 		}
         if(err==0)
@@ -353,14 +409,14 @@ struct  SmppPduTableEntry	SmppPDUTable[] =
 
 	else if(transaction.type == TT_DELIVER_MESSAGE)
 	{
-        if(transaction.error.intValue == UM_NO_ERROR)
+        if(transaction.status.internalError == SMSError_none)
 		{
-            pdu2 = [SmppPdu OutgoingDeliverSmRespOK:transaction.message withId:transaction.message.routerReference.stringValue];
+            pdu2 = [SmppPdu OutgoingDeliverSmRespOK:transaction._message withId:[transaction._message routerReference]];
 			err = [self sendPdu: pdu2 withSequenceString:transaction.sequenceNumber];
 		}
 		else
 		{
-            pdu2 = [SmppPdu OutgoingDeliverSmRespErr:transaction.error.intValue];
+			pdu2 = [SmppPdu OutgoingDeliverSmRespErr:transaction.status.smppError];
 			err = [self sendPdu: pdu2 withSequenceString:transaction.sequenceNumber];
 		}
         if(err==0)
@@ -372,9 +428,9 @@ struct  SmppPduTableEntry	SmppPDUTable[] =
     else if(transaction.type == TT_DELIVER_REPORT)
 	{
         /* we received a delivery report from a provider and have to ack it */
-        if(transaction.error.intValue == UM_NO_ERROR)
+        if(transaction.status.internalError == SMSError_none)
 		{
-            UMMessageReport * report = [transaction report];
+            id<SmscConnectionReportProtocol> report = [transaction report];
             pdu2 = [SmppPdu OutgoingDeliverSmReportRespOK:report
                                                    withId:report.providerReference];
 			err = [self sendPdu: pdu2 withSequenceString:transaction.sequenceNumber];
@@ -382,7 +438,7 @@ struct  SmppPduTableEntry	SmppPDUTable[] =
 		}
 		else
 		{
-            pdu2 = [SmppPdu OutgoingDeliverSmRespErr:transaction.error.intValue];
+			pdu2 = [SmppPdu OutgoingDeliverSmRespErr:transaction.status.smppError];
 			err = [self sendPdu: pdu2 withSequenceString:transaction.sequenceNumber];
 		}
         if(err==0)
@@ -393,14 +449,14 @@ struct  SmppPduTableEntry	SmppPDUTable[] =
     
     else if(transaction.type == TT_SUBMIT_REPORT)
 	{
-        if(transaction.error.intValue == UM_NO_ERROR)
+        if(transaction.status.internalError == SMSError_none)
 		{
-			pdu2 = [SmppPdu OutgoingSubmitSmRespOK:transaction.message withId:transaction.message.routerReference.stringValue];
+			pdu2 = [SmppPdu OutgoingSubmitSmRespOK:transaction._message withId:[transaction._message routerReference]];
 			err = [self sendPdu: pdu2 withSequenceString:transaction.sequenceNumber];
 		}
 		else
 		{
-			pdu2 = [SmppPdu OutgoingSubmitSmRespErr:transaction.error.intValue];
+			pdu2 = [SmppPdu OutgoingSubmitSmRespErr:transaction.status.smppError];
 			err = [self sendPdu: pdu2 withSequenceString:transaction.sequenceNumber];
 		}
         if(err==0)
@@ -415,8 +471,8 @@ struct  SmppPduTableEntry	SmppPDUTable[] =
 - (int) activePhase:(int)outbound
 {
 	id<SmscConnectionTransactionProtocol>		an;
-	UMMessage           *msg;
-	UMMessageReport     *report;
+	id<SmscConnectionMessageProtocol>			msg;
+	id<SmscConnectionReportProtocol>			report;
 	SmppPdu *pdu;
 	int i=0;
 	UMSocketError err=0;
@@ -460,7 +516,7 @@ struct  SmppPduTableEntry	SmppPDUTable[] =
         {
             SmscConnectionTransaction *transaction = [[SmscConnectionTransaction alloc]init];
             transaction.sequenceNumber = [pdu sequenceString];
-            transaction.message = msg;
+            transaction._message = msg;
             transaction.type = TT_SUBMIT_MESSAGE;
             [self addOutgoingTransaction: transaction];
             i++;
@@ -488,7 +544,7 @@ struct  SmppPduTableEntry	SmppPDUTable[] =
         {
             SmscConnectionTransaction *transaction = [[SmscConnectionTransaction alloc]init];
             transaction.sequenceNumber = [pdu sequenceString];
-            transaction.message = msg;
+            transaction._message = msg;
             transaction.type = TT_DELIVER_MESSAGE;
             [self addOutgoingTransaction: transaction];
             i++;
@@ -507,7 +563,7 @@ struct  SmppPduTableEntry	SmppPDUTable[] =
 #endif
     if(report)
     {
-        msg = report.reportToMsg;
+        msg = [report reportToMsg];
         pdu = [SmppPdu OutgoingSubmitSmReport: msg reportingEntity:SMPP_REPORTING_ENTITY_SMSC];
         [self.outboundReportsThroughput increase];
 
@@ -516,7 +572,7 @@ struct  SmppPduTableEntry	SmppPDUTable[] =
         {
             SmscConnectionTransaction *transaction = [[SmscConnectionTransaction alloc]init];
             transaction.sequenceNumber = [pdu sequenceString];
-            transaction.message = msg;
+            transaction._message = msg;
             transaction.report = report;
             transaction.type = TT_SUBMIT_REPORT;
             [self addOutgoingTransaction: transaction];
@@ -548,7 +604,7 @@ struct  SmppPduTableEntry	SmppPDUTable[] =
         {
             SmscConnectionTransaction *transaction = [[SmscConnectionTransaction alloc]init];
             transaction.sequenceNumber = [pdu sequenceString];
-            transaction.message = msg;
+            transaction._message = msg;
             transaction.report = report;
             transaction.type = TT_DELIVER_REPORT;
             [self addOutgoingTransaction: transaction];
@@ -618,7 +674,6 @@ end:
 
 - (void) inboundListener
 {
-    
 	UMSocket	*newUc;
 	NSString	*newName;
 	
@@ -645,7 +700,7 @@ end:
 		switch(_incomingStatus)
 		{
 			case SMPP_STATUS_INCOMING_OFF:
-                _uc = [[UMSocket alloc] initWithType:UMSOCKET_TYPE_TCP name:@"smpp-listener"];
+                _uc = [[UMSocket alloc] initWithType:UMSOCKET_TYPE_TCP4ONLY name:@"smpp-listener"]; /* FIXME: really IPv4 only? */
 				[_uc setLocalHost:_localHost];
 				[_uc setLocalPort:_localPort];
                 _uc.configuredMaxSegmentSize = _max_tcp_segment_size;
@@ -716,7 +771,7 @@ end:
                         if(doAccept)
                         {
 
-                            newName = [NSString stringWithFormat:@"%@ (%@)",
+                            newName = [NSString stringWithFormat:@"%@ (%p)",
                                        _name, newUc];
                             
                             SmscConnectionSMPP *e = [[SmscConnectionSMPP alloc] init];
@@ -906,23 +961,16 @@ end:
                 sErr  = [_uc dataIsAvailable:_receivePollTimeoutMs];
                 if((sErr == UMSocketError_has_data) || (sErr==UMSocketError_has_data_and_hup)) /* we received something */
                 {
-                    UMSocketError sErr2 = [_uc receiveToBufferWithBufferLimit: 1024];
+                    UMSocketError sErr2 = [_uc receiveToBufferWithBufferLimit: 10240];
                     if((sErr2== UMSocketError_no_data) || (sErr2==UMSocketError_connection_reset)) /* HUP */
                     {
                         NSString *msg = [NSString stringWithFormat:@"[SmscConnectionSMPP incomingReceiverThread]: EOF read"];
                         [self.logFeed info:0 inSubsection:@"outbound receiver" withText:msg];
                         _endThisConnection=YES;
                     }
-                    else if((sErr2==UMSocketError_no_error) || (sErr2==UMSocketError_has_data))
+                    else if(sErr2==UMSocketError_no_error)
                     {
                         [self checkForPackets];
-                    }
-                    else if(sErr==UMSocketError_has_data_and_hup)
-                    {
-                        [self checkForPackets]; /* process whatever is left */
-                        NSString *msg = [NSString stringWithFormat:@"[SmscConnectionSMPP incomingReceiverThread]: POLLHUP received"];
-                        [self.logFeed info:0 inSubsection:@"outbound receiver" withText:msg];
-                        _endThisConnection=YES;
                     }
                     else if(sErr2!=UMSocketError_try_again)
                     {
@@ -932,7 +980,13 @@ end:
                         _endThisConnection=YES;
                         break;
                     }
-
+                    if(sErr==UMSocketError_has_data_and_hup)
+                    {
+                        [self checkForPackets]; /* process whatever is left */
+                        NSString *msg = [NSString stringWithFormat:@"[SmscConnectionSMPP incomingReceiverThread]: POLLHUP received"];
+                        [self.logFeed info:0 inSubsection:@"outbound receiver" withText:msg];
+                        _endThisConnection=YES;
+                    }
                 }
                 else if((sErr != UMSocketError_try_again) && (sErr !=UMSocketError_no_error) && (sErr != UMSocketError_no_data))
                 {
@@ -1056,7 +1110,7 @@ end:
 	int i;
 	for (i=0;i< sizeof(SmppPDUTable) / sizeof(SmppPduTableEntry);i++)
 	{
-		if( SmppPDUTable[i].pduType == pdu.type)
+		if( SmppPDUTable[i].pduType == [pdu type])
 		{
 			if(0 == (SmppPDUTable[i].allowedSources & source))
             {
@@ -1089,28 +1143,28 @@ end:
         switch(a)
         {
             case SMPP_AUTH_UNKNOWN_PDU_TYPE:
-                pdu2	= [SmppPdu OutgoingGenericNack: UM_ESME_RINVCMDID];
+                pdu2	= [SmppPdu OutgoingGenericNack: ESME_RINVCMDID];
                 [self sendPdu: pdu2 asResponseTo:pdu];
                 _endThisConnection = YES;
                 _endPermanently = YES;
                 break;
                 
             case SMPP_AUTH_WRONG_SOURCE:
-                pdu2	= [SmppPdu OutgoingGenericNack: UM_ESME_RINVBNDSTS];
+                pdu2	= [SmppPdu OutgoingGenericNack: ESME_RINVBNDSTS];
                 [self sendPdu: pdu2 asResponseTo:pdu];
                 _endThisConnection = YES;
                 _endPermanently = YES;
                 break;
                 
             case SMPP_AUTH_WRONG_STATE:
-                pdu2	= [SmppPdu OutgoingGenericNack: UM_ESME_RINVBNDSTS];
+                pdu2	= [SmppPdu OutgoingGenericNack: ESME_RINVBNDSTS];
                 [self sendPdu: pdu2 asResponseTo:pdu];
                 _endThisConnection = YES;
                 _endPermanently = YES;
                 break;
                 
             case SMPP_AUTH_OK:
-                switch( (int)pdu.type)
+                switch( (int)[pdu type])
             {
                 case SMPP_PDU_SUBMIT_SM:
                     time(&_lastSubmitSmReceived);
@@ -1218,18 +1272,19 @@ end:
     int udhLen;
     int dataLen;
     SmscConnectionTransaction *transaction;
+    NSString *username;
 //    int err;
 
-    UMMessage * msg = [_router createMessage];
+    id<SmscConnectionMessageProtocol> msg = [_router createMessage];
     @try
     {
-        msg.submissionMethod = UMDIRTY_STRING(@"smpp");
-        msg.submissionType   = UMDIRTY_STRING(@"submit");
-        msg.fromIp        = UMDIRTY_STRING([_uc connectedRemoteAddress]);
-        msg.user = _user;
-        
+        [msg setInboundMethod: @"smpp"];
+        [msg setInboundType:@"submit"];
+        [msg setInboundAddress: [_uc connectedRemoteAddress]];
+        msg.user = self.user;
+
         [pdu resetCursor];
-        
+
         /*serviceType = */
         [pdu grabStringWithEncoding:NSISOLatin1StringEncoding	maxLength:255];
         ton  = (UMTonType)[pdu grabInt8];
@@ -1238,62 +1293,62 @@ end:
         if(ton == UMTON_ALPHANUMERIC)
         {
             from = [[UMSigAddr alloc] initWithAlpha:addr];
-            from.npi = npi;
+            [from setNpi: npi];
         }
         else
         {
             from = [[UMSigAddr alloc] init];
-            from.ton = ton;
-            from.npi = npi;
-            from.addr = addr;
+            [from setTon: ton];
+            [from setNpi: npi];
+            [from setAddr: addr];
             if(![addr hasOnlyDecimalDigits])
             {
                 @throw([NSException exceptionWithName:@"ESME_RINVSRCADR"
                                                reason:NULL
                                              userInfo:@{
-                    @"sysmsg" : @"invalid_source_address (address does not only contain digits)",
-                    @"func": @(__func__),
-                    @"obj":self,
-                    @"code":@(UM_ESME_RINVSRCADR)
-                }
-                       ]);
-                
+                                                        @"sysmsg" : @"invalid_source_address (address does not only contain digits)",
+                                                        @"func": @(__func__),
+                                                        @"obj":self,
+                                                        @"code":@(ESME_RINVSRCADR)
+                                                        }
+                        ]);
+
             }
         }
-        msg.fromNumber = UMDIRTY_STRING([from asString:1]);
-        
+        msg.source = from;
+
         ton  = (UMTonType)[pdu grabInt8];
         npi  = (UMNpiType)[pdu grabInt8];
         addr = [pdu grabStringWithEncoding:NSISOLatin1StringEncoding	maxLength:31];
         if(ton == UMTON_ALPHANUMERIC)
         {
             to = [[UMSigAddr alloc] initWithAlpha:addr];
-            to.npi = npi;
+            [to setNpi: npi];
         }
         else
         {
             to = [[UMSigAddr alloc] init];
-            to.ton = ton;
-            to.npi = npi;
-            to.addr = addr;
+            [to setTon: ton];
+            [to setNpi: npi];
+            [to setAddr: addr];
             if(![addr hasOnlyDecimalDigits])
             {
                 @throw([NSException exceptionWithName:@"ESME_RINVDSTADR"
                                                reason:NULL
                                              userInfo:@{
-                    @"sysmsg" : @"invalid_destination_addres (address does not only contain digits)",
-                    @"func": @(__func__),
-                    @"obj":self,
-                    @"code":@(UM_ESME_RINVDSTADR)
-                }
-                       ]);
+                                                        @"sysmsg" : @"invalid_destination_addres (address does not only contain digits)",
+                                                        @"func": @(__func__),
+                                                        @"obj":self,
+                                                        @"code":@(ESME_RINVDSTADR)
+                                                        }
+                        ]);
             }
         }
-        msg.toNumber = UMDIRTY_STRING([to asString:1]);
+        msg.destination = to;
         
         NSInteger esmClass = [pdu grabInt8];
         /* TODO: do something with ESM class */
-        
+
         if((esmClass & 0x03) == 0)
         {
             esmClass |= SMPP_PDU_ESM_CLASS_SUBMIT_STORE_AND_FORWARD_MODE;
@@ -1303,39 +1358,32 @@ end:
             @throw([NSException exceptionWithName:@"ESME_RINVESMCLASS"
                                            reason:NULL
                                          userInfo:@{
-                @"sysmsg" : @"error_wrong_esm_clas should be 0x03 for store & forward",
-                @"func": @(__func__),
-                @"obj":self,
-                @"code":@(UM_ESME_RINVESMCLASS)
-            }
-                   ]);
+                                                    @"sysmsg" : @"error_wrong_esm_clas should be 0x03 for store & forward",
+                                                    @"func": @(__func__),
+                                                    @"obj":self,
+                                                    @"code":@(ESME_RINVESMCLASS)
+                                                    }
+                    ]);
         }
         if(esmClass & SMPP_PDU_ESM_CLASS_SUBMIT_UDH_INDICATOR)
         {
-            msg.pduUdhIndicator=UMDIRTY_INTEGER(1);
-        }
-        else
-        {
-            msg.pduUdhIndicator=UMDIRTY_INTEGER(0);
+            msg.udhIndicator=1;
         }
         if(esmClass & SMPP_PDU_ESM_CLASS_SUBMIT_RPI)
         {
-            msg.pduReplyPathIndicator = UMDIRTY_INTEGER(1);
+            msg.replyPath = 1;
         }
-        else
-        {
-            msg.pduReplyPathIndicator = UMDIRTY_INTEGER(0);
-        }
-        msg.pduPid =  UMDIRTY_INTEGER([pdu grabInt8]);
-        msg.messagePriority = UMDIRTY_INTEGER([pdu grabInt8]);
 
-        NSString *defferredDeliveryString   = [pdu grabStringWithEncoding:NSISOLatin1StringEncoding maxLength:255];
-        NSDate *defferredDelivery           = [SmppPdu smppTimestampFromString:defferredDeliveryString];
-        msg.deferred = UMDIRTY_DATE(defferredDelivery);
+        [msg setPduPid:  (int) [pdu grabInt8]];
+        [msg setMessagePriority: (int) [pdu grabInt8]];
 
-        NSString *validityPeriodString      = [pdu grabStringWithEncoding:NSISOLatin1StringEncoding maxLength:255];
-        NSDate *validityPeriod              = [SmppPdu smppTimestampFromString:validityPeriodString];
-        msg.validity = UMDIRTY_DATE(validityPeriod);
+        NSString *defferredDeliveryString = [pdu grabStringWithEncoding:NSISOLatin1StringEncoding maxLength:255];
+        NSDate *defferredDelivery = [SmppPdu smppTimestampFromString:defferredDeliveryString];
+        [msg setDeferred:defferredDelivery];
+
+        NSString *validityPeriodString   = [pdu grabStringWithEncoding:NSISOLatin1StringEncoding maxLength:255];
+        NSDate *validityPeriod = [SmppPdu smppTimestampFromString:validityPeriodString];
+        [msg setValidity:validityPeriod];
         UMRequestMaskValue dlrMask = (UMRequestMaskValue)[pdu grabInt8];
         UMReportMaskValue requestMask = 0;
         if(dlrMask & REQUEST_MASK_SUCCESS_OR_FAIL)
@@ -1350,64 +1398,9 @@ end:
         {
             requestMask |= (UMDLR_MASK_BUFFERED | UMDLR_MASK_SUBMIT);
         }
-        msg.deliveryReportMask      = [[UMDirtyInteger alloc]initWithInteger:requestMask];
-        msg.replaceIfPresentFlag    = [[UMDirtyInteger alloc]initWithInteger:([pdu grabInt8] ? 1 : 0)];
-        int dcs = (int)[pdu grabInt8];
-        switch(dcs)
-        {
-            case 0: /* default */
-            case 1: /* IA5 CCITT T.50 */
-                msg.pduCoding=[[UMDirtyString alloc]initWithString:@"gsm"];
-                break;
-            case 2: /* Octet unspecified (8-bit binary) */
-            case 4: /* Octet unspecified (8-bit binary) */
-                msg.pduCoding=UMDIRTY_STRING(@"binary");
-                break;
-            case 3: /* Latin 1 ISO-8859-1 */
-                msg.pduCoding=UMDIRTY_STRING(@"latin-1");
-                break;
-            case 5: /* JIS (X 0208-1990) */
-                msg.pduCoding=UMDIRTY_STRING(@"jis");
-                break;
-            case 6: /* Cyrillic (ISO-8859-5) */
-                msg.pduCoding=UMDIRTY_STRING(@"cyrillic");
-                break;
-            case 7: /* Latin/Hebrew (ISO-8859-8)  */
-                msg.pduCoding=UMDIRTY_STRING(@"latin-8");
-                break;
-            case 8: /* UCS2 */
-                msg.pduCoding=UMDIRTY_STRING(@"ucs2");
-                break;
-            case 9: /* UCS2 */
-                msg.pduCoding=UMDIRTY_STRING(@"ucs2");
-                break;
-            case 0x0A: /* Music Codes */
-                msg.pduCoding=UMDIRTY_STRING(@"music");
-                break;
-            case 0x0D:
-                msg.pduCoding = UMDIRTY_STRING(@"extended-kanji");
-                break;
-            case 0x0E:
-                msg.pduCoding = UMDIRTY_STRING(@"ks-c-5601");
-                break;
-            default:
-            {
-                int upperFlags = dcs & 0xF0;
-                if((upperFlags == 0xC0)  || (upperFlags == 0xD0))
-                {
-                    msg.pduCoding = UMDIRTY_STRING(@"gsm-mwi");
-                }
-                else if(upperFlags == 0xF0)
-                {
-                    msg.pduCoding = UMDIRTY_STRING(@"gsm-message-class-control");
-                }
-                else
-                {
-                    msg.pduCoding = UMDIRTY_STRING(@"reserved");
-                }
-            }
-        }
-        msg.pduDcs= UMDIRTY_INTEGER(dcs);
+        [msg setDeliveryReportMask:requestMask];
+        [msg setReplaceIfPresentFlag: ([pdu grabInt8] ? YES : NO)];
+        [msg setPduDcs: [pdu grabInt8]];
         
     //	int i;
         
@@ -1415,7 +1408,7 @@ end:
     //	[msg setDefaultMessageId: i];
         int length = (int)[pdu grabInt8];
             
-        if(msg.pduUdhIndicator.integerValue==YES)
+        if(msg.udhIndicator)
         {
             if(length< 1)
             {
@@ -1425,7 +1418,7 @@ end:
                                                         @"sysmsg" : @"invalid length",
                                                         @"func": @(__func__),
                                                         @"obj":self,
-                                                        @"code":@(UM_ESME_RINVPARLEN)
+                                                        @"code":@(ESME_RINVPARLEN)
                                                         }
                         ]);
 
@@ -1441,47 +1434,49 @@ end:
                                                         @"sysmsg" : @"invalid length",
                                                         @"func": @(__func__),
                                                         @"obj":self,
-                                                        @"code":@(UM_ESME_RINVPARLEN)
+                                                        @"code":@(ESME_RINVPARLEN)
                                                         }
                         ]);
             }
-            pdu.cursor = pdu.cursor - 1;
-            udh = [[NSData alloc] initWithBytes: &((unsigned char *)[pdu.payload bytes])[pdu.cursor] length:udhLen+1];
-            [pdu setCursor: pdu.cursor + udhLen + 1];
+            [pdu setCursor: [pdu cursor] -1];
+            udh = [[NSData alloc] initWithBytes: &((unsigned char *)[[pdu payload] bytes])[[pdu cursor]] length:udhLen+1];
+            [pdu setCursor: [pdu cursor] + udhLen + 1];
 
-            data = [[NSData alloc] initWithBytes: &((unsigned char *)[pdu.payload bytes])[pdu.cursor] length:dataLen];
-            [pdu setCursor: pdu.cursor + dataLen + 1];
+            data = [[NSData alloc] initWithBytes: &((unsigned char *)[[pdu payload] bytes])[[pdu cursor]] length:dataLen];
+            [pdu setCursor: [pdu cursor] + dataLen + 1];
         }
         else
         {
     //		udhLen = 0;
             dataLen = length;
             udh = nil;
-            data = [[NSData alloc] initWithBytes: &((unsigned char *)[pdu.payload bytes])[pdu.cursor] length:dataLen];
-            [pdu setCursor: pdu.cursor + dataLen + 1];
+            data = [[NSData alloc] initWithBytes: &((unsigned char *)[[pdu payload] bytes])[[pdu cursor]] length:dataLen];
+            [pdu setCursor: [pdu cursor] + dataLen + 1];
         }
-        msg.pduUdh = UMDIRTY_DATA(udh);
-        msg.pduContent = UMDIRTY_DATA(data);
-        msg.plaintextContent = UMDIRTY_STRING([SmscConnectionSMPP stringFromGsm8:data]);
+        [msg setPduUdh: udh];
+        [msg setPduContent: data];
         
         [pdu grabTlvsWithDefinitions:_tlvDefs];
-        msg.tlvsText = UMDIRTY_STRING([pdu.tlvs jsonString]);
+        if([msg respondsToSelector:@selector(setTlvs:)])
+        {
+            [msg setTlvs:[pdu tlv]];
+        }
 		
         switch(pdu.dest_addr_subunit)
         {
             case 0x00: /* Unknown (default) */
                 break;
             case 0x01: /* MS Display */
-                msg.messageClass= UMDIRTY_INTEGER(MC_CLASS0); /* 3GPP TS 23.038 Class 0 = flash SMS */
+                msg.messageClass= MC_CLASS0; /* 3GPP TS 23.038 Class 0 = flash SMS */
                 break;
             case 0x02: /* Mobile Equipment */
-                msg.messageClass=UMDIRTY_INTEGER(MC_CLASS1); /* 3GPP TS 23.038 Default meaning: ME-specific. */
+                msg.messageClass=MC_CLASS1; /* 3GPP TS 23.038 Default meaning: ME-specific. */
                 break;
             case 0x03: /* Smart Card 1 (expected to be SIM if a SIM exists in the MS) */
-                msg.messageClass= UMDIRTY_INTEGER(MC_CLASS2); /* 3GPP TS 23.038 (U)SIM specific message */
+                msg.messageClass= MC_CLASS2; /* 3GPP TS 23.038 (U)SIM specific message */
                 break;
             case 0x04: /* External Unit 1 */
-                msg.messageClass= UMDIRTY_INTEGER(MC_CLASS3); /* default meaning: TE specific (see 3GPP TS 27.005 [8]) */
+                msg.messageClass= MC_CLASS3; /* default meaning: TE specific (see 3GPP TS 27.005 [8]) */
                 break;
             default: /*  5 to 255 = reserved */
                 @throw([NSException exceptionWithName:@"ESME_ROPTPARNOTALLWD"
@@ -1489,7 +1484,7 @@ end:
                                              userInfo:@{
                                                         @"sysmsg" : @"ESME_ROPTPARNOTALLWD",
                                                         @"func": @(__func__),
-                                                        @"err": @(UM_ESME_ROPTPARNOTALLWD)
+                                                        @"err": @(ESME_ROPTPARNOTALLWD)
                                                         }]);
 
                 break;
@@ -1504,7 +1499,7 @@ end:
                                                     @"sysmsg" : @"ESME_RMSGQFUL(out of credit)",
                                                     @"func": @(__func__),
                                                     @"obj":self,
-                                                    @"code":@(UM_ESME_RMSGQFUL)
+                                                    @"code":@(ESME_RMSGQFUL)
                                                     }
                     ]);
         }
@@ -1516,20 +1511,21 @@ end:
                                                     @"sysmsg" : @"ESME_RTHROTTLED(throttling because of speed limit reached)",
                                                     @"func": @(__func__),
                                                     @"obj":self,
-                                                    @"code":@(UM_ESME_RTHROTTLED)
+                                                    @"code":@(ESME_RTHROTTLED)
                                                     }
                     ]);
         }
         [_user increase];
         [self.inboundMessagesThroughput increase];
 
-        msg.user = _user;
-        msg.userReference = UMDIRTY_STRING([pdu sequenceString]);
+        username = [_user username];
+        [msg.dbUser setString:username];
+        [msg setUserReference:[pdu sequenceString]];
         
         transaction = [[SmscConnectionTransaction alloc] init];
         [transaction setLowerObject:self];
         transaction.sequenceNumber = [pdu sequenceString];
-        transaction.message= msg;
+        transaction._message= msg;
         [transaction setType: TT_SUBMIT_MESSAGE];
         [transaction setIncoming:YES];
         [self addIncomingTransaction:transaction];
@@ -1552,7 +1548,7 @@ end:
                                                     @"sysmsg" : @"ESME_RTHROTTLED(throttling because of speed limit reached)",
                                                     @"func": @(__func__),
                                                     @"obj":self,
-                                                    @"code":@(UM_ESME_RTHROTTLED)
+                                                    @"code":@(ESME_RTHROTTLED)
                                                     }
                     ]);
         }
@@ -1561,14 +1557,14 @@ end:
     {
         _lastStatus =  err.userInfo[@"sysmsg"];
         int errorCode = [err.userInfo[@"code"] intValue];
-        SmppPdu *pdu2	= [SmppPdu OutgoingSubmitSmRespErr:(UMSmppError)errorCode];
+        SmppPdu *pdu2	= [SmppPdu OutgoingSubmitSmRespErr:(SmppErrorCode)errorCode];
         [self sendPdu: pdu2 asResponseTo:pdu];
     }
 }
 
 - (void) handleIncomingSubmitSmResp: (SmppPdu *)pdu
 {
-    UMSmppError stCode = pdu.err;
+    SmppErrorCode stCode = [pdu err];
     NSString *remoteMessageId = [pdu grabStringWithEncoding:NSASCIIStringEncoding maxLength:65];
   
     if(_usesHexMessageIdInSubmitSmResp)
@@ -1579,13 +1575,13 @@ end:
     }
     
     SmscConnectionTransaction *transaction = [self findOutgoingTransaction:[pdu sequenceString]];
-    UMMessage *msg = transaction.message;
+    id<SmscConnectionMessageProtocol>msg = transaction._message;
     if(msg)
     {
-        msg.networkErrorCode = UMDIRTY_INTEGER(stCode);
-        msg.providerReference = UMDIRTY_STRING(remoteMessageId);
+        [msg setNetworkErrorCode:stCode];
+        msg.providerReference = remoteMessageId;
 
-        if (stCode == UM_NO_ERROR)
+        if (stCode == ESME_ROK)
         {
             [_router submitMessageSent:msg
                             forObject:self
@@ -1594,11 +1590,14 @@ end:
         }
         else
         {
+            SmscRouterError *err = [_router createError];
+            [err setSmppErrorCode:stCode];
+
             [_router submitMessageFailed:msg
-                                   error:@(stCode)
-                               forObject:self
-                             synchronous:NO];
-            _lastStatus = [NSString stringWithFormat:@"%@ (0x%08lx)",UMSmppErrorAsString(stCode), (unsigned long )stCode ];
+                              withError: [[SmscRouterError alloc]initWithSmppErrorCode:stCode]
+                              forObject:self
+                            synchronous:NO];
+            _lastStatus = [NSString stringWithFormat:@"%@ (0x%08lx)",[SmscConnectionSMPP smppErrorToString:stCode], (unsigned long )stCode ];
 
         }
     }
@@ -1624,17 +1623,14 @@ end:
     BOOL deliveryReport = NO;
     SmscConnectionTransaction *transaction = NULL;
     int esmClass;
-    UMMessageReport * report=NULL;
-    UMMessage * msg=NULL;
+    id<SmscConnectionReportProtocol> report=NULL;
+    id<SmscConnectionMessageProtocol> msg=NULL;
     
     [pdu unpackDeliverSmUsingTlvDefinition:_tlvDefs];
     
-    esmClass = (int)pdu.esm_class;
-    msg.esmClass = UMDIRTY_INTEGER(esmClass);
-    deliveryReport = esmClass == SMPP_PDU_ESM_CLASS_DELIVER_SMSC_DELIVER_ACK ||
-                     esmClass == SMPP_PDU_ESM_CLASS_DELIVER_SME_DELIVER_ACK ||
-                     esmClass == SMPP_PDU_ESM_CLASS_DELIVER_SME_MANULAL_ACK ||
-                     esmClass == SMPP_PDU_ESM_CLASS_DELIVER_INTERM_DEL_NOTIFICATION;
+    esmClass = (int)[pdu esm_class];
+    
+    deliveryReport = esmClass == SMPP_PDU_ESM_CLASS_DELIVER_SMSC_DELIVER_ACK || esmClass == SMPP_PDU_ESM_CLASS_DELIVER_SME_DELIVER_ACK ||        	esmClass == SMPP_PDU_ESM_CLASS_DELIVER_SME_MANULAL_ACK || esmClass == SMPP_PDU_ESM_CLASS_DELIVER_INTERM_DEL_NOTIFICATION;
     
     transaction = [[SmscConnectionTransaction alloc] init];
     transaction.sequenceNumber =[pdu sequenceString];
@@ -1647,7 +1643,7 @@ end:
     else
     {
         msg = [self deliverPduToMsg:pdu];
-        transaction.message = msg;
+        transaction._message = msg;
         [transaction setType: TT_DELIVER_MESSAGE];
     }
     [transaction setIncoming:YES];
@@ -1665,7 +1661,7 @@ end:
         }
         else
         {
-            SmppPdu *pdu2	= [SmppPdu OutgoingDeliverSmRespErr: UM_ESME_RSYSERR];
+            SmppPdu *pdu2	= [SmppPdu OutgoingDeliverSmRespErr: ESME_RSYSERR];
             [self sendPdu: pdu2 asResponseTo:pdu];
         }
     }
@@ -1679,7 +1675,7 @@ end:
         }
         else
         {
-            SmppPdu *pdu2	= [SmppPdu OutgoingDeliverSmRespErr: UM_ESME_RSYSERR];
+            SmppPdu *pdu2	= [SmppPdu OutgoingDeliverSmRespErr: ESME_RSYSERR];
             [self sendPdu: pdu2 asResponseTo:pdu];
         }
     }
@@ -1687,22 +1683,22 @@ end:
 
 - (void) handleIncomingDeliverSmResp: (SmppPdu *)pdu
 {
-    UMMessageReport *report;
-    UMMessage       *message;
+    id<SmscConnectionReportProtocol>report;
+    id<SmscConnectionMessageProtocol>message;
     
-    UMSmppError stCode = pdu.err;
+    SmppErrorCode stCode = [pdu err];
 //    NSString *remoteMessageId = [pdu grabStringWithEncoding:NSASCIIStringEncoding maxLength:65];
     SmscConnectionTransaction *transaction = [self findOutgoingTransaction:[pdu sequenceString]];
 
-//    NSString *sentMessageId = transaction.message.routerReference;
-    message = transaction.message;
+//    NSString *sentMessageId = transaction._message.routerReference;
+    message = transaction._message;
     report = [transaction report];
     if(report)
     {
         /* this is an ack to a delivery report we sent upstream */
         //[report setNetworkErrorCode:stCode];
         //[report setRemoteMessageId:remoteMessageId];
-        if (stCode == UM_NO_ERROR)
+        if (stCode == ESME_ROK)
         {
             [_router deliverReportSent:report
                             forObject:self
@@ -1710,21 +1706,22 @@ end:
         }
         else
         {
+            SmscRouterError *err = [_router createError];
+            [err setSmppErrorCode:stCode];
             [_router deliverReportFailed:report
-                                   error:@(UM_ESME_RDELIVERYFAILURE)
+                              withError:err
                               forObject:self
                             synchronous:NO];
-
         }
     }
     else if(message)
     {
         /* this is an ack on a sms-mo we sent upstream */
-        message.networkErrorCode=UMDIRTY_INTEGER(stCode);
+        [message setNetworkErrorCode:stCode];
         // As we sent a deliver sm upstream, remoteMessageId should be our own router id we send before
         // so definitively not the same as the provider's message ID we used before.
         //message.connectionReference = remoteMessageId;/* FIXME setRemoteMessageId should be what? */
-        if (stCode == UM_NO_ERROR)
+        if (stCode == ESME_ROK)
         {
             [_router deliverMessageSent:message
                              forObject:self
@@ -1732,8 +1729,10 @@ end:
         }
         else
         {
+            SmscRouterError *err = [_router createError];
+            [err setSmppErrorCode:stCode];
             [_router deliverMessageFailed:message
-                                    error:@(UM_ESME_RDELIVERYFAILURE)
+                               withError:err
                                forObject:self
                              synchronous:NO];
         }
@@ -1783,7 +1782,7 @@ end:
 	if([_router userExists:usr]==NO)
 	{
         _lastStatus = [NSString stringWithFormat:@"User '%@' does not exist",usr];
-        pdu2	= [SmppPdu OutgoingBindRespError: UM_ESME_RINVSYSID rx:rx tx:tx status:@"User does not exist"];
+        pdu2	= [SmppPdu OutgoingBindRespError: ESME_RINVSYSID rx:rx tx:tx status:@"User does not exist"];
 		[self sendPdu: pdu2 asResponseTo:pdu];
         _endThisConnection = YES;
         _endPermanently = YES;
@@ -1794,14 +1793,13 @@ end:
         if(!_user)
         {
             _lastStatus = [NSString stringWithFormat:@"User '%@' has wrong password",usr];
-            pdu2	= [SmppPdu OutgoingBindRespError: UM_ESME_RINVPASWD rx:rx tx:tx status:@"Password mismatch"];
+            pdu2	= [SmppPdu OutgoingBindRespError: ESME_RINVPASWD rx:rx tx:tx status:@"Password mismatch"];
             [self sendPdu: pdu2 asResponseTo:pdu];
             _endThisConnection = YES;
             _endPermanently = YES;
         }
         else
         {
-            _logFeed.name = [NSString stringWithFormat:@"smpp:%@",_user.username];
             /* switching logging to tracefile */
 
             if([_user respondsToSelector:@selector(tracing)] && [_user respondsToSelector:@selector(tracePath)])
@@ -1871,7 +1869,7 @@ end:
                 else
                 {
                     _lastStatus = [NSString stringWithFormat:@"User '%@' is not in whitelis for '%@'",usr,_uc.connectedRemoteAddress];
-                    pdu2	= [SmppPdu OutgoingBindRespError:UM_ESME_RBINDFAIL rx:rx tx:tx status:@"IP not in whitelist"];
+                    pdu2	= [SmppPdu OutgoingBindRespError:ESME_RBINDFAIL rx:rx tx:tx status:@"IP not in whitelist"];
                     [self sendPdu: pdu2 asResponseTo:pdu];
                     _endThisConnection = YES;
                     _endPermanently = YES;
@@ -1880,7 +1878,7 @@ end:
             else
             {
                 _lastStatus = [NSString stringWithFormat:@"User '%@' is out of credit (bind failed)",usr];
-                pdu2	= [SmppPdu OutgoingBindRespError:UM_ESME_RBINDFAIL rx:rx tx:tx status:@"out of credit"];
+                pdu2	= [SmppPdu OutgoingBindRespError:ESME_RBINDFAIL rx:rx tx:tx status:@"out of credit"];
                 [self sendPdu: pdu2 asResponseTo:pdu];
                 _endThisConnection = YES;
                 _endPermanently = YES;
@@ -1899,24 +1897,24 @@ end:
 - (void) handleIncomingBindReceiverResp: (SmppPdu *)pdu
 {
     NSString *systemId;
-    UMSmppError err;
+    SmppErrorCode err;
     
     [pdu resetCursor];
     _bindExpires = NULL;
 
     systemId = [pdu grabStringWithEncoding:NSISOLatin1StringEncoding	maxLength:16];
     
-    err = pdu.err;
-    if ((err != UM_NO_ERROR) && (err != UM_ESME_RALYBND))
+    err = [pdu err];
+    if ((err != ESME_ROK) && (err != ESME_RALYBND))
     {
-        NSString *msg = [NSString stringWithFormat:@"SmscConnectionSMPP:handleIncomingBindReceiverResp: [%@]: SMSC rejected login to transmit, code 0x%08lx (%@) with <%@>.\r\n", _name, (unsigned long )err, UMSmppErrorAsString(err), systemId];
+        NSString *msg = [NSString stringWithFormat:@"SmscConnectionSMPP:handleIncomingBindReceiverResp: [%@]: SMSC rejected login to transmit, code 0x%08lx (%@) with <%@>.\r\n", _name, (unsigned long )err, [SmscConnectionSMPP smppErrorToString:err], systemId];
         [self.logFeed majorError:0 withText:msg];
         if(_outgoingStatus != SMPP_STATUS_OUTGOING_MAJOR_FAILURE_RETRY_TIMER)
         {
             _outgoingStatus =  SMPP_STATUS_OUTGOING_MAJOR_FAILURE;
         }
 
-        _lastStatus = [NSString stringWithFormat:@"%@ (0x%08lx) for user <%@>",UMSmppErrorAsString(err), (unsigned long )err, _name ];
+        _lastStatus = [NSString stringWithFormat:@"%@ (0x%08lx) for user <%@>",[SmscConnectionSMPP smppErrorToString:err], (unsigned long )err, _name ];
     }
     else
     {
@@ -1935,23 +1933,23 @@ end:
 - (void) handleIncomingBindTransmitterResp: (SmppPdu *)pdu
 {
     NSString *systemId;
-    UMSmppError err;
+    SmppErrorCode err;
     
     [pdu resetCursor];
     
     _bindExpires = NULL;
     systemId = [pdu grabStringWithEncoding:NSUTF8StringEncoding maxLength:16];
     
-    err = pdu.err;
-    if ((err != UM_NO_ERROR) && (err != UM_ESME_RALYBND))
+    err = [pdu err];
+    if ((err != ESME_ROK) && (err != ESME_RALYBND))
     {
-        NSString *msg = [NSString stringWithFormat:@"SmscConnectionSMPP:handleIncomingBindTransmitterResp: [%@]: SMSC rejected login to transmit, code 0x%08lx (%@) with <%@>.\r\n", _name, (unsigned long )err, UMSmppErrorAsString(err), systemId];
+        NSString *msg = [NSString stringWithFormat:@"SmscConnectionSMPP:handleIncomingBindTransmitterResp: [%@]: SMSC rejected login to transmit, code 0x%08lx (%@) with <%@>.\r\n", _name, (unsigned long )err, [SmscConnectionSMPP smppErrorToString:err], systemId];
         [self.logFeed majorError:0 withText:msg];
         if(_outgoingStatus != SMPP_STATUS_OUTGOING_MAJOR_FAILURE_RETRY_TIMER)
         {
             _outgoingStatus =  SMPP_STATUS_OUTGOING_MAJOR_FAILURE;
         }
-        _lastStatus = [NSString stringWithFormat:@"%@ (0x%08lx) for user <%@>",UMSmppErrorAsString(err), (unsigned long )err, _name ];
+        _lastStatus = [NSString stringWithFormat:@"%@ (0x%08lx) for user <%@>",[SmscConnectionSMPP smppErrorToString:err], (unsigned long )err, _name ];
 
     }
     else
@@ -1969,27 +1967,18 @@ end:
     
     NSString *messageId = [pdu grabStringWithEncoding:NSUTF8StringEncoding maxLength:65];
     [pdu grabStringWithEncoding:NSISOLatin1StringEncoding    maxLength:255];
-    UMSigAddr *to = [[UMSigAddr alloc] init];
-    to.ton       = (UMTonType)[pdu grabInt8];
-    to.npi       = (UMNpiType)[pdu grabInt8];
-    to.addr      = [pdu grabStringWithEncoding:NSISOLatin1StringEncoding maxLength:21];
-    NSString *toNumber = [to stringValue];
-
+    UMTonType ton       = (UMTonType)[pdu grabInt8];
+    UMNpiType npi       = (UMNpiType)[pdu grabInt8];
+    NSString *addr      = [pdu grabStringWithEncoding:NSISOLatin1StringEncoding maxLength:21];
     
-    if([_router respondsToSelector:@selector(queryMessage:withNumber:)])
-    {
-        UMMessage *msg = [_router queryMessage:messageId withNumber:toNumber];
-        pdu2 = [SmppPdu OutgoingQueryRespOK:msg withId:messageId];
-    }
-
     if([_router respondsToSelector:@selector(queryMessage:)])
     {
-        UMMessage * msg = [_router queryMessage:messageId];
+        id<SmscConnectionMessageProtocol> msg = [_router queryMessage:messageId];
         pdu2 = [SmppPdu OutgoingQueryRespOK:msg withId:messageId];
     }
     else
     {
-        pdu2 = [SmppPdu OutgoingGenericNack:UM_ESME_RQUERYFAIL];
+        pdu2 = [SmppPdu OutgoingGenericNack:ESME_RQUERYFAIL];
     }
     [self sendPdu: pdu2 asResponseTo:pdu];
 }
@@ -2073,23 +2062,23 @@ end:
 - (void) handleIncomingBindTransceiverResp: (SmppPdu *)pdu
 {
     NSString *systemId;
-    UMSmppError err;
+    SmppErrorCode err;
     
     [pdu resetCursor];
     _bindExpires = NULL;
 
     systemId = [pdu grabStringWithEncoding:NSUTF8StringEncoding maxLength:16];
     
-    err = pdu.err;
-    if ((err != UM_NO_ERROR) && (err != UM_ESME_RALYBND))
+    err = [pdu err];
+    if ((err != ESME_ROK) && (err != ESME_RALYBND))
     {
-        NSString *msg = [NSString stringWithFormat:@"SmscConnectionSMPP:handleIncomingBindTransceiverResp: [%@]: SMSC rejected login (systemId: <%@>) to transmit, code 0x%08lx (%@).\r\n", _name, systemId,(unsigned long )err, UMSmppErrorAsString(err)];
+        NSString *msg = [NSString stringWithFormat:@"SmscConnectionSMPP:handleIncomingBindTransceiverResp: [%@]: SMSC rejected login (systemId: <%@>) to transmit, code 0x%08lx (%@).\r\n", _name, systemId,(unsigned long )err, [SmscConnectionSMPP smppErrorToString:err]];
         [self.logFeed majorError:0 withText:msg];
         if(_outgoingStatus != SMPP_STATUS_OUTGOING_MAJOR_FAILURE_RETRY_TIMER)
         {
             _outgoingStatus =  SMPP_STATUS_OUTGOING_MAJOR_FAILURE;
         }
-        _lastStatus = [NSString stringWithFormat:@"%@ (0x%08lx) for user <%@>",UMSmppErrorAsString(err), (unsigned long )err, _name ];
+        _lastStatus = [NSString stringWithFormat:@"%@ (0x%08lx) for user <%@>",[SmscConnectionSMPP smppErrorToString:err], (unsigned long )err, _name ];
 
     }
     else
@@ -2117,15 +2106,15 @@ end:
 }
 
 
-- (UMMessageReport *)deliverPduToReport:(SmppPdu *)pdu
+- (id<SmscConnectionReportProtocol>)deliverPduToReport:(SmppPdu *)pdu
 {
-    UMMessageReport * report=NULL;
+    id<SmscConnectionReportProtocol> report=NULL;
     NSString *receiptedId =NULL;
     //NSString *submitDateString =NULL;
     //NSString *doneDateString =NULL;
     NSData *messagePayload;
     NSData *shortMessage;
-    UMMessageStatusCode messageState = UMMESSAGE_STATUS_UNDEFINED;
+    DeliveryReportType messageState = SMS_REPORT_UNSET;
     NSData *networkErrorCode;
     int errInt;
     NSString *tmp;
@@ -2133,12 +2122,12 @@ end:
     
     /* case we are the terminal recipient of delivery report we not need the router */
     report = [_router createReport];
-    errInt = UM_ESME_RUNKNOWNERR;
+    errInt = ESME_RUNKNOWNERR;
 
-    NSDictionary *tlvs = pdu.tlvs;
+    NSDictionary *tlvs = [pdu tlv];
     /* check for SMPP v.3.4. and message_payload */
     messagePayload = tlvs[@"message payload"];
-    shortMessage = pdu.short_message;
+    shortMessage = [pdu short_message];
     if ([[self version] integerValue] > 0x33 && !shortMessage)
     {
         r = [[NSString alloc] initWithData:messagePayload encoding:NSASCIIStringEncoding];
@@ -2208,37 +2197,37 @@ end:
         {
             if ([value isEqualToString:@"ENROUTE"])
             {
-                messageState = UMMESSAGE_STATUS_ENROUTE;
+                messageState = SMS_REPORT_ENROUTE;
             }
             else if (([value isEqualToString:@"DELIVRD"]) || ([value isEqualToString:@"DELIVERED"]))
             {
-                messageState = UMMESSAGE_STATUS_DELIVERED;
+                messageState = SMS_REPORT_DELIVERED;
             }
             else if ([value isEqualToString:@"EXPIRED"])
             {
-                messageState = UMMESSAGE_STATUS_EXPIRED;
+                messageState = SMS_REPORT_EXPIRED;
             }
             else if ([value isEqualToString:@"DELETED"])
             {
-                messageState = UMMESSAGE_STATUS_DELETED;
+                messageState = SMS_REPORT_DELETED;
             }
             else if (([value isEqualToString:@"UNDELIV"]) || ([value isEqualToString:@"UNDELIVERABLE"]))
             {
-                messageState = UMMESSAGE_STATUS_UNDELIVERABLE;
+                messageState = SMS_REPORT_UNDELIVERABLE;
             }
             else if (([value isEqualToString:@"ACCEPTD"]) || ([value isEqualToString:@"ACCEPTED"]))
             {
-                messageState = UMMESSAGE_STATUS_ACCEPTED;
+                messageState = SMS_REPORT_ACCEPTED;
             }
             else if ( ([value isEqualToString:@"REJECTD"])
                         || ([value isEqualToString:@"REJECTED"])
                         || ([value isEqualToString:@"REJECT"]))
             {
-                messageState = UMMESSAGE_STATUS_REJECTED;
+                messageState = SMS_REPORT_REJECTED;
             }
             else
             {
-                messageState = UMMESSAGE_STATUS_UNDEFINED;
+                messageState = SMS_REPORT_UNKNOWN;
                 [self.logFeed minorError:0 withText:[NSString stringWithFormat:@"Unknown message state %@",value]];
             }
         }
@@ -2258,35 +2247,35 @@ end:
     {
         if (([s isEqualToString:@"1"]) || ([s isEqualToString:@"1"]))
         {
-            messageState = UMMESSAGE_STATUS_ENROUTE;
+            messageState = SMS_REPORT_ENROUTE;
         }
         else if (([s isEqualToString:@"DELIVRD"]) || ([s isEqualToString:@"DELIVERED"]) || ([s isEqualToString:@"2"]))
         {
-            messageState = UMMESSAGE_STATUS_DELIVERED;
+            messageState = SMS_REPORT_DELIVERED;
         }
         else if ([s isEqualToString:@"EXPIRED"] || ([s isEqualToString:@"3"]))
         {
-            messageState = UMMESSAGE_STATUS_EXPIRED;
+            messageState = SMS_REPORT_EXPIRED;
         }
         else if ([s isEqualToString:@"DELETED"]|| ([s isEqualToString:@"4"]))
         {
-            messageState = UMMESSAGE_STATUS_DELETED;
+            messageState = SMS_REPORT_DELETED;
         }
         else if (([s isEqualToString:@"UNDELIV"]) || ([s isEqualToString:@"UNDELIVERABLE"]) || ([s isEqualToString:@"5"]))
         {
-            messageState = UMMESSAGE_STATUS_UNDELIVERABLE;
+            messageState = SMS_REPORT_UNDELIVERABLE;
         }
         else if (([s isEqualToString:@"ACCEPTD"]) || ([s isEqualToString:@"ACCEPTED"])|| ([s isEqualToString:@"6"]))
         {
-            messageState = UMMESSAGE_STATUS_ACCEPTED;
+            messageState = SMS_REPORT_ACCEPTED;
         }
         else if (([s isEqualToString:@"REJECTD"]) || ([s isEqualToString:@"REJECTED"])|| ([s isEqualToString:@"8"]))
         {
-            messageState = UMMESSAGE_STATUS_REJECTED;
+            messageState = SMS_REPORT_REJECTED;
         }
         else
         {
-            messageState = UMMESSAGE_STATUS_UNDEFINED;
+            messageState = SMS_REPORT_UNKNOWN;
         }
     }
 
@@ -2344,14 +2333,17 @@ end:
     [report setReportText:r];
     [report setReportType:messageState];
 
-    if((errInt==0) && (messageState != UMMESSAGE_STATUS_DELIVERED))
+    SmscRouterError *err = [_router createError];
+
+    if((errInt==0) && (messageState != SMS_REPORT_DELIVERED))
     {
-        report.error = @(UM_ESME_VENDOR_SPECIFIC_NO_ERROR_CODE_PROVIDED);
+        [err setDeliveryReportErrorCode:DLR_ERROR_NO_ERROR_CODE_PROVIDED];
     }
     else
     {
-        report.error = @(errInt);
+        [err setDeliveryReportErrorCode:errInt];
     }
+    report.error =  err;
 
     UMSigAddr *from;
     if([pdu source_addr_ton] == UMTON_ALPHANUMERIC)
@@ -2366,7 +2358,7 @@ end:
 		[from setNpi:(UMNpiType)[pdu source_addr_npi]];
 		[from setAddr:[pdu source_addr]];
 	}
-    report.fromNumber = from.stringValue;
+    [report setSource:from];
     
     UMSigAddr *to;
     if([pdu dest_addr_ton] == UMTON_ALPHANUMERIC)
@@ -2381,14 +2373,17 @@ end:
 		[to setNpi:(UMNpiType)[pdu dest_addr_npi]];
 		[to setAddr:[pdu destination_addr]];
 	}
-    report.toNumber = to.stringValue;
-    report.tlvsText = [tlvs jsonString];
+    [report setDestination:to];
+    if([report respondsToSelector:@selector(setTlvs:)])
+    {
+        [report setTlvs:tlvs];
+    }
     return report;
 }
 
-- (UMMessage *)deliverPduToMsg:(SmppPdu *)pdu
+- (id<SmscConnectionMessageProtocol>)deliverPduToMsg:(SmppPdu *)pdu
 {
-    UMMessage * msg;
+    id<SmscConnectionMessageProtocol> msg;
     UMSigAddr *from, *to;
     NSString *addr;
     int ton, npi;
@@ -2399,9 +2394,9 @@ end:
     SmppPdu *pdu2;
     
     msg = [_router createMessage];
-    msg.submissionMethod   = UMDIRTY_STRING(@"smpp");
-    msg.submissionType     = UMDIRTY_STRING(@"deliver");
-	msg.fromIp          = UMDIRTY_STRING([_uc connectedRemoteAddress]);
+	[msg setInboundMethod: @"smpp"];
+	[msg setInboundType:@"deliver"];
+	[msg setInboundAddress: [_uc connectedRemoteAddress]];
     
 	ton  = (int)[pdu source_addr_ton];
 	npi  = (int)[pdu source_addr_npi];
@@ -2418,7 +2413,7 @@ end:
 		[from setNpi: npi];
 		[from setAddr: addr];
 	}
-    msg.fromNumber = UMDIRTY_STRING(from.stringValue);
+    msg.source = from;
     
 	ton  = (int)[pdu dest_addr_ton];
 	npi  = (int)[pdu dest_addr_npi];
@@ -2435,26 +2430,26 @@ end:
 		[to setNpi: npi];
 		[to setAddr: addr];
 	}
-    msg.toNumber = UMDIRTY_STRING(to.stringValue);
-
+    msg.destination = to;
+    
     int esmClass = (int)[pdu esm_class];
     if(esmClass & SMPP_PDU_ESM_CLASS_DELIVER_UDH_INDICATOR)
     {
-        msg.pduUdhIndicator = UMDIRTY_INTEGER(1);
+        msg.udhIndicator = 1;
     }
     if(esmClass & SMPP_PDU_ESM_CLASS_DELIVER_RPI)
     {
-        msg.pduReplyPathIndicator = UMDIRTY_INTEGER(1);
+        msg.replyPath = 1;
     }
-    msg.pduPid = UMDIRTY_INTEGER(pdu.protocol_id);
-	msg.messagePriority = UMDIRTY_INTEGER(pdu.priority_flag);
+    [msg setPduPid:   [pdu protocol_id]];
+	[msg setMessagePriority: (int)[pdu priority_flag]];
     
-    msg.replaceIfPresentFlag = UMDIRTY_INTEGER(pdu.replace_if_present_flag ? 1 : 0);
-    msg.pduDcs = UMDIRTY_INTEGER(pdu.data_coding);
+    [msg setReplaceIfPresentFlag: ([pdu replace_if_present_flag] ? YES : NO)];
+	[msg setPduDcs: [pdu data_coding]];
     
     int length = (int)[pdu sm_length];
     NSData *sm = [pdu short_message];
-    if(msg.pduUdhIndicator.integerValue)
+    if(msg.udhIndicator)
 	{
 		if(length< 1)
 			goto length_error;
@@ -2472,19 +2467,19 @@ end:
 	}
 	else
 	{
-        // udhLen = 0;
+        //		udhLen = 0;
 		dataLen = length;
 		udh = nil;
 		data = [NSData dataWithData:sm];
-		[pdu setCursor: pdu.cursor + dataLen + 1];
+		[pdu setCursor: [pdu cursor] + dataLen + 1];
 	}
     
-	msg.pduUdh = UMDIRTY_DATA(udh);
-	msg.pduContent = UMDIRTY_DATA(data);
+	[msg setPduUdh: udh];
+	[msg setPduContent: data];
     return msg;
     
 length_error:
-	pdu2 = [SmppPdu OutgoingSubmitSmRespErr: UM_ESME_RINVPARLEN];
+	pdu2 = [SmppPdu OutgoingSubmitSmRespErr: ESME_RINVPARLEN];
 	[self sendPdu: pdu2 asResponseTo:pdu];
     return nil;
 }
@@ -2518,7 +2513,7 @@ length_error:
                     {
                         _bindExpires = NULL;
                         _lastStatus = @"timeout waiting for bind";
-                        SmppPdu *pdu = [SmppPdu OutgoingGenericNack:UM_ESME_RBINDFAIL];
+                        SmppPdu *pdu = [SmppPdu OutgoingGenericNack:ESME_RBINDFAIL];
                         [_readyForServiceDelegate readyForMessages:NO connection:self];
                         [self sendPduWithNewSeq:pdu];
                         _incomingStatus = SMPP_STATUS_INCOMING_MAJOR_FAILURE;
@@ -2775,7 +2770,7 @@ length_error:
         {
             return -1;
         }
-        _uc = [[UMSocket alloc] initWithType:UMSOCKET_TYPE_TCP name:@"smpp-open-transmitter"];
+        _uc = [[UMSocket alloc] initWithType:UMSOCKET_TYPE_TCP4ONLY name:@"smpp-open-transmitter"];
         if (!_uc)
         {
             NSString *msg = [NSString stringWithFormat:@"[SmscConnectionSMPP openTransmitter] [%@]: Couldn't connect to server (no socket, status %d).\r\n", _name, _outgoingStatus];
@@ -2833,9 +2828,8 @@ length_error:
         {
             return -1;
         }
-        _uc = [[UMSocket alloc] initWithType:UMSOCKET_TYPE_TCP name:@"smpp-open-transceiver"];
+        _uc = [[UMSocket alloc] initWithType:UMSOCKET_TYPE_TCP4ONLY name:@"smpp-open-transceiver"];
         [_uc setRemoteHost:_remoteHost];
-        
         if(_transmitPort == 0)
         {
             _transmitPort = _remotePort;
@@ -2892,7 +2886,7 @@ length_error:
         if (!_login || !_password)
             return -1;
         
-        _uc = [[UMSocket alloc] initWithType:UMSOCKET_TYPE_TCP name:@"open-receiver"];
+        _uc = [[UMSocket alloc] initWithType:UMSOCKET_TYPE_TCP4ONLY name:@"open-receiver"];
         [_uc setRemoteHost:_remoteHost];
         [_uc setRequestedRemotePort:_receivePort];
         _uc.configuredMaxSegmentSize = _max_tcp_segment_size;
@@ -2996,6 +2990,8 @@ length_error:
         _runOutgoingReceiverThread = SMPP_ORT_STARTING;
         _endPermanently = NO;
         [self runSelectorInBackground:@selector(outgoingReceiverThread)];
+
+    //    [NSThread detachNewThreadSelector:@selector(outgoingReceiverThread) toTarget:self withObject:nil];
         while ((_runOutgoingReceiverThread != SMPP_ORT_RUNNING) && (i<100))
         {
             usleep(10000);
@@ -3035,83 +3031,70 @@ length_error:
     @autoreleasepool
     {
         ulib_set_thread_name([NSString stringWithFormat:@"[SmscConnectionSMPP outgoingReceiverThread] %@",_uc.description]);
-        if(_name==NULL)
-        {
-            _name = _uc.description;
-        }
+        
         if(_runOutgoingReceiverThread != SMPP_ORT_STARTING)
         {
             NSLog(@"wrong status %u for runOutgoingReceiverThread", _runIncomingReceiverThread);
-            return;
         }
-        if(_receivePollTimeoutMs <= 0)
-        {
-            _receivePollTimeoutMs = SMSC_CONNECTION_DEFAULT_RECEIVE_POLL_TIMEOUT_MS; /* default to 500ms */
-        }
+        
         NSString *msg = [NSString stringWithFormat:@"SmscConnectionSMPP outgoingReceiverThread]: outbound receiver thread %@ is starting\r\n", _name];
         [self.logFeed info:0 withText:msg];
         
         _runOutgoingReceiverThread = SMPP_ORT_RUNNING;
-                
+        
+        if(_receivePollTimeoutMs <= 0)
+        {
+            _receivePollTimeoutMs = SMSC_CONNECTION_DEFAULT_RECEIVE_POLL_TIMEOUT_MS; /* default to 200ms */
+        }
+        
         while ((!_endPermanently) && (!_endThisConnection) && (_runOutgoingReceiverThread==SMPP_ORT_RUNNING))
         {
             @autoreleasepool
             {
-                UMSocketError sErr = UMSocketError_no_data;
+                
+                UMSocketError err = UMSocketError_no_data;
+                
                 if (_runOutgoingReceiverThread!=SMPP_ORT_RUNNING)
                 {
                     _endThisConnection = YES;
                     continue;
                 }
-                sErr  = [_uc dataIsAvailable:_receivePollTimeoutMs];
-                if((sErr == UMSocketError_has_data) || (sErr==UMSocketError_has_data_and_hup)) /* we received something */
+                err  = [_uc dataIsAvailable:_receivePollTimeoutMs];
+                if((err ==UMSocketError_has_data) || (err==UMSocketError_has_data_and_hup)) /* we received something */
                 {
-                    UMSocketError sErr2 = [_uc receiveToBufferWithBufferLimit: 10240];
-                    if(sErr2 == UMSocketError_has_data_and_hup)
-                    {
-                        sErr2 = UMSocketError_has_data;
-                    }
-                    if((sErr2== UMSocketError_no_data) || (sErr2==UMSocketError_connection_reset)) /* HUP */
-                    {
-                        NSString *msg = [NSString stringWithFormat:@"[SmscConnectionSMPP outgoingReceiverThread]: EOF read"];
-                        [self.logFeed info:0 inSubsection:@"outgoing receiver" withText:msg];
-                        _endThisConnection=YES;
-                    }
-                    else if((sErr2==UMSocketError_no_error) || (sErr2==UMSocketError_has_data))
+                    UMSocketError err = [_uc receiveToBufferWithBufferLimit: 10240];
+                    if(err==UMSocketError_no_error)
                     {
                         [self checkForPackets];
                     }
-                    else if(sErr2!=UMSocketError_try_again)
+                    else
                     {
-                        NSString *msg = [NSString stringWithFormat:@"[SmscConnectionSMPP outgoingReceiverThread]:socket error %d (%@) when reading a packet\r\n", sErr2, [UMSocket getSocketErrorString:sErr2]];
-                        [self.logFeed info:0 inSubsection:@"outgoing receiver" withText:msg];
-                        [self checkForPackets]; /* process whatever is left */
-                        _endThisConnection=YES;
-                        break;
+                        NSString *msg = [NSString stringWithFormat:@"[SmscConnectionSMPP outgoingReceiverThread]: socket error %d when reading from socket\r\n", err];
+                        [self.logFeed info:0 inSubsection:@"outbound receiver" withText:msg];
+                        _endThisConnection = YES;
+                    }
+                    if(err==UMSocketError_has_data_and_hup)
+                    {
+                        NSString *msg = [NSString stringWithFormat:@"[SmscConnectionSMPP outgoingReceiverThread]: POLLHUP received"];
+                        [self.logFeed info:0 inSubsection:@"outbound receiver" withText:msg];
+                        _endThisConnection = YES;
                     }
                 }
-                else if(sErr==UMSocketError_has_data_and_hup)
-                {
-                    [self checkForPackets]; /* process whatever is left */
-                    NSString *msg = [NSString stringWithFormat:@"[SmscConnectionSMPP outgoingReceiverThread]: POLLHUP received"];
-                    [self.logFeed info:0 inSubsection:@"outbound receiver" withText:msg];
-                    _endThisConnection=YES;
-                }
-                else if(sErr == UMSocketError_try_again)
+                else if(err == UMSocketError_try_again)
                 {
                     usleep(10000);
                 }
-                else if (sErr == UMSocketError_no_error)
+                else if (err == UMSocketError_no_error)
                 {
                     usleep(10000);
                 }
-                else if (sErr == UMSocketError_no_data)
+                else if (err == UMSocketError_no_data)
                 {
                     usleep(10000);
                 }
                 else
                 {
-                    NSString *msg = [NSString stringWithFormat:@"[SmscConnectionSMPP outgoingReceiverThread]: socket error %d (%@) when socket returns, will terminate thread\r\n", sErr, [UMSocket getSocketErrorString:sErr]];
+                    NSString *msg = [NSString stringWithFormat:@"[SmscConnectionSMPP outgoingReceiverThread]: socket error %d when socket returned\r\n", err];
                     [self.logFeed majorError:0 inSubsection:@"init" withText:msg];
                     _endThisConnection = YES;
                     break;
@@ -3184,7 +3167,7 @@ length_error:
     @autoreleasepool
     {
         NSString *typeString = [SmppPdu pduTypeToString:pdu.type];
-        NSString *errString = UMSmppErrorAsString(pdu.err);
+        NSString *errString = [SmscConnectionSMPP smppErrorToString:pdu.err];
         NSMutableString *desc = [[NSMutableString alloc]init];
         [desc appendFormat:@"IncomingPdu:\n\tconnection:     0x%08lX (%ld)\n", (unsigned long)pdu.pdulen,(unsigned long)pdu.pdulen];
         [desc appendFormat:@"\tlen:     0x%08lX (%ld)\n", (unsigned long)pdu.pdulen,(unsigned long)pdu.pdulen];
@@ -3203,7 +3186,7 @@ length_error:
         NSMutableString *desc = [[NSMutableString alloc]init];
         [desc appendFormat:@"OutgoingPdu:\n\tlen:     0x%08lX (%ld)\n", (unsigned long)pdu.pdulen,(unsigned long)pdu.pdulen];
         [desc appendFormat:@"\ttype:    0x%08lX %@\n", (unsigned long)pdu.type,[SmppPdu pduTypeToString:pdu.type]];
-        [desc appendFormat:@"\terror:   0x%08lX %@\n", (unsigned long)pdu.err, UMSmppErrorAsString(pdu.err)];
+        [desc appendFormat:@"\terror:   0x%08lX %@\n", (unsigned long)pdu.err, [SmscConnectionSMPP smppErrorToString:pdu.err]];
         [desc appendFormat:@"\tseq:     0x%08lX (%ld)\n", (unsigned long)pdu.seq,(unsigned long)pdu.seq];
         [desc appendFormat:@"\tpayload: %@\n", pdu.payload];
         [self.logFeed info:0 withText:desc];
@@ -3306,6 +3289,339 @@ length_error:
     return err;
 }
 
++ (NSString *)smppErrorToString:(SmppErrorCode) err
+{
+	int i;
+	for (i=0;i< (sizeof(SmppErrorCodeList) / sizeof(SmppErrorCodeListEntry));i++)
+	{
+		if( SmppErrorCodeList[i].code == err)
+        {
+			return @(SmppErrorCodeList[i].text);
+        }
+	}
+	return @"";
+}
+
+#if 0
++ (SmscConnectionErrorCode) smppErrToGlobal:(SmppErrorCode)err
+{
+    switch(err)
+    {
+        case ESME_ROK:
+            return SMSC_CONNECTION_OK;
+        case ESME_RINVMSGLEN:
+            return SMSC_CONNECTION_INVMSGLEN;
+        case ESME_RINVCMDLEN:
+            return SMSC_CONNECTION_INVCMDLEN;
+        case ESME_RINVCMDID:
+            return SMSC_CONNECTION_INVCMDID;
+        case ESME_RINVBNDSTS:
+            return SMSC_CONNECTION_INVBNDSTS;
+        case ESME_RALYBND:
+            return SMSC_CONNECTION_ALYBND;
+        case ESME_RINVPRTFLG:
+            return SMSC_CONNECTION_INVPRTFLG;
+        case ESME_RINVREGDLVFLG:
+            return SMSC_CONNECTION_INVREGDLVFLG;
+        case ESME_RSYSERR:
+            return SMSC_CONNECTION_SYSERR;
+        case ESME_RINVSRCADR:
+            return SMSC_CONNECTION_INVSRCADR;
+        case ESME_RINVDSTADR:
+            return SMSC_CONNECTION_INVDSTADR;
+        case ESME_RINVMSGID:
+            return SMSC_CONNECTION_INVMSGID;
+        case ESME_RBINDFAIL:
+            return SMSC_CONNECTION_BINDFAIL;
+        case ESME_RINVPASWD:
+            return SMSC_CONNECTION_INVPASWD;
+        case ESME_RINVSYSID:
+            return SMSC_CONNECTION_INVSYSID;
+        case ESME_RCANCELFAIL:
+            return SMSC_CONNECTION_CANCELFAIL;
+        case ESME_RREPLACEFAIL:
+            return SMSC_CONNECTION_REPLACEFAIL;
+        case ESME_RMSGQFUL:
+            return SMSC_CONNECTION_MSGQFUL;
+        case ESME_RINVSERTYP:
+            return SMSC_CONNECTION_INVSERTYP;
+        case ESME_RINVNUMDESTS:
+            return SMSC_CONNECTION_INVNUMDESTS;
+        case ESME_RINVDLNAME:
+            return SMSC_CONNECTION_INVDLNAME;
+        case ESME_RINVDESTFLAG:
+            return SMSC_CONNECTION_INVDESTFLAG;
+        case ESME_RINVSUBREP:
+            return SMSC_CONNECTION_INVSUBREP;
+        case ESME_RINVESMCLASS:
+            return SMSC_CONNECTION_INVESMCLASS;
+        case ESME_RCNTSUBDL:
+            return SMSC_CONNECTION_CNTSUBDL;
+        case ESME_RSUBMITFAIL:
+            return SMSC_CONNECTION_SUBMITFAIL;
+        case ESME_RINVSRCTON:
+            return SMSC_CONNECTION_INVSRCTON;
+        case ESME_RINVSRCNPI:
+            return SMSC_CONNECTION_INVSRCNPI;
+        case ESME_RINVDSTTON:
+            return SMSC_CONNECTION_INVDSTTON;
+        case ESME_RINVDSTNPI:
+            return SMSC_CONNECTION_INVDSTNPI;
+        case ESME_RINVSYSTYP:
+            return SMSC_CONNECTION_INVSYSTYP;
+        case ESME_RINVREPFLAG:
+            return SMSC_CONNECTION_INVREPFLAG;
+        case ESME_RINVNUMMSGS:
+            return SMSC_CONNECTION_INVNUMMSGS;
+        case ESME_RTHROTTLED:
+            return SMSC_CONNECTION_THROTTLED;
+        case ESME_RINVSCHED:
+            return SMSC_CONNECTION_INVSCHED;
+        case ESME_RINVEXPIRY:
+            return SMSC_CONNECTION_INVEXPIRY;
+        case ESME_RINVDFTMSGID:
+            return SMSC_CONNECTION_INVDFTMSGID;
+        case ESME_RX_T_APPN:
+            return SMSC_CONNECTION_X_T_APPN;
+        case ESME_RX_P_APPN:
+            return SMSC_CONNECTION_X_P_APPN;
+        case ESME_RX_R_APPN:
+            return SMSC_CONNECTION_X_R_APPN;
+        case ESME_RQUERYFAIL:
+            return SMSC_CONNECTION_QUERYFAIL;
+        case ESME_RINVOPTPARSTREAM:
+            return SMSC_CONNECTION_INVOPTPARSTREAM;
+        case ESME_ROPTPARNOTALLWD:
+            return SMSC_CONNECTION_OPTPARNOTALLWD;
+        case ESME_RINVPARLEN:
+            return SMSC_CONNECTION_INVPARLEN;
+        case ESME_RMISSINGOPTPARAM:
+            return SMSC_CONNECTION_MISSINGOPTPARAM;
+        case ESME_RINVOPTPARAMVAL:
+            return SMSC_CONNECTION_INVOPTPARAMVAL;
+        case ESME_RDELIVERYFAILURE:
+            return SMSC_CONNECTION_DELIVERYFAILURE;
+        case ESME_RUNKNOWNERR:
+            return SMSC_CONNECTION_UNKNOWNERR;
+        case ESME_VENDOR_SPECIFIC_INVALID_INTERNAL_CONFIG:
+            return SMSC_CONNECTION_ERR_INVALID_INTERNAL_CONFIG;
+        case ESME_VENDOR_SPECIFIC_NO_PROVIDER_FOUND:
+            return SMSC_CONNECTION_ERR_NO_PRICING_TABLE_FOUND;
+        case ESME_VENDOR_SPECIFIC_NO_PROFITABLE_ROUTE_FOUND:
+            return SMSC_CONNECTION_ERR_NO_PROFITABLE_ROUTE_FOUND;
+        case ESME_VENDOR_SPECIFIC_NO_PRICING_TABLE_FOUND:
+            return SMSC_CONNECTION_ERR_NO_PROVIDER_FOUND;
+        case ESME_VENDOR_SPECIFIC_NO_DELIVERER:
+            return SMSC_CONNECTION_ERR_NO_DELIVERER;
+        case ESME_VENDOR_SPECIFIC_NO_SUCH_COUNTRY:
+            return SMSC_CONNECTION_ERR_NO_SUCH_COUNTRY;
+        case ESME_VENDOR_SPECIFIC_NO_SUCH_USER:
+            return SMSC_CONNECTION_ERR_NO_SUCH_USER;
+        case ESME_VENDOR_SPECIFIC_USER_OUT_OF_CREDIT:
+            return SMSC_CONNECTION_ERR_USER_OUT_OF_CREDIT;
+        case ESME_VENDOR_SPECIFIC_NO_PROVIDER:
+            return SMSC_CONNECTION_ERR_NO_PROVIDER;
+        case ESME_VENDOR_SPECIFIC_NO_USER:
+            return SMSC_CONNECTION_ERR_NO_USER;
+        case ESME_VENDOR_SPECIFIC_NUMBER_PREFIX_NOT_FOUND:
+            return SMSC_CONNECTION_ERR_NUMBER_PREFIX_NOT_FOUND;
+        case ESME_VENDOR_SPECIFIC_HLR_ROUTING_TABLE_NOT_FOUND:
+            return SMSC_CONNECTION_ERR_HLR_ROUTING_TABLE_NOT_FOUND;
+        case ESME_VENDOR_SPECIFIC_NUMBER_PREFIX_TABLE_NOT_FOUND:
+            return SMSC_CONNECTION_ERR_NUMBER_PREFIX_TABLE_NOT_FOUND;
+        case ESME_VENDOR_SPECIFIC_COUNTRY_NOT_FOUND:
+            return SMSC_CONNECTION_ERR_COUNTRY_NOT_FOUND;
+        case ESME_VENDOR_SPECIFIC_NO_PRICE_FOUND:
+            return SMSC_CONNECTION_ERR_NO_PRICE_FOUND;
+        case ESME_VENDOR_SPECIFIC_OFFLINE:
+            return SMSC_CONNECTION_ERR_OFFLINE;
+        case ESME_VENDOR_SPECIFIC_NO_ROUTING_TABLE:
+            return SMSC_CONNECTION_ERR_NO_ROUTING_TABLE;
+        case ESME_VENDOR_SPECIFIC_NO_ROUTING_TABLE_ENTRY:
+            return SMSC_CONNECTION_ERR_NO_ROUTING_TABLE_ENTRY;
+        case ESME_VENDOR_SPECIFIC_NO_ROUTE:
+            return SMSC_CONNECTION_ERR_NO_ROUTE;
+        case ESME_VENDOR_SPECIFIC_NO_PROVIDER_NAME:
+            return SMSC_CONNECTION_ERR_NO_PROVIDER_NAME;
+        case ESME_VENDOR_SPECIFIC_UNKNOWN_SUB:
+            return SMSC_CONNECTION_ERR_UNKNOWN_SUB;
+        case ESME_VENDOR_SPECIFIC_UNKNOWN_MSC:
+            return SMSC_CONNECTION_ERR_UNKNOWN_MSC;
+        case ESME_VENDOR_SPECIFIC_UNIDENTIFIED_SUB:
+            return SMSC_CONNECTION_ERR_UNIDENTIFIED_SUB;
+        case ESME_VENDOR_SPECIFIC_ABSENT_SUB_SM:
+            return SMSC_CONNECTION_ERR_ABSENT_SUB_SM;
+        case ESME_VENDOR_SPECIFIC_UNKNOWN_EQUIPMENT:
+            return SMSC_CONNECTION_ERR_UNKNOWN_EQUIPMENT;
+        case ESME_VENDOR_SPECIFIC_NOROAM:
+            return SMSC_CONNECTION_ERR_NOROAM;
+        case ESME_VENDOR_SPECIFIC_ILLEGAL_SUB:
+            return SMSC_CONNECTION_ERR_ILLEGAL_SUB;
+        case ESME_VENDOR_SPECIFIC_BEARER_SERVICE_NOT_PROVISIONED:
+            return SMSC_CONNECTION_ERR_BEARER_SERVICE_NOT_PROVISIONED;
+        case ESME_VENDOR_SPECIFIC_NOT_PROV:
+            return SMSC_CONNECTION_ERR_NOT_PROV;
+        case ESME_VENDOR_SPECIFIC_ILLEGAL_EQUIPMENT:
+            return SMSC_CONNECTION_ERR_ILLEGAL_EQUIPMENT;
+        case ESME_VENDOR_SPECIFIC_BARRED:
+            return SMSC_CONNECTION_ERR_BARRED;
+        case ESME_VENDOR_SPECIFIC_FORWARDING_VIOLATION:
+            return SMSC_CONNECTION_ERR_FORWARDING_VIOLATION;
+        case ESME_VENDOR_SPECIFIC_CUG_REJECT:
+            return SMSC_CONNECTION_ERR_CUG_REJECT;
+        case ESME_VENDOR_SPECIFIC_ILLEGAL_SS:
+            return SMSC_CONNECTION_ERR_ILLEGAL_SS;
+        case ESME_VENDOR_SPECIFIC_SS_ERR_STATUS:
+            return SMSC_CONNECTION_ERR_SS_ERR_STATUS;
+        case ESME_VENDOR_SPECIFIC_SS_NOTAVAIL:
+            return SMSC_CONNECTION_ERR_SS_NOTAVAIL;
+        case ESME_VENDOR_SPECIFIC_SS_SUBVIOL:
+            return SMSC_CONNECTION_ERR_SS_SUBVIOL;
+        case ESME_VENDOR_SPECIFIC_SS_INCOMPAT:
+            return SMSC_CONNECTION_ERR_SS_INCOMPAT;
+        case ESME_VENDOR_SPECIFIC_NOT_SUPPORTED:
+            return SMSC_CONNECTION_ERR_NOT_SUPPORTED;
+        case ESME_VENDOR_SPECIFIC_MEMORY_CAP_EXCEED:
+            return SMSC_CONNECTION_ERR_MEMORY_CAP_EXCEED;
+        case ESME_VENDOR_SPECIFIC_NO_HANDOVER_NUMBER_AVAILABLE:
+            return SMSC_CONNECTION_ERR_NO_HANDOVER_NUMBER_AVAILABLE;
+        case ESME_VENDOR_SPECIFIC_SUBSEQUENT_HANDOVER_FAILURE:
+            return SMSC_CONNECTION_ERR_SUBSEQUENT_HANDOVER_FAILURE;
+        case ESME_VENDOR_SPECIFIC_ABSENT_SUB:
+            return SMSC_CONNECTION_ERR_ABSENT_SUB;
+        case ESME_VENDOR_SPECIFIC_INCOMPATIBLE_TERMINAL:
+            return SMSC_CONNECTION_ERR_INCOMPATIBLE_TERMINAL;
+        case ESME_VENDOR_SPECIFIC_SHORT_TERM_DENIAL:
+            return SMSC_CONNECTION_ERR_SHORT_TERM_DENIAL;
+        case ESME_VENDOR_SPECIFIC_LONG_TERM_DENIAL:
+            return SMSC_CONNECTION_ERR_LONG_TERM_DENIAL;
+        case ESME_VENDOR_SPECIFIC_SM_SUBSCRIBER_BUSY:
+            return SMSC_CONNECTION_ERR_SM_SUBSCRIBER_BUSY;
+        case ESME_VENDOR_SPECIFIC_SM_DELIVERY_FAILURE:
+            return SMSC_CONNECTION_ERR_SM_DELIVERY_FAILURE;
+        case ESME_VENDOR_SPECIFIC_MESSAGE_WAITING_LIST_FULL:
+            return SMSC_CONNECTION_ERR_MESSAGE_WAITING_LIST_FULL;
+        case ESME_VENDOR_SPECIFIC_SYSTEM_FAILURE:
+            return SMSC_CONNECTION_ERR_SYSTEM_FAILURE;
+        case ESME_VENDOR_SPECIFIC_DATA_MISSING:
+            return SMSC_CONNECTION_ERR_DATA_MISSING;
+        case ESME_VENDOR_SPECIFIC_UNEXP_VAL:
+            return SMSC_CONNECTION_ERR_UNEXP_VAL;
+        case ESME_VENDOR_SPECIFIC_PW_REGISTRATION_FAILURE:
+            return SMSC_CONNECTION_ERR_PW_REGISTRATION_FAILURE;
+        case ESME_VENDOR_SPECIFIC_NEGATIVE_PW_CHECK:
+            return SMSC_CONNECTION_ERR_NEGATIVE_PW_CHECK;
+        case ESME_VENDOR_SPECIFIC_NO_ROAMING_NUMBER_AVAILABLE:
+            return SMSC_CONNECTION_ERR_NO_ROAMING_NUMBER_AVAILABLE;
+        case ESME_VENDOR_SPECIFIC_TRACING_BUFFER_FULL:
+            return SMSC_CONNECTION_ERR_TRACING_BUFFER_FULL;
+        case ESME_VENDOR_SPECIFIC_TARGET_CELL_OUTSIDE_GROUP_CALL_AREA:
+            return SMSC_CONNECTION_ERR_TARGET_CELL_OUTSIDE_GROUP_CALL_AREA;
+        case ESME_VENDOR_SPECIFIC_NUMBER_OF_PW_ATTEMPS_VIOLATION:
+            return SMSC_CONNECTION_ERR_NUMBER_OF_PW_ATTEMPS_VIOLATION;
+        case ESME_VENDOR_SPECIFIC_NUMBER_CHANGED:
+            return SMSC_CONNECTION_ERR_NUMBER_CHANGED;
+        case ESME_VENDOR_SPECIFIC_BUSY_SUBSCRIBER:
+            return SMSC_CONNECTION_ERR_BUSY_SUBSCRIBER;
+        case ESME_VENDOR_SPECIFIC_NO_SUBSCRIBER_REPLY:
+            return SMSC_CONNECTION_ERR_NO_SUBSCRIBER_REPLY;
+        case ESME_VENDOR_SPECIFIC_FORWARDING_FAILED:
+            return SMSC_CONNECTION_ERR_FORWARDING_FAILED;
+        case ESME_VENDOR_SPECIFIC_OR_NOT_ALLOWED:
+            return SMSC_CONNECTION_ERR_OR_NOT_ALLOWED;
+        case ESME_VENDOR_SPECIFIC_ATI_NOT_ALLOWED:
+            return SMSC_CONNECTION_ERR_ATI_NOT_ALLOWED;
+        case ESME_VENDOR_SPECIFIC_NO_ERROR_CODE_PROVIDED:
+            return SMSC_CONNECTION_ERR_NO_ERROR_CODE_PROVIDED;
+        case ESME_VENDOR_SPECIFIC_NO_ROUTE_TO_DESTINATION:
+            return SMSC_CONNECTION_ERR_NO_ROUTE_TO_DESTINATION;
+        case ESME_VENDOR_SPECIFIC_UNKNOWN_ALPHABETH:
+            return SMSC_CONNECTION_ERR_UNKNOWN_ALPHABETH;
+        case ESME_VENDOR_SPECIFIC_USSD_BUSY:
+            return SMSC_CONNECTION_ERR_USSD_BUSY;
+        case ESME_VENDOR_SPECIFIC_SCCP_NO_TRANSLATION_FOR_AN_ADDRESS_OF_SUCH_NATURE:
+            return SMSC_CONNECTION_ERR_SCCP_NO_TRANSLATION_FOR_AN_ADDRESS_OF_SUCH_NATURE;
+        case ESME_VENDOR_SPECIFIC_SCCP_NO_TRANSLATION_FOR_THIS_SPECIFIC_ADDRESS:
+            return SMSC_CONNECTION_ERR_SCCP_NO_TRANSLATION_FOR_THIS_SPECIFIC_ADDRESS;
+        case ESME_VENDOR_SPECIFIC_SCCP_SUBSYSTEM_CONGESTION:
+            return SMSC_CONNECTION_ERR_SCCP_SUBSYSTEM_CONGESTION;
+        case ESME_VENDOR_SPECIFIC_SCCP_SUBSYSTEM_FAILURE:
+            return SMSC_CONNECTION_ERR_SCCP_SUBSYSTEM_FAILURE;
+        case ESME_VENDOR_SPECIFIC_SCCP_UNEQUIPPED_FAILURE:
+            return SMSC_CONNECTION_ERR_SCCP_UNEQUIPPED_FAILURE;
+        case ESME_VENDOR_SPECIFIC_SCCP_MTP_FAILURE:
+            return SMSC_CONNECTION_ERR_SCCP_MTP_FAILURE;
+        case ESME_VENDOR_SPECIFIC_SCCP_NETWORK_CONGESTION:
+            return SMSC_CONNECTION_ERR_SCCP_NETWORK_CONGESTION;
+        case ESME_VENDOR_SPECIFIC_SCCP_UNQUALIFIED:
+            return SMSC_CONNECTION_ERR_SCCP_UNQUALIFIED;
+        case ESME_VENDOR_SPECIFIC_SCCP_ERROR_IN_MESSAGE_TRANSPORT:
+            return SMSC_CONNECTION_ERR_SCCP_ERROR_IN_MESSAGE_TRANSPORT;
+        case ESME_VENDOR_SPECIFIC_SCCP_ERROR_IN_LOCAL_PROCESSING:
+            return SMSC_CONNECTION_ERR_SCCP_ERROR_IN_LOCAL_PROCESSING;
+        case ESME_VENDOR_SPECIFIC_SCCP_DESTINATION_CANNOT_PERFORM_REASSEMBLY:
+            return SMSC_CONNECTION_ERR_SCCP_DESTINATION_CANNOT_PERFORM_REASSEMBLY;
+        case ESME_VENDOR_SPECIFIC_SCCP_FAILURE:
+            return SMSC_CONNECTION_ERR_SCCP_FAILURE;
+        case ESME_VENDOR_SPECIFIC_SCCP_HOP_COUNTER_VIOLATION:
+            return SMSC_CONNECTION_ERR_SCCP_HOP_COUNTER_VIOLATION;
+        case ESME_VENDOR_SPECIFIC_SCCP_SEGMENTATION_NOT_SUPPORTED:
+            return SMSC_CONNECTION_ERR_SCCP_SEGMENTATION_NOT_SUPPORTED;
+        case ESME_VENDOR_SPECIFIC_SCCP_SEGMENTATION_FAILURE:
+            return SMSC_CONNECTION_ERR_SCCP_SEGMENTATION_FAILURE;
+        case ESME_VENDOR_SPECIFIC_FAILED_TO_DELIVER:
+            return SMSC_CONNECTION_ERR_FAILED_TO_DELIVER;
+        case ESME_VENDOR_SPECIFIC_UNEXP_TCAP_MSG:
+            return SMSC_CONNECTION_ERR_UNEXP_TCAP_MSG;
+        case ESME_VENDOR_SPECIFIC_FAILED_TO_REQ_ROUTING_INFO:
+            return SMSC_CONNECTION_ERR_FAILED_TO_REQ_ROUTING_INFO;
+        case ESME_VENDOR_SPECIFIC_TIMER_EXP:
+            return SMSC_CONNECTION_ERR_TIMER_EXP;
+        case ESME_VENDOR_SPECIFIC_TCAP_ABORT1:
+            return SMSC_CONNECTION_ERR_TCAP_ABORT1;
+        case ESME_VENDOR_SPECIFIC_TCAP_ABORT2:
+            return SMSC_CONNECTION_ERR_TCAP_ABORT2;
+        case ESME_VENDOR_SPECIFIC_BLACKLISTED_SMSC:
+            return SMSC_CONNECTION_ERR_BLACKLISTED_SMSC;
+        case ESME_VENDOR_SPECIFIC_BLACKLISTED_DPC:
+            return SMSC_CONNECTION_ERR_BLACKLISTED_DPC;
+        case ESME_VENDOR_SPECIFIC_BLACKLISTED_OPC:
+            return SMSC_CONNECTION_ERR_BLACKLISTED_OPC;
+        case ESME_VENDOR_SPECIFIC_BLACKLISTED_DESTINATION:
+            return SMSC_CONNECTION_ERR_BLACKLISTED_DESTINATION;
+        case ESME_VENDOR_SPECIFIC_BLACKLISTED_PREFIX:
+            return SMSC_CONNECTION_ERR_BLACKLISTED_PREFIX;
+        case ESME_VENDOR_SPECIFIC_BLACKLISTED_TEXT:
+            return SMSC_CONNECTION_ERR_BLACKLISTED_TEXT;
+        case ESME_VENDOR_SPECIFIC_BLACKLISTED_IMSI_PREFIX:
+            return SMSC_CONNECTION_ERR_BLACKLISTED_IMSI_PREFIX;
+        case ESME_VENDOR_SPECIFIC_CHARGING_NOT_DEFINED:
+            return SMSC_CONNECTION_ERR_CHARGING_NOT_DEFINED;
+        case ESME_VENDOR_SPECIFIC_QUOTA_REACHED:
+            return SMSC_CONNECTION_ERR_QUOTA_REACHED;
+        case ESME_VENDOR_SPECIFIC_CHARGING_BLOCKED:
+            return SMSC_CONNECTION_ERR_CHARGING_BLOCKED;
+        case ESME_VENDOR_SPECIFIC_BLACKLISTED_MSC:
+            return SMSC_CONNECTION_ERR_BLACKLISTED_MSC;
+        case ESME_VENDOR_SPECIFIC_UNKNOWN_USER:
+            return SMSC_CONNECTION_ERR_UNKNOWN_USER;
+        case ESME_VENDOR_SPECIFIC_UNKNOWN_METHOD:
+            return SMSC_CONNECTION_ERR_UNKNOWN_METHOD;
+        case ESME_VENDOR_SPECIFIC_NOT_IMPLEMENTED:
+            return SMSC_CONNECTION_ERR_NOT_IMPLEMENTED;
+        case ESME_VENDOR_SPECIFIC_PDU_CAN_NOT_BE_ENCODED:
+            return SMSC_CONNECTION_ERR_PDU_CAN_NOT_BE_ENCODED;
+        case ESME_VENDOR_SPECIFIC_TCAP_USER_ABORT:
+            return SMSC_CONNECTION_ERR_TCAP_USER_ABORT;
+        case ESME_VENDOR_SPECIFIC_ABORT_BY_SCRIPT:
+            return SMSC_CONNECTION_ERR_ABORT_BY_SCRIPT;
+        case ESME_VENDOR_SPECIFIC_MAX_ATTEMPTS_REACHED:
+            return SMSC_CONNECTION_ERR_MAX_ATTEMPTS_REACHED;
+        default:
+            return SMSC_CONNECTION_UNKNOWNERR;
+    }
+}
+#endif
 
 - (NSString *)stringStatus
 {
@@ -3820,202 +4136,4 @@ length_error:
     }
 }
 
-+ (NSString *)stringFromGsm8:(NSData *)d
-{
-    NSMutableString *out = [[NSMutableString alloc]init];
-    const uint8_t *inBytes = d.bytes;
-    NSInteger i;
-    NSInteger len = d.length;
-    BOOL escape = NO;
-    for(i=0;i<len;i++)
-    {
-        NSString *c = @"";
-        if(escape)
-        {
-            escape = NO;
-            switch(inBytes[i])
-            {
-                case 0x14:
-                    c = @"^";
-                    break;
-                case 0x28:
-                    c = @"{";
-                    break;
-                case 0x29:
-                    c = @"}";
-                    break;
-                case 0x2F:
-                    c = @"\\";
-                    break;
-                case 0x3C:
-                    c = @"[";
-                    break;
-                case 0x3D:
-                    c = @"~";
-                    break;
-                case 0x3E:
-                    c = @"]";
-                    break;
-                case 0x40:
-                    c = @"|";
-                    break;
-                case 0x65:
-                    c = @"€";
-                    break;
-                case 0x0A:
-                    c = @"\n";
-                    break;
-                default:
-                    break;
-            }
-        }
-        else
-        {
-            switch(inBytes[i])
-            {
-                case 0x00:
-                    c = @"@";
-                    break;
-                case 0x01:
-                    c = @"£";
-                    break;
-                case 0x02:
-                    c = @"$";
-                    break;
-                case 0x03:
-                    c = @"¥";
-                    break;
-                case 0x04:
-                    c = @"è";
-                    break;
-                case 0x05:
-                    c = @"é";
-                    break;
-                case 0x06:
-                    c = @"ù";
-                    break;
-                case 0x07:
-                    c = @"ì";
-                    break;
-                case 0x08:
-                    c = @"ò";
-                    break;
-                case 0x09:
-                    c = @"Ç";
-                    break;
-                case 0x0A:
-                    c = @"\n";
-                    break;
-                case 0x0B:
-                    c = @"Ø";
-                    break;
-                case 0x0C:
-                    c = @"ø";
-                    break;
-                case 0x0D:
-                    c = @"\r";
-                    break;
-                case 0x0E:
-                    c = @"Å";
-                    break;
-                case 0x0F:
-                    c = @"å";
-                    break;
-                case 0x10:
-                    c = @"Δ";
-                    break;
-                case 0x11:
-                    c = @"_";
-                    break;
-                case 0x12:
-                    c = @"Φ";
-                    break;
-                case  0x13:
-                    c = @"Γ";
-                    break;
-                case  0x14:
-                    c = @"Λ";
-                    break;
-                case  0x15:
-                    c = @"Ω";
-                    break;
-                case  0x16:
-                    c = @"Π";
-                    break;
-                case  0x17:
-                    c = @"Ψ";
-                    break;
-                case  0x18:
-                    c = @"Σ";
-                    break;
-                case  0x19:
-                    c = @"Θ";
-                    break;
-                case 0x1A:
-                    c = @"Ξ";
-                    break;
-                case 0x01B:
-                    escape = YES;
-                    break;
-                case 0x1C:
-                    c = @"Æ";
-                    break;
-                case 0x1D:
-                    c = @"æ";
-                    break;
-                case 0x1E:
-                    c = @"ß";
-                    break;
-                case 0x1F:
-                    c = @"É";
-                    break;
-                case 0x24:
-                    c = @"¤";
-                    break;
-                case 0x40:
-                    c = @"¡";
-                    break;
-                case 0x5B:
-                    c = @"Ä";
-                    break;
-                case 0x5C:
-                    c = @"Ö";
-                    break;
-                case 0x5D:
-                    c = @"Ñ";
-                    break;
-                case 0x5E:
-                    c = @"Ü";
-                    break;
-                case 0x5F:
-                    c = @"§";
-                    break;
-                case 0x60:
-                    c = @"¿";
-                    break;
-                case 0x7B:
-                    c = @"ä";
-                    break;
-                case 0x7C:
-                    c = @"ö";
-                    break;
-                case 0x7D:
-                    c = @"ñ";
-                    break;
-                case 0x7E:
-                    c = @"ü";
-                    break;
-                case 0x7F:
-                    c = @"à";
-                    break;
-                default:
-                    c = [NSString stringWithFormat:@"%c",inBytes[i]];
-                    break;
-            }
-        }
-        [out appendString:c];
-    }
-    return out;
-}
 @end
-

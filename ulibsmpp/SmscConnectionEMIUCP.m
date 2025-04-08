@@ -112,11 +112,11 @@
 }
 
 /* submit Message: router->outbound TX connection */
-- (void) submitMessage:(UMMessage *)msg
+- (void) submitMessage:(id<SmscConnectionMessageProtocol>)msg
              forObject:(id)sendingObject
            synchronous:(BOOL)sync
 {
-    UMMessageReport * report = NULL;
+    id<SmscConnectionReportProtocol> report = NULL;
     
     [sendingObject submitMessageSent:msg
                            forObject:self
@@ -128,27 +128,24 @@
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
     [formatter setDateFormat:@"yyyyMMddHHmmss"];
     NSString *reportText = [NSString stringWithFormat:@"id:%@ sub:001 dlvrd:001 submit date:%@ done date:%@ stat:DELIVRD err:0",
-                            msg.routerReference.stringValue,
-                            msg.submitTimestamp      ? [formatter stringFromDate:msg.submitTimestamp.dateValue]
-                                                     : [formatter stringFromDate:[NSDate date]],
-                            msg.messageAttempted ?
-                                                       [formatter stringFromDate:msg.messageAttempted.dateValue]
-                                                     : [formatter stringFromDate:[NSDate date]]];
-    report.reportType               = UMMESSAGE_STATUS_DELIVERED;
+                            msg.routerReference,
+                            msg.submitDate ?    [formatter stringFromDate:msg.submitDate]:[formatter stringFromDate:[NSDate date]],
+                            msg.messageAttempted ? [formatter stringFromDate:msg.messageAttempted]:[formatter stringFromDate:[NSDate date]]];
+    report.reportType               = SMS_REPORT_DELIVERED;
     report.error                    = NULL;
-    report.routerReference          = msg.routerReference.stringValue;
-    report.providerReference        = msg.providerReference.stringValue;
-    report.userReference            = msg.userReference.stringValue;
-    report.originalSendingObject    = sendingObject;
+    report.routerReference          = msg.routerReference;
+    report.providerReference        = msg.providerReference;
+    report.userReference            = msg.userReference;
+    report.originalSendingObject    = msg.originalSendingObject;
     report.reportText               = reportText;
-    report.fromNumber               = msg.toNumber.stringValue;
-    report.toNumber                 = msg.fromNumber.stringValue;
+    report.source                   = msg.destination;
+    report.destination              = msg.source;
     [sendingObject deliverReport:report
                        forObject:self
                      synchronous:NO];
 }
 
-- (void) submitReport:(UMMessageReport *)report
+- (void) submitReport:(id<SmscConnectionReportProtocol>)report
             forObject:(id)sendingObject
           synchronous:(BOOL)sync
 {
@@ -157,14 +154,14 @@
                         synchronous:!sync];
 }
 
-- (void) submitReportSent:(UMMessageReport *)report
+- (void) submitReportSent:(id<SmscConnectionReportProtocol>)report
                 forObject:(id)reportingObject
               synchronous:(BOOL)sync
 {
 }
 
-- (void) submitReportFailed:(UMMessageReport *)report
-                      error:(NSNumber *)error
+- (void) submitReportFailed:(id<SmscConnectionReportProtocol>)report
+                  withError:(SmscRouterError *)err
                   forObject:(id)reportingObject
                 synchronous:(BOOL)sync
 {
@@ -172,11 +169,11 @@
 }
 
 /* deliverMessage: router->inbound RX connection */
-- (void) deliverMessage:(UMMessage *)msg
+- (void) deliverMessage:(id<SmscConnectionMessageProtocol>)msg
               forObject:(id)sendingObject
             synchronous:(BOOL)sync
 {
-    UMMessageReport * report = NULL;
+    id<SmscConnectionReportProtocol> report = NULL;
     
     [sendingObject deliverMessageSent:msg
                             forObject:self
@@ -186,26 +183,23 @@
     [formatter setDateFormat:@"yyyyMMddHHmmss"];
     NSString *reportText = [NSString stringWithFormat:@"id:%@ sub:001 dlvrd:001 submit date:%@ done date:%@ stat:DELIVRD err:0",
                             msg.routerReference,
-                            msg.submitTimestamp ?     [formatter stringFromDate:msg.submitTimestamp.dateValue]
-                                                     :[formatter stringFromDate:[NSDate date]],
-                            msg.messageAttempted ? [formatter stringFromDate:msg.messageAttempted.dateValue]
-                                                     :[formatter stringFromDate:[NSDate date]]];
-    report.reportType               = UMMESSAGE_STATUS_DELIVERED;
+                            msg.submitDate ?    [formatter stringFromDate:msg.submitDate]:[formatter stringFromDate:[NSDate date]],
+                            msg.messageAttempted ? [formatter stringFromDate:msg.messageAttempted]:[formatter stringFromDate:[NSDate date]]];
+    report.reportType               = SMS_REPORT_DELIVERED;
     report.error                    = NULL;
-    report.routerReference          = msg.routerReference.stringValue;
-    report.providerReference        = msg.providerReference.stringValue;
-    report.userReference            = msg.userReference.stringValue;
-    report.originalSendingObject    = sendingObject;
+    report.routerReference          = msg.routerReference;
+    report.providerReference      = msg.providerReference;
+    report.userReference            = msg.userReference;
+    report.originalSendingObject    = msg.originalSendingObject;
     report.reportText               = reportText;
-    report.fromNumber               = msg.toNumber.stringValue;
-    report.toNumber                 = msg.fromNumber.stringValue;
-    report.reportToMsg              = msg;
+    report.source                   = msg.destination;
+    report.destination              = msg.source;
     [sendingObject submitReport:report
                       forObject:self
                     synchronous:NO];
 }
 
-- (void) deliverReport:(UMMessageReport *)report
+- (void) deliverReport:(id<SmscConnectionReportProtocol>)report
              forObject:(id)sendingObject
            synchronous:(BOOL)sync
 {
@@ -214,14 +208,14 @@
                          synchronous:!sync];
 }
 
-- (void) deliverReportSent:(UMMessageReport *)report
+- (void) deliverReportSent:(id<SmscConnectionReportProtocol>)report
                  forObject:(id)reportingObject
                synchronous:(BOOL)sync
 {
 }
 
-- (void) deliverReportFailed:(UMMessageReport *)report
-                       error:(NSNumber *)error
+- (void) deliverReportFailed:(id<SmscConnectionReportProtocol>)report
+                   withError:(SmscRouterError *)err
                    forObject:(id)reportingObject
                  synchronous:(BOOL)sync
 {

@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 #import <ulibsmpp/SmscConnectionMessagePassingProtocol.h>
 
-//@protocol SmscConnectionMessageProtocol;
+@protocol SmscConnectionMessageProtocol;
 @protocol SmscConnectionReportProtocol;
 @protocol SmscConnectionRouterProtocol;
 
@@ -33,7 +33,7 @@
 @optional
 
 - (BOOL) sendHlrReport;
-- (void) hlrReport:(UMMessageReport *)report forObject:(id)sendingObject;
+- (void) hlrReport:(id<SmscConnectionReportProtocol>)report forObject:(id)sendingObject;
 
 @end
 
