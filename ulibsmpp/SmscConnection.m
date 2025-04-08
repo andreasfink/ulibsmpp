@@ -7,9 +7,9 @@
 //
 
 #import "SmscConnection.h"
-#import "SmscConnectionTransaction.h"
+#import <ulibsmpp/SmscConnectionTransaction.h>
 #include <uuid/uuid.h>
-#import "SmscRouterError.h"
+#import <ulibsmpp/SmscRouterError.h>
 
 #define	EMPTYSTRINGFORNIL(a)	(a?a:@"")
 #define	EMPTYIPFORNIL(a)        (a?a:@"0.0.0.0")

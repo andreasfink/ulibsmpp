@@ -11,7 +11,6 @@
 #import <ulibsmpp/GSMErrorCode.h>
 #import <ulibsmpp/SmppErrorCode.h>
 #import <ulibsmpp/DeliveryReportErrorCode.h>
-
 typedef enum UMSmscRouterErrorTag
 {
     UMSmscRouterErrorTag_dlrError   = 1,
@@ -50,7 +49,6 @@ typedef int SmscRouterInternalError;
 #if __OBJC2__
 __attribute__((__objc_exception__))
 #endif
-
 @interface SmscRouterError : UMASN1Sequence
 {
     int                         _errorTypes; /*bitfield */
@@ -60,7 +58,6 @@ __attribute__((__objc_exception__))
     SmscRouterInternalError     _internalErr;
     NSString                    *_humanReadable;
 }
-
 @property(readwrite,strong)     NSString *humanReadable;
 
 -(int) errorTypes;
