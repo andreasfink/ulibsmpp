@@ -78,7 +78,6 @@
 		A6BCC8F92AE6DF5300C34D40 /* UniversalEMIUCP.h in Headers */ = {isa = PBXBuildFile; fileRef = A6BCC8F62AE6DF5300C34D40 /* UniversalEMIUCP.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		A6BCC8FA2AE6DF5300C34D40 /* SmscConnectionEMIUCP.h in Headers */ = {isa = PBXBuildFile; fileRef = A6BCC8F72AE6DF5300C34D40 /* SmscConnectionEMIUCP.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		A6BCC8FB2AE6DF5300C34D40 /* SmscConnectionEMIUCP.m in Sources */ = {isa = PBXBuildFile; fileRef = A6BCC8F82AE6DF5300C34D40 /* SmscConnectionEMIUCP.m */; };
-		A6DA330D2D941C6800B7027F /* um.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A6DA330C2D941C6800B7027F /* um.framework */; };
 		A6DB3E74191E41810090FC94 /* ulibsmpp.m in Sources */ = {isa = PBXBuildFile; fileRef = A6DB3E73191E41810090FC94 /* ulibsmpp.m */; };
 		A6DDD9D3163621FD002FA7CC /* NSString+UniversalSMPP.m in Sources */ = {isa = PBXBuildFile; fileRef = A6DDD9D1163621FD002FA7CC /* NSString+UniversalSMPP.m */; };
 		A6DDD9D81636221A002FA7CC /* NSMutableString+UniversalSMPP.m in Sources */ = {isa = PBXBuildFile; fileRef = A6DDD9D61636221A002FA7CC /* NSMutableString+UniversalSMPP.m */; };
@@ -163,7 +162,6 @@
 		A6BCC8F72AE6DF5300C34D40 /* SmscConnectionEMIUCP.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SmscConnectionEMIUCP.h; sourceTree = "<group>"; };
 		A6BCC8F82AE6DF5300C34D40 /* SmscConnectionEMIUCP.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SmscConnectionEMIUCP.m; sourceTree = "<group>"; };
 		A6D54EAA181EAE630030B3BD /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		A6DA330C2D941C6800B7027F /* um.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = um.framework; path = "/Library/Application Support/FinkTelecomServices/frameworks/um.framework"; sourceTree = "<absolute>"; };
 		A6DB3E73191E41810090FC94 /* ulibsmpp.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ulibsmpp.m; sourceTree = "<group>"; };
 		A6DDD9281635FAFA002FA7CC /* ulibsmpp-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ulibsmpp-Prefix.pch"; sourceTree = "<group>"; };
 		A6DDD92B1635FBC6002FA7CC /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = InfoPlist.strings; sourceTree = "<group>"; };
@@ -185,7 +183,6 @@
 			files = (
 				A6798B9F22BBBAD00019806C /* ulib.framework in Frameworks */,
 				A642ADB91AC9CEE500854472 /* Foundation.framework in Frameworks */,
-				A6DA330D2D941C6800B7027F /* um.framework in Frameworks */,
 				A68348C528854CF3003351AF /* ulibasn1.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -233,7 +230,6 @@
 				22278AFA162D53D200633C39 /* Foundation.framework */,
 				A6798B9E22BBBAD00019806C /* ulib.framework */,
 				A68348C428854CF3003351AF /* ulibasn1.framework */,
-				A6DA330C2D941C6800B7027F /* um.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
