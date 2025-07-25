@@ -6,7 +6,7 @@
 //  Copyright 2008-2014 Andreas Fink, Paradieshofstrasse 101, 4054 Basel, Switzerland
 //
 
-#import <Foundation/Foundation.h>
+#import <ulib/framework.h>
 
 #define UUID_STR_LEN 36
 #ifndef range_func_t

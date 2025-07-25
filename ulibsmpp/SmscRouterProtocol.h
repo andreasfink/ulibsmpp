@@ -8,7 +8,7 @@
 
 #pragma error dont use anymore
 
-#import <Foundation/Foundation.h>
+#import <ulib/framework.h>
 
 
 /*

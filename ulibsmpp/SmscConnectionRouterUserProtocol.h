@@ -6,7 +6,7 @@
 //  Copyright (c) 2012 Andreas Fink. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
+#import <ulib/framework.h>
 #import <ulibsmpp/SmscConnectionMessagePassingProtocol.h>
 
 //@protocol SmscConnectionMessageProtocol;

@@ -6,7 +6,7 @@
 //  Copyright 2008-2014 Andreas Fink, Röschenzerstr. 27, 4058 Basel, Switzerland
 //
 
-#import <Foundation/Foundation.h>
+#import <ulib/framework.h>
 
 typedef	enum TonType
 {
