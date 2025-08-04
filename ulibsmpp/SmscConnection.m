@@ -8,9 +8,13 @@
 
 #import <um/um.h>
 #import "SmscConnection.h"
-#import "SmscConnectionTransaction.h"
+#import <ulibsmpp/SmscConnectionTransaction.h>
 #include <uuid/uuid.h>
+<<<<<<< HEAD
 #import <ulibsmpp/UMSmppError.h>
+=======
+#import <ulibsmpp/SmscRouterError.h>
+>>>>>>> release-2.1
 
 #define	EMPTYSTRINGFORNIL(a)	(a?a:@"")
 #define	EMPTYIPFORNIL(a)        (a?a:@"0.0.0.0")

@@ -293,6 +293,5 @@ typedef enum SMPPConnectionMode
 //+ (int)old_globalToNetworkError:(SmscConnectionErrorCode)e;
 
 - (void)setAlphaEncodingString:(NSString *)alphaCoding;
-+ (NSString *)stringFromGsm8:(NSData *)d;
 @end
 

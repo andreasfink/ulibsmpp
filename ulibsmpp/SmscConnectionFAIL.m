@@ -161,6 +161,7 @@
     [formatter setDateFormat:@"yyyyMMddHHmmss"];
     NSString *reportText = [NSString stringWithFormat:@"id:%@ sub:001 dlvrd:001 submit date:%@ done date:%@ stat:UNDELVRD err:%03d text:no-route-to-destination",
                             msg.routerReference,
+<<<<<<< HEAD
                             msg.submitTimestamp     ?    [formatter stringFromDate:msg.submitTimestamp.dateValue]
                                                          :[formatter stringFromDate:[NSDate date]],
                             msg.messageAttempted 	?   [formatter stringFromDate:msg.messageAttempted.dateValue]
@@ -176,6 +177,25 @@
     report.reportText               = reportText;
     report.fromNumber               = msg.toNumber.stringValue;
     report.toNumber                 = msg.fromNumber.stringValue;
+=======
+                            msg.submitDate ?    [formatter stringFromDate:msg.submitDate]:[formatter stringFromDate:[NSDate date]],
+                            msg.messageAttempted ? [formatter stringFromDate:msg.messageAttempted]:[formatter stringFromDate:[NSDate date]],
+                            errorToReturn.dlrError];
+    report.reportType               = SMS_REPORT_UNDELIVERABLE;
+    if(errorToReturn == NULL)
+    {
+        errorToReturn = [_router createError];
+        [errorToReturn setSmppErrorCode:ESME_RSYSERR];
+    }
+    report.error                    = errorToReturn;
+    report.routerReference          = msg.routerReference;
+    report.providerReference      = msg.providerReference;
+    report.userReference            = msg.userReference;
+    report.originalSendingObject    = msg.originalSendingObject;
+    report.reportText               = reportText;
+    report.source                   = msg.destination;
+    report.destination              = msg.source;
+>>>>>>> release-2.1
     
     [sendingObject deliverReport:report
                        forObject:self
@@ -221,17 +241,28 @@
     [formatter setDateFormat:@"yyyyMMddHHmmss"];
     NSString *reportText = [NSString stringWithFormat:@"id:%@ sub:001 dlvrd:001 submit date:%@ done date:%@ stat:DELIVRD err:000",
                             msg.routerReference,
+<<<<<<< HEAD
                             msg.submitTimestamp  ?    [formatter stringFromDate:msg.submitTimestamp.dateValue]:[formatter stringFromDate:[NSDate date]],
                             msg.messageAttempted ? [formatter stringFromDate:msg.messageAttempted.dateValue]:[formatter stringFromDate:[NSDate date]]];
     report.reportType               = UMMESSAGE_STATUS_DELIVERED;
+=======
+                            msg.submitDate ?    [formatter stringFromDate:msg.submitDate]:[formatter stringFromDate:[NSDate date]],
+                            msg.messageAttempted ? [formatter stringFromDate:msg.messageAttempted]:[formatter stringFromDate:[NSDate date]]];
+    report.reportType               = SMS_REPORT_DELIVERED;
+>>>>>>> release-2.1
     report.error                    = NULL;
     report.routerReference          = msg.routerReference.stringValue;
     report.providerReference        = msg.providerReference.stringValue;
     report.userReference            = msg.userReference.stringValue;
     report.originalSendingObject    = msg.originalSendingObject;
     report.reportText               = reportText;
+<<<<<<< HEAD
     report.fromNumber               = msg.toNumber.stringValue;
     report.toNumber                 = msg.fromNumber.stringValue;
+=======
+    report.source                   = msg.destination;
+    report.destination              = msg.source;
+>>>>>>> release-2.1
     [sendingObject submitReport:report
                       forObject:self
                     synchronous:NO];

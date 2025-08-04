@@ -11,6 +11,7 @@
 
 @interface SmscStandardReport : UMObject <SmscConnectionReportProtocol>
 {
+<<<<<<< HEAD
     NSString    *_userReference;
     NSString    *_routerReference;
     NSString    *_providerReference;
@@ -29,13 +30,33 @@
     NSString    *_reportTypeAsString;
     UMDeliveryReportType _reportType;
     id          _currentTransaction;
+=======
+    NSString    *userReference;
+    NSString    *routerReference;
+    NSString    *providerReference;
+    UMSigAddr   *destination;
+    UMSigAddr   *source;
+    NSString    *reportText;
+    SmscRouterError *error;
+    int         priority;
+    id          originalSendingObject;
+    NSString    *imsi;
+    NSString    *msc;
+    NSString    *mcc;
+    NSString    *mnc;
+    int         responseCode;
+    id<SmscConnectionMessageProtocol>   reportToMsg;
+    NSString    *reportTypeAsString;
+    DeliveryReportType reportType;
+    id          currentTransaction;
+>>>>>>> release-2.1
 }
 
 @property(readwrite,strong)  NSString    *userReference;
 @property(readwrite,strong)  NSString    *routerReference;
 @property(readwrite,strong)  NSString    *providerReference;
-@property(readwrite,strong) NSString   *fromNumber;
-@property(readwrite,strong) NSString   *toNumber;
+@property(readwrite,strong)  UMSigAddr   *destination;
+@property(readwrite,strong)  UMSigAddr   *source;
 @property(readwrite,strong)  NSString    *reportText;
 @property(readwrite,strong)  SmscRouterError *error;
 @property(readwrite,assign)  int         priority;

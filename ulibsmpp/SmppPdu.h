@@ -258,9 +258,16 @@ typedef unsigned long        SmppPduSequence;
     long                _esme_addr_ton;
     long                _esme_addr_npi;
     NSString            *esme_addr;
+<<<<<<< HEAD
     long                _ms_availability_status;
     long                _sc_interface_version;
     NSMutableDictionary *_tlvs;
+=======
+    long                ms_availability_status;
+    
+    long                sc_interface_version;
+    NSMutableDictionary *tlv;
+>>>>>>> release-2.1
 }
 
 
@@ -285,7 +292,7 @@ typedef unsigned long        SmppPduSequence;
 @property(readwrite,assign) long                protocol_id;
 @property(readwrite,assign) long                priority_flag;
 @property(readwrite,strong) NSData              *message_payload;
-@property(readwrite,strong) NSMutableDictionary *tlvs;
+@property(readwrite,strong) NSMutableDictionary *tlv;
 @property(readwrite,strong) NSString            *message_id;
 @property(readwrite,assign) long                replace_if_present_flag;
 @property(readwrite,assign) long                dest_addr_subunit;

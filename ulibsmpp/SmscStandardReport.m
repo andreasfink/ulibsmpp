@@ -12,12 +12,30 @@
 
 @implementation SmscStandardReport
 
+@synthesize userReference;
+@synthesize routerReference;
+@synthesize providerReference;
+@synthesize destination;
+@synthesize source;
+@synthesize reportText;
+@synthesize reportType;
+@synthesize error;
+
+@synthesize priority;
+@synthesize originalSendingObject;
+@synthesize imsi;
+@synthesize msc;
+@synthesize mcc;
+@synthesize mnc;
+@synthesize responseCode;
+@synthesize reportToMsg;
+@synthesize reportTypeAsString;
+@synthesize currentTransaction;
+
 - (NSString *)responseCodeToString
 {
-    return [NSString stringWithFormat:@"%d",_responseCode];
+    return [NSString stringWithFormat:@"%d",responseCode];
 }
-
-
 @end
 
 #endif

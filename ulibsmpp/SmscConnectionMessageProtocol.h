@@ -52,29 +52,24 @@
 #define	REPORT_FAILURE	2
 #define	REPORT_BUFFERED	4
 
-typedef enum SmscMessageState
-{
-    MESSAGE_STATE_NEW           = 0,
-    MESSAGE_STATE_ENROUTE       = 1,
-    MESSAGE_STATE_DELIVERED     = 2,
-    MESSAGE_STATE_EXPIRED       = 3,
-    MESSAGE_STATE_DELETED		= 4,
-	MESSAGE_STATE_UNDELIVERABLE = 5,
-	MESSAGE_STATE_ACCEPTED		= 6,
-	MESSAGE_STATE_REJECTED		= 7,
-    MESSAGE_STATE_UNKNOWN       = 8,
-} SmscMessageState;
+#define	MESSAGE_STATE_ENROUTE		1
+#define	MESSAGE_STATE_DELIVERED		2
+#define	MESSAGE_STATE_EXPIRED	    3
+#define	MESSAGE_STATE_DELETED		4
+#define	MESSAGE_STATE_UNDELIVERABLE 5
+#define	MESSAGE_STATE_ACCEPTED		6
+#define	MESSAGE_STATE_UNKNOWN		7
+#define	MESSAGE_STATE_REJECTED		8
 
 
 @class SRMessageState;
 
 @protocol SmscConnectionMessageProtocol<NSObject>
 
-@property(readwrite)    id userTransaction;
-@property(readwrite)    id routerTransaction;
-@property(readwrite)    id providerTransaction;
-@property(readwrite)    id originalSendingObject;
+- (void) setRouterReference:(NSString *)msgid;
+- (NSString *)routerReference;
 
+<<<<<<< HEAD
 @property(readwrite)    id<SmscConnectionUserProtocol>user;
 
 @property(readwrite)    UMDirtyString *instance;
@@ -111,8 +106,90 @@ typedef enum SmscMessageState
 @property(readwrite)    SmscMessageState messageStateCode;
 @property(readwrite)    UMDirtyInteger *messagePriority;
 @property(readwrite)    UMDirtyInteger *replaceIfPresentFlag;
+=======
+- (void) setUserReference:(NSString *)msgid;
+- (NSString *)userReference;
+>>>>>>> release-2.1
 
+- (void) setUser:(id<SmscConnectionUserProtocol>)user;
+- (id<SmscConnectionUserProtocol>)user;
+
+- (void) setUserMessageReference:(NSData *)ref;
+- (NSData *)userMessageReference;
+
+- (void) setProviderReference:(NSString *)msgid;
+- (NSString *)providerReference;
+
+//- (int)dbStatusFlags;
+//- (void)setDbStatusFlags:(int)flags;
+- (NSString *)type;
+- (NSString *)method;
+//- (NSString *)addr;
+- (NSString *)inboundMethod;
+- (void) setInboundMethod:(NSString *)method;
+- (NSString *)inboundType;
+- (void) setInboundType:(NSString *)type;
+- (NSString *)inboundAddress;
+- (void) setInboundAddress:(NSString *)addr;
+- (void) setSource:(UMSigAddr *)from;
+- (UMSigAddr *)source;
+- (void) setDestination:(UMSigAddr *)to;
+- (UMSigAddr *)destination;
+- (void) setDeliveryReportAddress:(UMSigAddr *)reportTo;
+- (UMSigAddr *)deliveryReportAddress;
+- (void) setDeliveryReportMask:(UMReportMaskValue)mask;
+- (UMReportMaskValue) deliveryReportMask;
+- (void) setPduDcs:(NSInteger)dcs;
+- (NSInteger) pduDcs;
+- (void) setMessageClass:(NSInteger)messageClass;
+- (NSInteger) messageClass;
+- (void) setPduCoding:(NSInteger)coding;
+- (NSInteger) pduCoding;
+- (void) setPduPid:(NSInteger)pid;
+- (NSInteger) pduPid;
+- (void) setReplyPath:(NSInteger)rp;
+- (NSInteger) replyPath;
+- (void) setPduUdh:(NSData *)udh;
+- (NSData *) pduUdh;
+- (void) setUdhIndicator:(NSInteger)i;
+- (NSInteger) udhIndicator;
+- (void) setPduContent:(NSData *)content;
+- (NSData *)pduContent;
+- (NSDate *)messageAttempted;
+- (NSDate *)submitDate;
+- (NSDate *)submitAckTime;
+- (void) setSubmitAckTime:(NSDate *)d;
+- (void) setValidity:(NSDate *)d;
+- (NSDate *)validity;
+- (void) setDeferred:(NSDate *)d;
+- (NSDate *)deferred;
+- (void) setSubmitString: (NSString *)s;
+- (NSString *)submitString;
+- (NSDate *)submitErrTime;
+- (void) setSubmitErrTime:(NSDate *)d;
+- (NSInteger)submitErrCode;
+- (void) setSubmitErrCode:(NSInteger)err;
+- (int) networkErrorCode;
+- (void)setNetworkErrorCode:(int)c;
+
+- (int) messageStateCode;
+- (void) setMessageStateCode:(int)state;
+
+- (void) setUserTransaction:(id)transaction;
+- (id) userTransaction;
+
+- (void) setRouterTransaction:(id)transaction;
+- (id) routerTransaction;
+- (int) messagePriority;
+- (void) setMessagePriority:(int)prio;
+- (int) replaceIfPresentFlag;
+- (void) setReplaceIfPresentFlag:(int)i;
+- (id)originalSendingObject;
+- (void)setOriginalSendingObject:(id)obj;
+- (NSString *)instance;
+- (void)setInstance:(NSString *)instance;
 @optional
+<<<<<<< HEAD
 @property(readwrite)     UMDirtyString *smsc_srism_gt;
 @property(readwrite)     UMDirtyString *smsc_srism_map;
 @property(readwrite)     UMDirtyString *smsc_fsm_gt;
@@ -132,7 +209,38 @@ typedef enum SmscMessageState
 @property(readwrite)     UMDirtyString *mnc;
 
 @property(readwrite)     NSMutableDictionary *tlvs;
+=======
+- (NSString *)smsc1;
+- (void)setSmsc1:(NSString *)smsc1;
+- (NSString *)smsc2;
+- (void)setSmsc2:(NSString *)smsc2;
+- (NSString *)smsc3;
+- (void)setSmsc3:(NSString *)smsc3;
+- (NSString *)opc1;
+- (NSString *)opc2;
+- (NSString *)dpc1;
+- (NSString *)dpc2;
+- (NSInteger)userFlags;
+- (void)setUserFlags:(NSInteger)flags;
+- (NSString *)msc;
+- (void)setMsc:(NSString *)msc;
+- (NSString *)hlr;
+- (NSString *)mcc;
+- (void)setMcc:(NSString *)mcc;
+- (NSString *)mnc;
+- (void)setMnc:(NSString *)mnc;
+- (NSString *)imsi;
+- (void)setImsi:(NSString *)imsi;
+- (NSString *)toString;
+- (void)setToString:(NSString *)t;
+- (UMStringWithHistory *)dbUser;
+- (void)setString:(NSString *)newValue;
+>>>>>>> release-2.1
 
+- (BOOL)equals:(id<SmscConnectionMessageProtocol>)msg;
+
+- (NSDictionary *)tlvs;
+- (void)setTlvs:(NSDictionary *)tlvs;
 
 @end
 #endif
