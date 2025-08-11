@@ -1220,19 +1220,10 @@ end:
     UMMessage * msg = [_router createMessage];
     @try
     {
-<<<<<<< HEAD
         msg.submissionMethod = UMDIRTY_STRING(@"smpp");
         msg.submissionType   = UMDIRTY_STRING(@"submit");
         msg.fromIp        = UMDIRTY_STRING([_uc connectedRemoteAddress]);
         msg.user = _user;
-        
-=======
-        [msg setInboundMethod: @"smpp"];
-        [msg setInboundType:@"submit"];
-        [msg setInboundAddress: [_uc connectedRemoteAddress]];
-        msg.user = self.user;
-
->>>>>>> release-2.1
         [pdu resetCursor];
 
         /*serviceType = */
@@ -1256,7 +1247,6 @@ end:
                 @throw([NSException exceptionWithName:@"ESME_RINVSRCADR"
                                                reason:NULL
                                              userInfo:@{
-<<<<<<< HEAD
                     @"sysmsg" : @"invalid_source_address (address does not only contain digits)",
                     @"func": @(__func__),
                     @"obj":self,
@@ -1267,20 +1257,6 @@ end:
             }
         }
         msg.fromNumber = UMDIRTY_STRING([from asString:1]);
-        
-=======
-                                                        @"sysmsg" : @"invalid_source_address (address does not only contain digits)",
-                                                        @"func": @(__func__),
-                                                        @"obj":self,
-                                                        @"code":@(ESME_RINVSRCADR)
-                                                        }
-                        ]);
-
-            }
-        }
-        msg.source = from;
-
->>>>>>> release-2.1
         ton  = (UMTonType)[pdu grabInt8];
         npi  = (UMNpiType)[pdu grabInt8];
         addr = [pdu grabStringWithEncoding:NSISOLatin1StringEncoding	maxLength:31];
@@ -1300,7 +1276,6 @@ end:
                 @throw([NSException exceptionWithName:@"ESME_RINVDSTADR"
                                                reason:NULL
                                              userInfo:@{
-<<<<<<< HEAD
                     @"sysmsg" : @"invalid_destination_addres (address does not only contain digits)",
                     @"func": @(__func__),
                     @"obj":self,
@@ -1310,18 +1285,6 @@ end:
             }
         }
         msg.toNumber = UMDIRTY_STRING([to asString:1]);
-=======
-                                                        @"sysmsg" : @"invalid_destination_addres (address does not only contain digits)",
-                                                        @"func": @(__func__),
-                                                        @"obj":self,
-                                                        @"code":@(ESME_RINVDSTADR)
-                                                        }
-                        ]);
-            }
-        }
-        msg.destination = to;
->>>>>>> release-2.1
-        
         NSInteger esmClass = [pdu grabInt8];
         /* TODO: do something with ESM class */
 
@@ -1334,7 +1297,6 @@ end:
             @throw([NSException exceptionWithName:@"ESME_RINVESMCLASS"
                                            reason:NULL
                                          userInfo:@{
-<<<<<<< HEAD
                 @"sysmsg" : @"error_wrong_esm_clas should be 0x03 for store & forward",
                 @"func": @(__func__),
                 @"obj":self,
@@ -1368,34 +1330,6 @@ end:
         NSString *validityPeriodString      = [pdu grabStringWithEncoding:NSISOLatin1StringEncoding maxLength:255];
         NSDate *validityPeriod              = [SmppPdu smppTimestampFromString:validityPeriodString];
         msg.validity = UMDIRTY_DATE(validityPeriod);
-=======
-                                                    @"sysmsg" : @"error_wrong_esm_clas should be 0x03 for store & forward",
-                                                    @"func": @(__func__),
-                                                    @"obj":self,
-                                                    @"code":@(ESME_RINVESMCLASS)
-                                                    }
-                    ]);
-        }
-        if(esmClass & SMPP_PDU_ESM_CLASS_SUBMIT_UDH_INDICATOR)
-        {
-            msg.udhIndicator=1;
-        }
-        if(esmClass & SMPP_PDU_ESM_CLASS_SUBMIT_RPI)
-        {
-            msg.replyPath = 1;
-        }
-
-        [msg setPduPid:  (int) [pdu grabInt8]];
-        [msg setMessagePriority: (int) [pdu grabInt8]];
-
-        NSString *defferredDeliveryString = [pdu grabStringWithEncoding:NSISOLatin1StringEncoding maxLength:255];
-        NSDate *defferredDelivery = [SmppPdu smppTimestampFromString:defferredDeliveryString];
-        [msg setDeferred:defferredDelivery];
-
-        NSString *validityPeriodString   = [pdu grabStringWithEncoding:NSISOLatin1StringEncoding maxLength:255];
-        NSDate *validityPeriod = [SmppPdu smppTimestampFromString:validityPeriodString];
-        [msg setValidity:validityPeriod];
->>>>>>> release-2.1
         UMRequestMaskValue dlrMask = (UMRequestMaskValue)[pdu grabInt8];
         UMReportMaskValue requestMask = 0;
         if(dlrMask & REQUEST_MASK_SUCCESS_OR_FAIL)
@@ -1410,7 +1344,6 @@ end:
         {
             requestMask |= (UMDLR_MASK_BUFFERED | UMDLR_MASK_SUBMIT);
         }
-<<<<<<< HEAD
         msg.deliveryReportMask      = [[UMDirtyInteger alloc]initWithInteger:requestMask];
         msg.replaceIfPresentFlag    = [[UMDirtyInteger alloc]initWithInteger:([pdu grabInt8] ? 1 : 0)];
         int dcs = (int)[pdu grabInt8];
@@ -1469,23 +1402,13 @@ end:
             }
         }
         msg.pduDcs= UMDIRTY_INTEGER(dcs);
-=======
-        [msg setDeliveryReportMask:requestMask];
-        [msg setReplaceIfPresentFlag: ([pdu grabInt8] ? YES : NO)];
-        [msg setPduDcs: [pdu grabInt8]];
->>>>>>> release-2.1
-        
     //	int i;
         
     /*	i = */[pdu grabInt8];
     //	[msg setDefaultMessageId: i];
         int length = (int)[pdu grabInt8];
             
-<<<<<<< HEAD
         if(msg.pduUdhIndicator.integerValue==YES)
-=======
-        if(msg.udhIndicator)
->>>>>>> release-2.1
         {
             if(length< 1)
             {
@@ -1530,30 +1453,17 @@ end:
             data = [[NSData alloc] initWithBytes: &((unsigned char *)[pdu.payload bytes])[pdu.cursor] length:dataLen];
             [pdu setCursor: pdu.cursor + dataLen + 1];
         }
-<<<<<<< HEAD
         msg.pduUdh = UMDIRTY_DATA(udh);
         msg.pduContent = UMDIRTY_DATA(data);
         msg.plaintextContent = UMDIRTY_STRING([SmscConnectionSMPP stringFromGsm8:data]);
         
         [pdu grabTlvsWithDefinitions:_tlvDefs];
         msg.tlvsText = UMDIRTY_STRING([pdu.tlvs jsonString]);
-=======
-        [msg setPduUdh: udh];
-        [msg setPduContent: data];
-        
-        [pdu grabTlvsWithDefinitions:_tlvDefs];
-        if([msg respondsToSelector:@selector(setTlvs:)])
-        {
-            [msg setTlvs:[pdu tlv]];
-        }
->>>>>>> release-2.1
-		
         switch(pdu.dest_addr_subunit)
         {
             case 0x00: /* Unknown (default) */
                 break;
             case 0x01: /* MS Display */
-<<<<<<< HEAD
                 msg.messageClass= UMDIRTY_INTEGER(MC_CLASS0); /* 3GPP TS 23.038 Class 0 = flash SMS */
                 break;
             case 0x02: /* Mobile Equipment */
@@ -1564,18 +1474,6 @@ end:
                 break;
             case 0x04: /* External Unit 1 */
                 msg.messageClass= UMDIRTY_INTEGER(MC_CLASS3); /* default meaning: TE specific (see 3GPP TS 27.005 [8]) */
-=======
-                msg.messageClass= MC_CLASS0; /* 3GPP TS 23.038 Class 0 = flash SMS */
-                break;
-            case 0x02: /* Mobile Equipment */
-                msg.messageClass=MC_CLASS1; /* 3GPP TS 23.038 Default meaning: ME-specific. */
-                break;
-            case 0x03: /* Smart Card 1 (expected to be SIM if a SIM exists in the MS) */
-                msg.messageClass= MC_CLASS2; /* 3GPP TS 23.038 (U)SIM specific message */
-                break;
-            case 0x04: /* External Unit 1 */
-                msg.messageClass= MC_CLASS3; /* default meaning: TE specific (see 3GPP TS 27.005 [8]) */
->>>>>>> release-2.1
                 break;
             default: /*  5 to 255 = reserved */
                 @throw([NSException exceptionWithName:@"ESME_ROPTPARNOTALLWD"
@@ -1616,16 +1514,8 @@ end:
         }
         [_user increase];
         [self.inboundMessagesThroughput increase];
-
-<<<<<<< HEAD
         msg.user = _user;
         msg.userReference = UMDIRTY_STRING([pdu sequenceString]);
-=======
-        username = [_user username];
-        [msg.dbUser setString:username];
-        [msg setUserReference:[pdu sequenceString]];
->>>>>>> release-2.1
-        
         transaction = [[SmscConnectionTransaction alloc] init];
         [transaction setLowerObject:self];
         transaction.sequenceNumber = [pdu sequenceString];
@@ -1682,14 +1572,8 @@ end:
     UMMessage *msg = transaction.message;
     if(msg)
     {
-<<<<<<< HEAD
         msg.networkErrorCode = UMDIRTY_INTEGER(stCode);
         msg.providerReference = UMDIRTY_STRING(remoteMessageId);
-=======
-        [msg setNetworkErrorCode:stCode];
-        msg.providerReference = remoteMessageId;
->>>>>>> release-2.1
-
         if (stCode == UM_NO_ERROR)
         {
             [_router submitMessageSent:msg
@@ -1734,18 +1618,12 @@ end:
     
     [pdu unpackDeliverSmUsingTlvDefinition:_tlvDefs];
     
-<<<<<<< HEAD
     esmClass = (int)pdu.esm_class;
     msg.esmClass = UMDIRTY_INTEGER(esmClass);
     deliveryReport = esmClass == SMPP_PDU_ESM_CLASS_DELIVER_SMSC_DELIVER_ACK ||
                      esmClass == SMPP_PDU_ESM_CLASS_DELIVER_SME_DELIVER_ACK ||
                      esmClass == SMPP_PDU_ESM_CLASS_DELIVER_SME_MANULAL_ACK ||
                      esmClass == SMPP_PDU_ESM_CLASS_DELIVER_INTERM_DEL_NOTIFICATION;
-=======
-    esmClass = (int)[pdu esm_class];
-    
-    deliveryReport = esmClass == SMPP_PDU_ESM_CLASS_DELIVER_SMSC_DELIVER_ACK || esmClass == SMPP_PDU_ESM_CLASS_DELIVER_SME_DELIVER_ACK ||        	esmClass == SMPP_PDU_ESM_CLASS_DELIVER_SME_MANULAL_ACK || esmClass == SMPP_PDU_ESM_CLASS_DELIVER_INTERM_DEL_NOTIFICATION;
->>>>>>> release-2.1
     
     transaction = [[SmscConnectionTransaction alloc] init];
     transaction.sequenceNumber =[pdu sequenceString];
@@ -1831,11 +1709,7 @@ end:
     else if(message)
     {
         /* this is an ack on a sms-mo we sent upstream */
-<<<<<<< HEAD
         message.networkErrorCode=UMDIRTY_INTEGER(stCode);
-=======
-        [message setNetworkErrorCode:stCode];
->>>>>>> release-2.1
         // As we sent a deliver sm upstream, remoteMessageId should be our own router id we send before
         // so definitively not the same as the provider's message ID we used before.
         //message.connectionReference = remoteMessageId;/* FIXME setRemoteMessageId should be what? */
@@ -2087,15 +1961,11 @@ end:
     UMNpiType npi       = (UMNpiType)[pdu grabInt8];
     NSString *addr      = [pdu grabStringWithEncoding:NSISOLatin1StringEncoding maxLength:21];
     
-<<<<<<< HEAD
     if([_router respondsToSelector:@selector(queryMessage:withNumber:)])
     {
         UMMessage *msg = [_router queryMessage:messageId withNumber:toNumber];
         pdu2 = [SmppPdu OutgoingQueryRespOK:msg withId:messageId];
     }
-
-=======
->>>>>>> release-2.1
     if([_router respondsToSelector:@selector(queryMessage:)])
     {
         UMMessage * msg = [_router queryMessage:messageId];
@@ -2249,11 +2119,7 @@ end:
     report = [_router createReport];
     errInt = UM_ESME_RUNKNOWNERR;
 
-<<<<<<< HEAD
     NSDictionary *tlvs = pdu.tlvs;
-=======
-    NSDictionary *tlvs = [pdu tlv];
->>>>>>> release-2.1
     /* check for SMPP v.3.4. and message_payload */
     messagePayload = tlvs[@"message payload"];
     shortMessage = pdu.short_message;
@@ -2499,16 +2365,13 @@ end:
 		[to setNpi:(UMNpiType)[pdu dest_addr_npi]];
 		[to setAddr:[pdu destination_addr]];
 	}
-<<<<<<< HEAD
     report.toNumber = to.stringValue;
     report.tlvsText = [tlvs jsonString];
-=======
     [report setDestination:to];
     if([report respondsToSelector:@selector(setTlvs:)])
     {
         [report setTlvs:tlvs];
     }
->>>>>>> release-2.1
     return report;
 }
 
@@ -2525,15 +2388,9 @@ end:
     SmppPdu *pdu2;
     
     msg = [_router createMessage];
-<<<<<<< HEAD
     msg.submissionMethod   = UMDIRTY_STRING(@"smpp");
     msg.submissionType     = UMDIRTY_STRING(@"deliver");
 	msg.fromIp          = UMDIRTY_STRING([_uc connectedRemoteAddress]);
-=======
-	[msg setInboundMethod: @"smpp"];
-	[msg setInboundType:@"deliver"];
-	[msg setInboundAddress: [_uc connectedRemoteAddress]];
->>>>>>> release-2.1
     
 	ton  = (int)[pdu source_addr_ton];
 	npi  = (int)[pdu source_addr_npi];
@@ -2550,11 +2407,7 @@ end:
 		[from setNpi: npi];
 		[from setAddr: addr];
 	}
-<<<<<<< HEAD
     msg.fromNumber = UMDIRTY_STRING(from.stringValue);
-=======
-    msg.source = from;
->>>>>>> release-2.1
     
 	ton  = (int)[pdu dest_addr_ton];
 	npi  = (int)[pdu dest_addr_npi];
@@ -2571,7 +2424,6 @@ end:
 		[to setNpi: npi];
 		[to setAddr: addr];
 	}
-<<<<<<< HEAD
     msg.toNumber = UMDIRTY_STRING(to.stringValue);
 
     int esmClass = (int)[pdu esm_class];
@@ -2592,28 +2444,6 @@ end:
     int length = (int)[pdu sm_length];
     NSData *sm = [pdu short_message];
     if(msg.pduUdhIndicator.integerValue)
-=======
-    msg.destination = to;
-    
-    int esmClass = (int)[pdu esm_class];
-    if(esmClass & SMPP_PDU_ESM_CLASS_DELIVER_UDH_INDICATOR)
-    {
-        msg.udhIndicator = 1;
-    }
-    if(esmClass & SMPP_PDU_ESM_CLASS_DELIVER_RPI)
-    {
-        msg.replyPath = 1;
-    }
-    [msg setPduPid:   [pdu protocol_id]];
-	[msg setMessagePriority: (int)[pdu priority_flag]];
-    
-    [msg setReplaceIfPresentFlag: ([pdu replace_if_present_flag] ? YES : NO)];
-	[msg setPduDcs: [pdu data_coding]];
-    
-    int length = (int)[pdu sm_length];
-    NSData *sm = [pdu short_message];
-    if(msg.udhIndicator)
->>>>>>> release-2.1
 	{
 		if(length< 1)
 			goto length_error;

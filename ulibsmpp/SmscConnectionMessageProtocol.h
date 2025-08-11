@@ -69,7 +69,6 @@
 - (void) setRouterReference:(NSString *)msgid;
 - (NSString *)routerReference;
 
-<<<<<<< HEAD
 @property(readwrite)    id<SmscConnectionUserProtocol>user;
 
 @property(readwrite)    UMDirtyString *instance;
@@ -106,10 +105,6 @@
 @property(readwrite)    SmscMessageState messageStateCode;
 @property(readwrite)    UMDirtyInteger *messagePriority;
 @property(readwrite)    UMDirtyInteger *replaceIfPresentFlag;
-=======
-- (void) setUserReference:(NSString *)msgid;
-- (NSString *)userReference;
->>>>>>> release-2.1
 
 - (void) setUser:(id<SmscConnectionUserProtocol>)user;
 - (id<SmscConnectionUserProtocol>)user;
@@ -189,7 +184,6 @@
 - (NSString *)instance;
 - (void)setInstance:(NSString *)instance;
 @optional
-<<<<<<< HEAD
 @property(readwrite)     UMDirtyString *smsc_srism_gt;
 @property(readwrite)     UMDirtyString *smsc_srism_map;
 @property(readwrite)     UMDirtyString *smsc_fsm_gt;
@@ -209,33 +203,6 @@
 @property(readwrite)     UMDirtyString *mnc;
 
 @property(readwrite)     NSMutableDictionary *tlvs;
-=======
-- (NSString *)smsc1;
-- (void)setSmsc1:(NSString *)smsc1;
-- (NSString *)smsc2;
-- (void)setSmsc2:(NSString *)smsc2;
-- (NSString *)smsc3;
-- (void)setSmsc3:(NSString *)smsc3;
-- (NSString *)opc1;
-- (NSString *)opc2;
-- (NSString *)dpc1;
-- (NSString *)dpc2;
-- (NSInteger)userFlags;
-- (void)setUserFlags:(NSInteger)flags;
-- (NSString *)msc;
-- (void)setMsc:(NSString *)msc;
-- (NSString *)hlr;
-- (NSString *)mcc;
-- (void)setMcc:(NSString *)mcc;
-- (NSString *)mnc;
-- (void)setMnc:(NSString *)mnc;
-- (NSString *)imsi;
-- (void)setImsi:(NSString *)imsi;
-- (NSString *)toString;
-- (void)setToString:(NSString *)t;
-- (UMStringWithHistory *)dbUser;
-- (void)setString:(NSString *)newValue;
->>>>>>> release-2.1
 
 - (BOOL)equals:(id<SmscConnectionMessageProtocol>)msg;
 

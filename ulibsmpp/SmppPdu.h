@@ -258,16 +258,9 @@ typedef unsigned long        SmppPduSequence;
     long                _esme_addr_ton;
     long                _esme_addr_npi;
     NSString            *esme_addr;
-<<<<<<< HEAD
     long                _ms_availability_status;
     long                _sc_interface_version;
     NSMutableDictionary *_tlvs;
-=======
-    long                ms_availability_status;
-    
-    long                sc_interface_version;
-    NSMutableDictionary *tlv;
->>>>>>> release-2.1
 }
 
 
