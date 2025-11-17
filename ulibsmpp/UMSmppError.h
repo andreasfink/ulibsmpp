@@ -8,10 +8,10 @@
 #import <ulib/ulib.h>
 
 /* this is a global error table which can be mapped to different errors */
-typedef     enum UMSmppError
+typedef enum UMSmppError
 {
     /* these are SMPP errors which get returned during submit */
-    UM_NO_ERROR                                                                 = 0x00000000,
+    UM_ESME_ROK                                                                  = 0x00000000,
     UM_ESME_RINVMSGLEN                                                          = 0x00000001,
     UM_ESME_RINVCMDLEN                                                          = 0x00000002,
     UM_ESME_RINVCMDID                                                           = 0x00000003,

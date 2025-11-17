@@ -9,8 +9,8 @@
 #import <ulib/ulib.h>
 #import <ulibasn1/ulibasn1.h>
 #import <ulibsmpp/GSMErrorCode.h>
-#import <ulibsmpp/SmppErrorCode.h>
-#import <ulibsmpp/DeliveryReportErrorCode.h>
+#import <ulibsmpp/UMSmppError.h>
+#import <ulibsmpp/UMDeliveryReportErrorCode.h>
 typedef enum UMSmscRouterErrorTag
 {
     UMSmscRouterErrorTag_dlrError   = 1,
@@ -52,8 +52,8 @@ __attribute__((__objc_exception__))
 @interface SmscRouterError : UMASN1Sequence
 {
     int                         _errorTypes; /*bitfield */
-    DeliveryReportErrorCode     _dlrErr;
-    SmppErrorCode               _smppErr;
+    UMDeliveryReportErrorCode   _dlrErr;
+    UMSmppError                 _smppErr;
     GSMErrorCode                _gsmErr;
     SmscRouterInternalError     _internalErr;
     NSString                    *_humanReadable;
@@ -65,12 +65,12 @@ __attribute__((__objc_exception__))
 - (SmscRouterError *)initWithGsmErrorCode:(GSMErrorCode)e;
 - (SmscRouterError *)initWithGsmErrorCode:(GSMErrorCode)e usingOptions:(NSDictionary *)options;
 
-- (SmscRouterError *)initWithDeliveryReportErrorCode:(DeliveryReportErrorCode)e;
-- (SmscRouterError *)initWithDeliveryReportErrorCode:(DeliveryReportErrorCode)e usingOptions:(NSDictionary *)options;
+- (SmscRouterError *)initWithDeliveryReportErrorCode:(UMDeliveryReportErrorCode)e;
+- (SmscRouterError *)initWithDeliveryReportErrorCode:(UMDeliveryReportErrorCode)e usingOptions:(NSDictionary *)options;
 
 
-- (SmscRouterError *)initWithSmppErrorCode:(SmppErrorCode)e;
-- (SmscRouterError *)initWithSmppErrorCode:(SmppErrorCode)e usingOptions:(NSDictionary *)options;
+- (SmscRouterError *)initWithSmppErrorCode:(UMSmppError)e;
+- (SmscRouterError *)initWithSmppErrorCode:(UMSmppError)e usingOptions:(NSDictionary *)options;
 
 //- (SmscRouterError *)initWithSmscConnectionErrorCode:(SmscConnectionErrorCode)e;
 //- (SmscRouterError *)initWithSmscConnectionErrorCode:(SmscConnectionErrorCode)e usingOptions:(NSDictionary *)options;
@@ -81,23 +81,23 @@ __attribute__((__objc_exception__))
 
 - (void)setGsmErrorCode:(GSMErrorCode)e;
 - (void)setGsmErrorCode:(GSMErrorCode)e usingOptions:(NSDictionary *)options;
-- (void)setDeliveryReportErrorCode:(DeliveryReportErrorCode)e;
-- (void)setDeliveryReportErrorCode:(DeliveryReportErrorCode)e usingOptions:(NSDictionary *)options;
-- (void)setSmppErrorCode:(SmppErrorCode)e;
-- (void)setSmppErrorCode:(SmppErrorCode)e usingOptions:(NSDictionary *)options;
+- (void)setDeliveryReportErrorCode:(UMDeliveryReportErrorCode)e;
+- (void)setDeliveryReportErrorCode:(UMDeliveryReportErrorCode)e usingOptions:(NSDictionary *)options;
+- (void)setSmppErrorCode:(UMSmppError)e;
+- (void)setSmppErrorCode:(UMSmppError)e usingOptions:(NSDictionary *)options;
 //- (void)setSmscConnectionErrorCode:(SmscConnectionErrorCode)e;
 //- (void)setSmscConnectionErrorCode:(SmscConnectionErrorCode)e usingOptions:(NSDictionary *)options;
 - (void)setInternalErrorCode:(SmscRouterInternalError)e;
 - (void)setInternalErrorCode:(SmscRouterInternalError)e usingOptions:(NSDictionary *)options;
 
 - (GSMErrorCode)gsmErrorUsingOptions:(NSDictionary *)options;
-- (SmppErrorCode)smppErrorUsingOptions:(NSDictionary *)options;
+- (UMSmppError)smppErrorUsingOptions:(NSDictionary *)options;
 //- (SmscConnectionErrorCode)smscErrorUsingOptions:(NSDictionary *)options;
 - (SmscRouterInternalError)internalErrorUsingOptions:(NSDictionary *)options;
 
 - (GSMErrorCode)gsmError;
-- (DeliveryReportErrorCode)dlrError;
-- (SmppErrorCode)smppError;
+- (UMDeliveryReportErrorCode)dlrError;
+- (UMSmppError)smppError;
 //- (SmscConnectionErrorCode)smscError;
 - (SmscRouterInternalError)internalError;
 

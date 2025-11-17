@@ -7,11 +7,11 @@
 //
 
 #import <ulib/framework.h>
-
 #import <ulibsmpp/UniversalSMSC.h>
 #import <ulibsmpp/SmppTlv.h>
 #import <ulibsmpp/SmppMultiResult.h>
 #import <ulibsmpp/UMSmppError.h>
+@class UMMessageObject;
 
 typedef    enum SmppReportingEntity
 {
@@ -285,7 +285,7 @@ typedef unsigned long        SmppPduSequence;
 @property(readwrite,assign) long                protocol_id;
 @property(readwrite,assign) long                priority_flag;
 @property(readwrite,strong) NSData              *message_payload;
-@property(readwrite,strong) NSMutableDictionary *tlv;
+@property(readwrite,strong) NSMutableDictionary *tlvs;
 @property(readwrite,strong) NSString            *message_id;
 @property(readwrite,assign) long                replace_if_present_flag;
 @property(readwrite,assign) long                dest_addr_subunit;
@@ -343,46 +343,46 @@ typedef unsigned long        SmppPduSequence;
 + (SmppPdu *)OutgoingUnbindRespOK;
 + (SmppPdu *)OutgoingUnbindRespErr:(UMSmppError) err;
 + (SmppPdu *)OutgoingGenericNack:(UMSmppError) err;
-+ (SmppPdu *)OutgoingSubmitSm:(UMMessage *)msg;
-+ (SmppPdu *)OutgoingSubmitSm:(UMMessage *)msg options:(NSDictionary *)options;
-+ (SmppPdu *)OutgoingSubmitSm:(UMMessage *)msg esmClass:(int)esmclass serviceType:(NSString *)servicetype;
-+ (SmppPdu *)OutgoingSubmitSm:(UMMessage *)msg esmClass:(int)esmclass serviceType:(NSString *)servicetype options:(NSDictionary *)options;
-+ (SmppPdu *)OutgoingSubmitSmReport:(UMMessage *)msg reportingEntity:(SmppReportingEntity)re;
-+ (SmppPdu *)OutgoingSubmitSmRespOK:(UMMessage *)msg
++ (SmppPdu *)OutgoingSubmitSm:(UMMessageObject *)msg;
++ (SmppPdu *)OutgoingSubmitSm:(UMMessageObject *)msg options:(NSDictionary *)options;
++ (SmppPdu *)OutgoingSubmitSm:(UMMessageObject *)msg esmClass:(int)esmclass serviceType:(NSString *)servicetype;
++ (SmppPdu *)OutgoingSubmitSm:(UMMessageObject *)msg esmClass:(int)esmclass serviceType:(NSString *)servicetype options:(NSDictionary *)options;
++ (SmppPdu *)OutgoingSubmitSmReport:(UMMessageObject *)msg reportingEntity:(SmppReportingEntity)re;
++ (SmppPdu *)OutgoingSubmitSmRespOK:(UMMessageObject *)msg
                              withId:(NSString *)id;
 + (SmppPdu *)OutgoingSubmitSmRespErr:(UMSmppError) err;
-+ (SmppPdu *)OutgoingSubmitMulti:(UMMessage *)msg distributionList:(NSString *) distributionListName;
++ (SmppPdu *)OutgoingSubmitMulti:(UMMessageObject *)msg distributionList:(NSString *) distributionListName;
 + (SmppPdu *)OutgoingSubmitMultiRespOK:(NSArray *)unsuccessfulDeliveries /* array of  SmppMultiResult */
                                 withId:(NSString *)msgid;
 + (SmppPdu *)OutgoingSubmitMultiRespErr:(UMSmppError) err;
 
 
-+ (SmppPdu *)OutgoingDeliverSm:(UMMessage *)msg;
-+ (SmppPdu *)OutgoingDeliverSm:(UMMessage *)msg
++ (SmppPdu *)OutgoingDeliverSm:(UMMessageObject *)msg;
++ (SmppPdu *)OutgoingDeliverSm:(UMMessageObject *)msg
                        options:(NSDictionary *)options;
-+ (SmppPdu *)OutgoingDeliverSm:(UMMessage *)msg
++ (SmppPdu *)OutgoingDeliverSm:(UMMessageObject *)msg
                       esmClass:(int)esmclass
                 serviceType:(NSString *)servicetype;
 
-+ (SmppPdu *)OutgoingDeliverSm:(UMMessage *)msg
++ (SmppPdu *)OutgoingDeliverSm:(UMMessageObject *)msg
                       esmClass:(int)esmclass serviceType:(NSString *)servicetype
                        options:(NSDictionary *)options;
 
-+ (SmppPdu *)OutgoingDeliverSmReport:(UMMessage *)msg
++ (SmppPdu *)OutgoingDeliverSmReport:(UMMessageObject *)msg
                      reportingEntity:(SmppReportingEntity)re;
-+ (SmppPdu *)OutgoingDeliverSmRespOK:(UMMessage *)msg
++ (SmppPdu *)OutgoingDeliverSmRespOK:(UMMessageObject *)msg
                               withId:(NSString *)msg_id;
 + (SmppPdu *)OutgoingDeliverSmReportRespOK:(UMMessageReport *)msg
                               withId:(NSString *)msg_id;
 + (SmppPdu *)OutgoingDeliverSmRespErr:(UMSmppError) err;
-+ (SmppPdu *)OutgoingDataSm:(UMMessage *)msg;
-+ (SmppPdu *)OutgoingDataSm:(UMMessage *)msg esmClass:(int)esmclass serviceType:(NSString *)servicetype;
++ (SmppPdu *)OutgoingDataSm:(UMMessageObject *)msg;
++ (SmppPdu *)OutgoingDataSm:(UMMessageObject *)msg esmClass:(int)esmclass serviceType:(NSString *)servicetype;
 
-+ (SmppPdu *)OutgoingDataSmRespOK:(UMMessage *)msg
++ (SmppPdu *)OutgoingDataSmRespOK:(UMMessageObject *)msg
                            withId:(NSString *)msg_id;
 + (SmppPdu *)OutgoingDataSmRespErr:(UMSmppError) err messageId:(NSString *)msgid networkType:(SmppNetworkType)nt;
 + (SmppPdu *)OutgoingQuerySm;
-+ (SmppPdu *)OutgoingQueryRespOK:(UMMessage *)msg
++ (SmppPdu *)OutgoingQueryRespOK:(UMMessageObject *)msg
                           withId:(NSString *)msg_id;
 + (SmppPdu *)OutgoingQuerySmRespErr:(UMSmppError) err;
 + (SmppPdu *)OutgoingCancelSm;

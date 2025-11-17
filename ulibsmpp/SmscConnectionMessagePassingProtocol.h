@@ -32,19 +32,19 @@
  
  */
  
-#import <um/um.h>
+#import <ummessage/ummessage.h>
 
 @protocol SmscConnectionMessagePassingProtocol<NSObject>
 
-- (void) submitMessage:(UMMessage *)msg
+- (void) submitMessage:(UMMessageObject *)msg
              forObject:(id)sendingObject
            synchronous:(BOOL)sync;
 
-- (void) submitMessageSent:(UMMessage *)msg
+- (void) submitMessageSent:(UMMessageObject *)msg
                  forObject:(id)reportingObject
                synchronous:(BOOL)sync;
 
-- (void) submitMessageFailed:(UMMessage *)msg
+- (void) submitMessageFailed:(UMMessageObject *)msg
                        error:(NSNumber *)error /* UMSmppError */
                    forObject:(id)reportingObject
                  synchronous:(BOOL)sync;
@@ -63,15 +63,15 @@
                   forObject:(id)reportingObject
                 synchronous:(BOOL)sync;
 
-- (void) deliverMessage:(UMMessage *)msg
+- (void) deliverMessage:(UMMessageObject *)msg
               forObject:(id)sendingObject
             synchronous:(BOOL)sync;
 
-- (void) deliverMessageSent:(UMMessage *)msg
+- (void) deliverMessageSent:(UMMessageObject *)msg
                   forObject:(id)reportingObject
                 synchronous:(BOOL)sync;
 
-- (void) deliverMessageFailed:(UMMessage *)msg
+- (void) deliverMessageFailed:(UMMessageObject *)msg
                         error:(NSNumber *)error /* UMSmppError */
                     forObject:(id)reportingObject
                   synchronous:(BOOL)sync;

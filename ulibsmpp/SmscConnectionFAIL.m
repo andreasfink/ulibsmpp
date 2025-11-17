@@ -127,7 +127,7 @@
 }
 
 /* submit Message: router->outbound TX connection */
-- (void) submitMessage:(UMMessage *)msg
+- (void) submitMessage:(UMMessageObject *)msg
              forObject:(id)sendingObject
            synchronous:(BOOL)sync
 {
@@ -206,7 +206,7 @@
 }
 
 /* deliverMessage: router->inbound RX connection . we just ack it.*/
-- (void) deliverMessage:(UMMessage *)msg
+- (void) deliverMessage:(UMMessageObject *)msg
               forObject:(id)sendingObject
             synchronous:(BOOL)sync
 {

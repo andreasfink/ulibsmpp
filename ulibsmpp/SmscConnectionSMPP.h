@@ -269,7 +269,7 @@ typedef enum SMPPConnectionMode
 
 
 - (UMMessageReport *)deliverPduToReport:(SmppPdu *)pdu;
-- (UMMessage *)deliverPduToMsg:(SmppPdu *)pdu;
+- (UMMessageObject *)deliverPduToMsg:(SmppPdu *)pdu;
 
 - (int) setConfig: (NSDictionary *) dict;
 - (NSDictionary *) getConfig;

@@ -14,9 +14,16 @@
 #include <sys/signal.h>
 #import "SmscConnectionUserProtocol.h"
 #import <ulibsmpp/UMSmppError.h>
+#import <ulibsms/ulibsms.h>
 
 #define SMPP_RECONNECT_DELAY                 30
 #define SMPP_WAIT_FOR_BIND_RESPONSE_DELAY    30
+
+#define MC_UNDEF                SMS_PARAM_UNDEFINED
+#define MC_CLASS0                0
+#define MC_CLASS1                1
+#define MC_CLASS2                2
+#define MC_CLASS3                3
 
 #include <unistd.h> /* for usleep */
 
@@ -332,7 +339,7 @@ struct  SmppPduTableEntry	SmppPDUTable[] =
 
 	if(transaction.type == TT_SUBMIT_MESSAGE)
 	{
-        if(transaction.error.intValue == UM_NO_ERROR)
+        if(transaction.error.intValue == UM_ESME_ROK)
 		{
             pdu2 = [SmppPdu OutgoingSubmitSmRespOK:transaction.message
                                             withId:transaction.message.routerReference.stringValue];
@@ -351,7 +358,7 @@ struct  SmppPduTableEntry	SmppPDUTable[] =
 
 	else if(transaction.type == TT_DELIVER_MESSAGE)
 	{
-        if(transaction.error.intValue == UM_NO_ERROR)
+        if(transaction.error.intValue == UM_ESME_ROK)
 		{
             pdu2 = [SmppPdu OutgoingDeliverSmRespOK:transaction.message withId:transaction.message.routerReference.stringValue];
 			err = [self sendPdu: pdu2 withSequenceString:transaction.sequenceNumber];
@@ -370,7 +377,7 @@ struct  SmppPduTableEntry	SmppPDUTable[] =
     else if(transaction.type == TT_DELIVER_REPORT)
 	{
         /* we received a delivery report from a provider and have to ack it */
-        if(transaction.error.intValue == UM_NO_ERROR)
+        if(transaction.error.intValue == UM_ESME_ROK)
 		{
             UMMessageReport * report = [transaction report];
             pdu2 = [SmppPdu OutgoingDeliverSmReportRespOK:report
@@ -391,7 +398,7 @@ struct  SmppPduTableEntry	SmppPDUTable[] =
     
     else if(transaction.type == TT_SUBMIT_REPORT)
 	{
-        if(transaction.error.intValue == UM_NO_ERROR)
+        if(transaction.error.intValue == UM_ESME_ROK)
 		{
 			pdu2 = [SmppPdu OutgoingSubmitSmRespOK:transaction.message withId:transaction.message.routerReference.stringValue];
 			err = [self sendPdu: pdu2 withSequenceString:transaction.sequenceNumber];
@@ -413,7 +420,7 @@ struct  SmppPduTableEntry	SmppPDUTable[] =
 - (int) activePhase:(int)outbound
 {
 	id<SmscConnectionTransactionProtocol>		an;
-	UMMessage           *msg;
+	UMMessageObject           *msg;
 	UMMessageReport     *report;
 	SmppPdu *pdu;
 	int i=0;
@@ -1217,7 +1224,7 @@ end:
     NSString *username;
 //    int err;
 
-    UMMessage * msg = [_router createMessage];
+    UMMessageObject * msg = [_router createMessage];
     @try
     {
         msg.submissionMethod = UMDIRTY_STRING(@"smpp");
@@ -1455,7 +1462,7 @@ end:
         }
         msg.pduUdh = UMDIRTY_DATA(udh);
         msg.pduContent = UMDIRTY_DATA(data);
-        msg.plaintextContent = UMDIRTY_STRING([SmscConnectionSMPP stringFromGsm8:data]);
+        msg.plaintextContent = UMDIRTY_STRING([data stringFromGsm8]);
         
         [pdu grabTlvsWithDefinitions:_tlvDefs];
         msg.tlvsText = UMDIRTY_STRING([pdu.tlvs jsonString]);
@@ -1569,12 +1576,12 @@ end:
     }
     
     SmscConnectionTransaction *transaction = [self findOutgoingTransaction:[pdu sequenceString]];
-    UMMessage *msg = transaction.message;
+    UMMessageObject *msg = transaction.message;
     if(msg)
     {
         msg.networkErrorCode = UMDIRTY_INTEGER(stCode);
         msg.providerReference = UMDIRTY_STRING(remoteMessageId);
-        if (stCode == UM_NO_ERROR)
+        if (stCode == UM_ESME_ROK)
         {
             [_router submitMessageSent:msg
                             forObject:self
@@ -1614,7 +1621,7 @@ end:
     SmscConnectionTransaction *transaction = NULL;
     int esmClass;
     UMMessageReport * report=NULL;
-    UMMessage * msg=NULL;
+    UMMessageObject * msg=NULL;
     
     [pdu unpackDeliverSmUsingTlvDefinition:_tlvDefs];
     
@@ -1677,7 +1684,7 @@ end:
 - (void) handleIncomingDeliverSmResp: (SmppPdu *)pdu
 {
     UMMessageReport *report;
-    UMMessage       *message;
+    UMMessageObject       *message;
     
     UMSmppError stCode = pdu.err;
 //    NSString *remoteMessageId = [pdu grabStringWithEncoding:NSASCIIStringEncoding maxLength:65];
@@ -1691,7 +1698,7 @@ end:
         /* this is an ack to a delivery report we sent upstream */
         //[report setNetworkErrorCode:stCode];
         //[report setRemoteMessageId:remoteMessageId];
-        if (stCode == UM_NO_ERROR)
+        if (stCode == UM_ESME_ROK)
         {
             [_router deliverReportSent:report
                             forObject:self
@@ -1713,7 +1720,7 @@ end:
         // As we sent a deliver sm upstream, remoteMessageId should be our own router id we send before
         // so definitively not the same as the provider's message ID we used before.
         //message.connectionReference = remoteMessageId;/* FIXME setRemoteMessageId should be what? */
-        if (stCode == UM_NO_ERROR)
+        if (stCode == UM_ESME_ROK)
         {
             [_router deliverMessageSent:message
                              forObject:self
@@ -1895,7 +1902,7 @@ end:
     systemId = [pdu grabStringWithEncoding:NSISOLatin1StringEncoding	maxLength:16];
     
     err = pdu.err;
-    if ((err != UM_NO_ERROR) && (err != UM_ESME_RALYBND))
+    if ((err != UM_ESME_ROK) && (err != UM_ESME_RALYBND))
     {
         NSString *msg = [NSString stringWithFormat:@"SmscConnectionSMPP:handleIncomingBindReceiverResp: [%@]: SMSC rejected login to transmit, code 0x%08lx (%@) with <%@>.\r\n", _name, (unsigned long )err, UMSmppErrorAsString(err), systemId];
         [self.logFeed majorError:0 withText:msg];
@@ -1931,7 +1938,7 @@ end:
     systemId = [pdu grabStringWithEncoding:NSUTF8StringEncoding maxLength:16];
     
     err = pdu.err;
-    if ((err != UM_NO_ERROR) && (err != UM_ESME_RALYBND))
+    if ((err != UM_ESME_ROK) && (err != UM_ESME_RALYBND))
     {
         NSString *msg = [NSString stringWithFormat:@"SmscConnectionSMPP:handleIncomingBindTransmitterResp: [%@]: SMSC rejected login to transmit, code 0x%08lx (%@) with <%@>.\r\n", _name, (unsigned long )err, UMSmppErrorAsString(err), systemId];
         [self.logFeed majorError:0 withText:msg];
@@ -1963,12 +1970,12 @@ end:
     
     if([_router respondsToSelector:@selector(queryMessage:withNumber:)])
     {
-        UMMessage *msg = [_router queryMessage:messageId withNumber:toNumber];
+        UMMessageObject *msg = [_router queryMessage:messageId withNumber:addr];
         pdu2 = [SmppPdu OutgoingQueryRespOK:msg withId:messageId];
     }
     if([_router respondsToSelector:@selector(queryMessage:)])
     {
-        UMMessage * msg = [_router queryMessage:messageId];
+        UMMessageObject * msg = [_router queryMessage:messageId];
         pdu2 = [SmppPdu OutgoingQueryRespOK:msg withId:messageId];
     }
     else
@@ -2065,7 +2072,7 @@ end:
     systemId = [pdu grabStringWithEncoding:NSUTF8StringEncoding maxLength:16];
     
     err = pdu.err;
-    if ((err != UM_NO_ERROR) && (err != UM_ESME_RALYBND))
+    if ((err != UM_ESME_ROK) && (err != UM_ESME_RALYBND))
     {
         NSString *msg = [NSString stringWithFormat:@"SmscConnectionSMPP:handleIncomingBindTransceiverResp: [%@]: SMSC rejected login (systemId: <%@>) to transmit, code 0x%08lx (%@).\r\n", _name, systemId,(unsigned long )err, UMSmppErrorAsString(err)];
         [self.logFeed majorError:0 withText:msg];
@@ -2350,8 +2357,7 @@ end:
 		[from setNpi:(UMNpiType)[pdu source_addr_npi]];
 		[from setAddr:[pdu source_addr]];
 	}
-    [report setSource:from];
-    
+    report.fromNumber=from.stringValue;
     UMSigAddr *to;
     if([pdu dest_addr_ton] == UMTON_ALPHANUMERIC)
 	{
@@ -2367,17 +2373,12 @@ end:
 	}
     report.toNumber = to.stringValue;
     report.tlvsText = [tlvs jsonString];
-    [report setDestination:to];
-    if([report respondsToSelector:@selector(setTlvs:)])
-    {
-        [report setTlvs:tlvs];
-    }
     return report;
 }
 
-- (UMMessage *)deliverPduToMsg:(SmppPdu *)pdu
+- (UMMessageObject *)deliverPduToMsg:(SmppPdu *)pdu
 {
-    UMMessage * msg;
+    UMMessageObject * msg;
     UMSigAddr *from, *to;
     NSString *addr;
     int ton, npi;

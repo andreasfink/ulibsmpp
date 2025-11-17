@@ -6,7 +6,7 @@
 //  Copyright 2008-2014 Andreas Fink, Paradieshofstrasse 101, 4054 Basel, Switzerland
 //
 
-#import <um/um.h>
+#import <ummessage/ummessage.h>
 
 #import <ulibsmpp/SmscConnectionMessageProtocol.h>
 #import <ulibsmpp/SmscConnectionTransactionProtocol.h>
@@ -15,7 +15,7 @@
 @interface SmscConnectionTransaction : UMObject<SmscConnectionTransactionProtocol>
 {
     NSString                            *_sequenceNumber;
-    UMMessage                           *_message;
+    UMMessageObject                           *_message;
     UMMessageReport                     *_report;
     id                                  _upperObject;
     id                                  _lowerObject;
@@ -28,7 +28,7 @@
 
 @property(readwrite,atomic,strong)			NSString *sequenceNumber;
 
-@property(readwrite,atomic,strong)  UMMessage                       *message;   //Transaction retains the message; it will released when no more needed
+@property(readwrite,atomic,strong)  UMMessageObject                       *message;   //Transaction retains the message; it will released when no more needed
 @property(readwrite,atomic,strong)  UMMessageReport                 *report;
 @property(readwrite,atomic,strong)  NSNumber                        *error;
 @property(readwrite,atomic,strong)  NSString                        *reference;

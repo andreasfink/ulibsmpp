@@ -5,7 +5,7 @@
 //  Created by Andreas Fink on 28/03/14.
 //
 //
-#if 0
+#if 0 /* now using UMSmppErrorCode */
 typedef enum SmppErrorCode
 {
     ESME_ROK                                                               = 0x00000000,
@@ -169,5 +169,5 @@ typedef enum SmppErrorCode
 
 } SmppErrorCode;
 
-#endif
 
+#endif

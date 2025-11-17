@@ -7,5 +7,5 @@
 //
 
 @protocol SmscMessageWellProtocol<NSObject>
-- (UMMessage *)createMessage;
+- (UMMessageObject *)createMessage;
 @end

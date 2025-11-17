@@ -9,7 +9,7 @@
 #import <ulib/framework.h>
 
 #import <ulib/ulib.h>
-#import <um/um.h>
+#import <ummessage/ummessage.h>
 #import <ulibsmpp/UniversalSMSC.h>
 #import <ulibsmpp/UniversalSMPP.h>
 #import <ulibsmpp/UniversalEMIUCP.h>

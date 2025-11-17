@@ -61,4 +61,4 @@ typedef enum UMDeliveryReportErrorCode
     DLR_ERROR_NO_ROUTE_TO_DESTINATION               = 63,
     DLR_ERROR_UNKNOWN_ALPHABETH                     = 71,
     DLR_ERROR_USSD_BUSY                             = 72,
-} DeliveryReportErrorCode;
+} UMDeliveryReportErrorCode;

@@ -6,7 +6,7 @@
 //  Copyright 2008-2014 Andreas Fink, Paradieshofstrasse 101, 4054 Basel, Switzerland
 //
 
-#import <um/um.h>
+#import <ummessage/ummessage.h>
 #import "SmscConnection.h"
 #import <ulibsmpp/SmscConnectionTransaction.h>
 #include <uuid/uuid.h>
@@ -69,7 +69,7 @@
 }
 
 /* submit Message: router->outbound TX connection */
-- (void) submitMessage:(UMMessage *)msg
+- (void) submitMessage:(UMMessageObject *)msg
              forObject:(id)sendingObject
            synchronous:(BOOL)sync
 {
@@ -86,7 +86,7 @@
 }
 
 /* deliverMessage: router->inbound RX connection */
-- (void) deliverMessage:(UMMessage *)msg
+- (void) deliverMessage:(UMMessageObject *)msg
               forObject:(id)sendingObject
             synchronous:(BOOL)sync
 {
@@ -103,7 +103,7 @@
 }
 
 /* deliver_sm to proxy for testing purposes*/
-- (void) proxyDeliverMessage:(UMMessage *)msg forObject:(id)sendingObject
+- (void) proxyDeliverMessage:(UMMessageObject *)msg forObject:(id)sendingObject
 {
 #ifdef USE_SMPP_PRIORITY_QUEUES
     [deliverMessageQueue   addToQueue:msg priority:[msg priority]];
@@ -151,7 +151,7 @@
 }
 
 /* submitMessageSent: router->inbound TX connection */
-- (void) submitMessageSent:(UMMessage *)msg
+- (void) submitMessageSent:(UMMessageObject *)msg
                  forObject:(id)reportingObject
                synchronous:(BOOL)sync
 {
@@ -159,14 +159,14 @@
     SmscConnectionTransaction *transaction = [self findIncomingTransactionByMessage:msg];
     if(transaction)
     {
-        transaction.error = @(UM_NO_ERROR);
+        transaction.error = @(UM_ESME_ROK);
         [_ackNackQueue append:transaction];
     }
 }
 
 
 /* submitMessageFailed: router->inbound TX connection */
-- (void)submitMessageFailed:(UMMessage *)msg
+- (void)submitMessageFailed:(UMMessageObject *)msg
                       error:(NSNumber *)error
                   forObject:(id)reportingObject
                 synchronous:(BOOL)sync
@@ -190,7 +190,7 @@
     SmscConnectionTransaction * transaction = [self findIncomingTransactionByReport:rep];
     if(transaction)
     {
-        transaction.error   = @(UM_NO_ERROR);
+        transaction.error   = @(UM_ESME_ROK);
         [_ackNackQueue append:transaction];
     }
 }
@@ -210,7 +210,7 @@
     }
 }
 
-- (void) deliverMessageSent:(UMMessage *)msg
+- (void) deliverMessageSent:(UMMessageObject *)msg
                   forObject:(id)reportingObject
                 synchronous:(BOOL)sync
 {
@@ -218,13 +218,13 @@
     SmscConnectionTransaction * transaction = [self findOutgoingTransactionByMessage:msg];
     if(transaction)
     {
-        transaction.error   = @(UM_NO_ERROR);
+        transaction.error   = @(UM_ESME_ROK);
         [_ackNackQueue append:transaction];
     }
 }
 
 
-- (void)deliverMessageFailed:(UMMessage *)msg
+- (void)deliverMessageFailed:(UMMessageObject *)msg
                        error:(NSNumber *)error
                    forObject:(id)reportingObject
                  synchronous:(BOOL)sync
@@ -247,7 +247,7 @@
     SmscConnectionTransaction * transaction = [self findIncomingTransactionByReport:rep];
     if(transaction)
     {
-        transaction.error   = @(UM_NO_ERROR);
+        transaction.error   = @(UM_ESME_ROK);
         [_ackNackQueue append:transaction];
     }
 }
@@ -443,7 +443,7 @@
     return transaction;
 }
 
-- (id) findIncomingTransactionByMessage:(UMMessage *)msg
+- (id) findIncomingTransactionByMessage:(UMMessageObject *)msg
 {
     return msg.userTransaction;
 
@@ -468,7 +468,7 @@
     */
 }
 
-- (id) findOutgoingTransactionByMessage:(UMMessage *)msg
+- (id) findOutgoingTransactionByMessage:(UMMessageObject *)msg
 {
     SmscConnectionTransaction * transaction = NULL;
     NSString *key;
@@ -589,7 +589,7 @@
 {
     SmscConnectionTransaction *t = transaction;
 	[self removeIncomingTransaction:t];
-    t.error = @(UM_NO_ERROR);
+    t.error = @(UM_ESME_ROK);
     [_ackNackQueue append:transaction];
 }
 
@@ -605,7 +605,7 @@
 - (void) ackOutgoingTransaction:(SmscConnectionTransaction *)t
 {
 	[self removeOutgoingTransaction:t];
-    t.error     = @(UM_NO_ERROR);
+    t.error     = @(UM_ESME_ROK);
     [_ackNackQueue append:t];
 
 }

@@ -119,7 +119,7 @@ NSString *UMNetworkErrorAsString(UMNetworkError e)
  
  typedef struct SmppErrorCodeListEntry
  {
-     SmppErrorCode    code;
+     UMSmppErrorCode    code;
      const char      *text;
      const char      *description;
  } SmppErrorCodeListEntry;

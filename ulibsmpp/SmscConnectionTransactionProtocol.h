@@ -5,7 +5,7 @@
 //  Created by Andreas Fink on 09.03.09.
 //  Copyright 2008-2014 Andreas Fink, Paradieshofstrasse 101, 4054 Basel, Switzerland
 //
-#import <um/um.h>
+#import <ummessage/ummessage.h>
 
 #import <ulibsmpp/SmscConnectionMessageProtocol.h>
 
@@ -20,7 +20,7 @@ typedef enum SmscConnectionTransactionType
 
 @protocol SmscConnectionTransactionProtocol<NSObject>
 
-@property(readwrite,atomic,strong)  UMMessage       *message;
+@property(readwrite,atomic,strong)  UMMessageObject       *message;
 @property(readwrite,atomic,strong)  UMMessageReport *report;
 @property(readwrite,atomic,strong)  NSString        *reference;
 @property(readwrite,atomic,strong)  NSNumber        *error;

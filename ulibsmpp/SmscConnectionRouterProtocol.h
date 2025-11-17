@@ -17,7 +17,7 @@
 @protocol SmscConnectionRouterProtocol<NSObject,SmscConnectionRouterUserProtocol>
 
 /* asking the router to provide a new message object */
-- (UMMessage *)createMessage;
+- (UMMessageObject *)createMessage;
 /* asking the router to provide a new report object */
 - (UMMessageReport *)createReport;
 
@@ -45,8 +45,8 @@
 
 @optional
 
-- (UMMessage *)queryMessage:(NSString *)msgid;
-- (UMMessage *)queryMessage:(NSString *)msgid withNumber:(NSString *)msisdn;
+- (UMMessageObject *)queryMessage:(NSString *)msgid;
+- (UMMessageObject *)queryMessage:(NSString *)msgid withNumber:(NSString *)msisdn;
 
 @optional
 - (BOOL) isAddressWhitelisted:(NSString *)remoteIpAddress

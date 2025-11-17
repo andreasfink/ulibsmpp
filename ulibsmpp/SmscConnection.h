@@ -8,7 +8,7 @@
 
 #import <ulib/framework.h>
 #import <ulib/ulib.h>
-#import <um/um.h>
+#import <ummessage/ummessage.h>
 #import <ulibsmpp/UniversalSMSUtilities.h>
 
 #import <ulibsmpp/SmscConnectionProtocol.h>
@@ -187,7 +187,7 @@ enum SmppAlphaCoding;
 
 
 - (void)transactionDone:(id<SmscConnectionTransactionProtocol>) t;
-- (void) proxyDeliverMessage:(UMMessage *)msg forObject:(id)sendingObject;
+- (void) proxyDeliverMessage:(UMMessageObject *)msg forObject:(id)sendingObject;
 - (BOOL)hasOption:(NSString *)n;
 - (void)setOption:(NSString *)n;
 - (void)clearOption:(NSString *)n;
