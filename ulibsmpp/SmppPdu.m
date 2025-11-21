@@ -1206,16 +1206,19 @@ static UMSmppError SMPP_outgoingErrorCodeMapping(UMSmppError e);
 			default:
 				ms = @"UNKNOWN";
 		}
-        
 		NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
         [formatter setDateFormat:@"yyyyMMddHHmmss"];
         
-		reportText = [NSString stringWithFormat:@"id:%@ sub:001 dlvrd:001 submit date:%@ done date:%@ stat:%@ err:%d text:Report",
+        NSString *ec = @"000";
+        if(msg.networkErrorCode)
+        {
+            ec = [NSString stringWithFormat:@"%03ld",msg.networkErrorCode.integerValue];
+        }
+		reportText = [NSString stringWithFormat:@"id:%@ sub:001 dlvrd:001 submit date:%@ done date:%@ stat:%@ err:%@ text:Report",
 					  msg.routerReference,
                       msg.submitTimestamp ? [formatter stringFromDate:msg.submitTimestamp.dateValue]:[formatter stringFromDate:[NSDate date]],
                       msg.messageAttempted ? [formatter stringFromDate:msg.messageAttempted.dateValue]:[formatter stringFromDate:[NSDate date]],
-					  ms,
-                      msg.networkErrorCode ? [NSString stringWithFormat:@"%03ld",msg.networkErrorCode.integerValue] : @"000"];
+					  ms,ec];
 		data = [reportText dataUsingEncoding:NSISOLatin1StringEncoding allowLossyConversion:YES];
 	}
 	else
