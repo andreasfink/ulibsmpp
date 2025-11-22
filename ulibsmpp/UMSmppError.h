@@ -11,7 +11,7 @@
 typedef enum UMSmppError
 {
     /* these are SMPP errors which get returned during submit */
-    UM_ESME_ROK                                                                  = 0x00000000,
+    UM_ESME_ROK                                                                 = 0x00000000,
     UM_ESME_RINVMSGLEN                                                          = 0x00000001,
     UM_ESME_RINVCMDLEN                                                          = 0x00000002,
     UM_ESME_RINVCMDID                                                           = 0x00000003,
@@ -173,6 +173,8 @@ typedef enum UMSmppError
     UM_ESME_VENDOR_SPECIFIC_INVALID_GROUP                                       = 0x10000203,
     UM_ESME_VENDOR_SPECIFIC_EXCEPTION_ENCOUNTERED                               = 0x10000204,
     UM_ESME_VENDOR_SPECIFIC_SPLITTING_FAILED                                    = 0x10000205,
+    UM_ESME_VENDOR_SPECIFIC_DATABASE_FAILURE                                    = 0x10000206,
+
 } UMSmppError;
 
 NSString *UMSmppErrorAsString(UMSmppError e);

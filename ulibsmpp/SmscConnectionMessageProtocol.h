@@ -146,8 +146,8 @@
 - (NSInteger) replyPath;
 - (void) setPduUdh:(NSData *)udh;
 - (NSData *) pduUdh;
-- (void) setUdhIndicator:(NSInteger)i;
-- (NSInteger) udhIndicator;
+- (void) setUdhIndicator:(BOOL)b;
+- (BOOL) udhIndicator;
 - (void) setPduContent:(NSData *)content;
 - (NSData *)pduContent;
 - (NSDate *)messageAttempted;

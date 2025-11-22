@@ -1,17 +1,16 @@
 //
-//  NSString+HexFunctions.m
+//  NSString+smppFunctions.m
 //  UniversalSMSUtilitites
 //
 //  Created by Andreas Fink on 27.02.09.
 //  Copyright 2008-2014 Andreas Fink, Paradieshofstrasse 101, 4054 Basel, Switzerland
 //
 
-#if 0
-#import <ulibsmpp/NSString+HexFunctions.h>
-#import <ulibsmpp/NSData+HexFunctions.h>
+#import <ulibsmpp/NSString+smppFunctions.h>
+#import <ulibsmpp/NSData+smppFunctions.h>
 #import <ulibsmpp/GsmCharSet.h>
 
-@implementation NSString (SMSUtilitiesHexFunctions)
+@implementation NSString (smppFunctions)
 
 - (NSString *) randomize
 {
@@ -304,5 +303,4 @@
 
 
 @end
-#endif
 

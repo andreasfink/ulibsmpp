@@ -20,9 +20,9 @@
 
 /* this is only for the User of a router to be implemented */
 - (void)  registerMessageRouter:(id<SmscConnectionRouterProtocol>) router;
-- (void)  unregisterMessageRouter:(id<SmscConnectionRouterProtocol>) router; 
-- (void) setConnectionName:(NSString *)connectionName;
-- (NSString *)connectionName;
+- (void)  unregisterMessageRouter:(id<SmscConnectionRouterProtocol>) router;
+- (NSString *)name;
+- (void)setName:(NSString *)name;
 
 /* this is for user and router to be implemented */
 - (void) setRouterName:(NSString *)routerName;

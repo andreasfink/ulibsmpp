@@ -73,4 +73,6 @@ typedef	enum UMNaiType
 - (NSData *) asPackedAlpha;
 - (UMSigAddr *) randomize; /* replaces X'es in the digits with random digits */
 - (NSString *)description;
+- (NSString *)stringValue;
+
 @end

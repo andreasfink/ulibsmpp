@@ -661,16 +661,6 @@
     [self removeIncomingTransaction:t];
 }
 
--(void)setConnectionName:(NSString *)connectionName
-{
-    
-}
-
--(NSString *)connectionName
-{
-    return _routerName;
-}
-
 - (NSString *)htmlStatus
 {
     NSMutableString *s = [[NSMutableString alloc]init];

@@ -8,7 +8,7 @@
 
 #import "SmppPdu.h"
 #import "ulib/ulib.h"
-#import "NSData+HexFunctions.h"
+#import "NSData+smppFunctions.h"
 #import "SmscConnectionSMPP.h"
 #import "UMSmppError.h"
 
@@ -71,7 +71,7 @@ static UMSmppError SMPP_outgoingErrorCodeMapping(UMSmppError e);
 
 
 
-- (size_t)_pdulen
+- (size_t)pdulen
 {
     _pdulen = 16 + [_payload length];
     return _pdulen;
@@ -272,10 +272,14 @@ static UMSmppError SMPP_outgoingErrorCodeMapping(UMSmppError e);
 + (SmppPdu *)OutgoingBindRespOK:(NSString *)systemId supportedVersion:(NSInteger)version rx:(BOOL)rx tx:(BOOL)tx
 {
 	if((rx==YES) && (tx==YES))
-		return [self OutgoingBindTransceiverRespOK:systemId supportedVersion:version];
-	if(rx==YES)
-		return [self OutgoingBindReceiverRespOK:systemId supportedVersion:version];
-	return [self OutgoingBindTransmitterRespOK:systemId supportedVersion:version];
+    {
+        return [self OutgoingBindTransceiverRespOK:systemId supportedVersion:version];
+    }
+    if(rx==YES)
+    {
+        return [self OutgoingBindReceiverRespOK:systemId supportedVersion:version];
+    }
+    return [self OutgoingBindTransmitterRespOK:systemId supportedVersion:version];
 }
 
 + (SmppPdu *)OutgoingBindRespError:(UMSmppError) err rx:(BOOL)rx tx:(BOOL)tx
@@ -487,8 +491,7 @@ static UMSmppError SMPP_outgoingErrorCodeMapping(UMSmppError e);
 	NSData *data;
 	NSUInteger len;
 	int use_message_payload;
-	
-    if(msg.pduUdhIndicator.integerValue)
+    if(msg.udhIndicator)
     {
 		esmclass |= SMPP_PDU_ESM_CLASS_SUBMIT_UDH_INDICATOR;
     }
@@ -533,7 +536,7 @@ static UMSmppError SMPP_outgoingErrorCodeMapping(UMSmppError e);
 	[pdu appendInt8:msg.replaceIfPresentFlag.integerValue];
 	[pdu appendInt8:msg.pduDcs.integerValue];
 	[pdu appendInt8:0];	/* predefined message text */
-    if(msg.pduUdhIndicator.integerValue)
+    if(msg.udhIndicator)
     {
         NSMutableData *d = [NSMutableData dataWithData:msg.pduUdh.data];
         [d appendData:msg.pduContent.data];
@@ -975,11 +978,11 @@ static UMSmppError SMPP_outgoingErrorCodeMapping(UMSmppError e);
 	pdu = [[SmppPdu alloc] initWithType:SMPP_PDU_SUBMIT_SM_MULTI err:UM_ESME_ROK];
     
 	esmclass = SMPP_PDU_ESM_CLASS_SUBMIT_STORE_AND_FORWARD_MODE;
-    if (msg.pduUdhIndicator.integerValue )
+    if(msg.udhIndicator)
     {
         esmclass |= SMPP_PDU_ESM_CLASS_SUBMIT_UDH_INDICATOR;
     }
-    if(msg.pduReplyPathIndicator.integerValue)
+    if(msg.replyPathIndicator)
     {
         esmclass |= SMPP_PDU_ESM_CLASS_SUBMIT_RPI;
     }
@@ -1001,7 +1004,7 @@ static UMSmppError SMPP_outgoingErrorCodeMapping(UMSmppError e);
     [pdu appendInt8:  (msg.replaceIfPresentFlag.integerValue ? 1 : 0)];
     [pdu appendInt8:  msg.pduDcs.integerValue];
 	[pdu appendInt8:  0];	/* predefined message text */
-    if(msg.pduUdhIndicator.integerValue)
+    if(msg.udhIndicator)
     {
         NSMutableData *d = [NSMutableData dataWithData:msg.pduUdh.data];
         [d appendData:msg.pduContent.data];
@@ -1130,14 +1133,15 @@ static UMSmppError SMPP_outgoingErrorCodeMapping(UMSmppError e);
     {
         we_are_delivery_report = 0;
     }
-    if (msg.pduUdhIndicator.integerValue)
+    if(msg.udhIndicator)
     {
-		esmclass |= SMPP_PDU_ESM_CLASS_SUBMIT_UDH_INDICATOR;
+        esmclass |= SMPP_PDU_ESM_CLASS_SUBMIT_UDH_INDICATOR;
     }
-    if(msg.pduReplyPathIndicator.integerValue)
+    if(msg.replyPathIndicator)
     {
-		esmclass |= SMPP_PDU_ESM_CLASS_SUBMIT_RPI;
+        esmclass |= SMPP_PDU_ESM_CLASS_SUBMIT_RPI;
     }
+
 	pdu = [[SmppPdu alloc] initWithType:SMPP_PDU_DELIVER_SM err:UM_ESME_ROK];
 	
 	[pdu appendNSStringMax:servicetype maxLength: 6];
@@ -1203,24 +1207,34 @@ static UMSmppError SMPP_outgoingErrorCodeMapping(UMSmppError e);
 			case UMMESSAGE_STATUS_REJECTED:
 				ms = @"REJECTD";
 				break;
+            case UMMESSAGE_STATUS_FAILED:
+                ms = @"FAILED";
+                break;
 			default:
 				ms = @"UNKNOWN";
 		}
-        
 		NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
         [formatter setDateFormat:@"yyyyMMddHHmmss"];
-        
-		reportText = [NSString stringWithFormat:@"id:%@ sub:001 dlvrd:001 submit date:%@ done date:%@ stat:%@ err:%d text:Report",
+        long ne=0;
+        if(msg.networkErrorCode)
+        {
+            ne = msg.networkErrorCode.integerValue;
+        }
+        else
+        {
+            ne = msg.messageError.integerValue;
+        }
+		reportText = [NSString stringWithFormat:@"id:%@ sub:001 dlvrd:001 submit date:%@ done date:%@ stat:%@ err:%03ld text:Report",
 					  msg.routerReference,
                       msg.submitTimestamp ? [formatter stringFromDate:msg.submitTimestamp.dateValue]:[formatter stringFromDate:[NSDate date]],
                       msg.messageAttempted ? [formatter stringFromDate:msg.messageAttempted.dateValue]:[formatter stringFromDate:[NSDate date]],
 					  ms,
-                      msg.networkErrorCode ? [NSString stringWithFormat:@"%03ld",msg.networkErrorCode.integerValue] : @"000"];
+                      ne];
 		data = [reportText dataUsingEncoding:NSISOLatin1StringEncoding allowLossyConversion:YES];
 	}
 	else
 	{
-        if(msg.pduUdhIndicator.integerValue)
+        if(msg.udhIndicator)
         {
             NSMutableData *d = [NSMutableData dataWithData:msg.pduUdh.data];
             [d appendData:msg.pduContent.data];
@@ -1379,11 +1393,14 @@ static UMSmppError SMPP_outgoingErrorCodeMapping(UMSmppError e);
 	NSUInteger len;
 	int use_message_payload;
 	
-    if(msg.pduUdhIndicator.integerValue)
-		esmclass |= SMPP_PDU_ESM_CLASS_SUBMIT_UDH_INDICATOR;
-    if(msg.pduReplyPathIndicator.integerValue)
-		esmclass |= SMPP_PDU_ESM_CLASS_SUBMIT_RPI;
-	
+    if(msg.udhIndicator)
+    {
+        esmclass |= SMPP_PDU_ESM_CLASS_SUBMIT_UDH_INDICATOR;
+    }
+    if(msg.replyPathIndicator)
+    {
+        esmclass |= SMPP_PDU_ESM_CLASS_SUBMIT_RPI;
+    }
 	pdu = [[SmppPdu alloc] initWithType:SMPP_PDU_DATA_SM err:UM_ESME_ROK];
 	
 	[pdu appendNSStringMax:servicetype maxLength: 6];
@@ -1401,7 +1418,7 @@ static UMSmppError SMPP_outgoingErrorCodeMapping(UMSmppError e);
     [pdu appendInt8:  msg.deliveryReportMask.integerValue ? 1 : 0];
     [pdu appendInt8:  msg.pduDcs.integerValue];
     
-    if(msg.pduUdhIndicator.integerValue)
+    if(msg.udhIndicator)
     {
         NSMutableData *d = [NSMutableData dataWithData:msg.pduUdh.data];
         [d appendData:msg.pduContent.data];
@@ -1797,7 +1814,7 @@ static UMSmppError SMPP_outgoingErrorCodeMapping(UMSmppError e);
 	_source_addr = [self grabStringWithEncoding:NSISOLatin1StringEncoding	maxLength:40];
 	_dest_addr_ton  = [self grabInt8];
 	_dest_addr_npi  = [self grabInt8];
-	_destination_addr = [self grabStringWithEncoding:NSISOLatin1StringEncoding	maxLength:31];
+	_dest_addr = [self grabStringWithEncoding:NSISOLatin1StringEncoding	maxLength:31];
 	_esm_class = (int)[self grabInt8];
     _protocol_id = [self grabInt8];
     _priority_flag = [self grabInt8];
@@ -2221,7 +2238,7 @@ static UMSmppError SMPP_outgoingErrorCodeMapping(UMSmppError e);
         [desc appendFormat:@"system type is %@\n", _source_addr];
         [desc appendFormat:@"destnation addr ton is %ld\n", _dest_addr_ton];
         [desc appendFormat:@"destination addr npi is %ld\n", _dest_addr_npi];
-        [desc appendFormat:@"destination addr is %@\n", _destination_addr];
+        [desc appendFormat:@"destination addr is %@\n", _dest_addr];
         [desc appendFormat:@"esm class is %ld\n", _esm_class];
         [desc appendFormat:@"source protocol id is %ld\n", _protocol_id];
         [desc appendFormat:@"priority flag is %ld\n", _priority_flag];
@@ -2322,7 +2339,7 @@ static UMSmppError SMPP_outgoingErrorCodeMapping(UMSmppError e);
         [desc appendFormat:@"system type is %@\n", _source_addr];
         [desc appendFormat:@"destnation addr ton is %ld\n", _dest_addr_ton];
         [desc appendFormat:@"destination addr npi is %ld\n", _dest_addr_npi];
-        [desc appendFormat:@"destination addr is %@\n", _destination_addr];
+        [desc appendFormat:@"destination addr is %@\n", _dest_addr];
         [desc appendFormat:@"esm class is %ld\n", _esm_class];
         [desc appendFormat:@"source protocol id is %ld\n", _protocol_id];
         [desc appendFormat:@"priority flag is %ld\n", _priority_flag];
@@ -2365,7 +2382,7 @@ static UMSmppError SMPP_outgoingErrorCodeMapping(UMSmppError e);
         [desc appendFormat:@"system type is %@\n", _source_addr];
         [desc appendFormat:@"destnation addr ton is %ld\n", _dest_addr_ton];
         [desc appendFormat:@"destination addr npi is %ld\n", _dest_addr_npi];
-        [desc appendFormat:@"destination addr is %@\n", _destination_addr];
+        [desc appendFormat:@"destination addr is %@\n", _dest_addr];
         [desc appendFormat:@"esm class is %ld\n", _esm_class];
         [desc appendFormat:@"registered delivery is %ld\n", _registered_delivery];
         [desc appendFormat:@"data coding is %ld\n", _data_coding];
@@ -2436,7 +2453,7 @@ static UMSmppError SMPP_outgoingErrorCodeMapping(UMSmppError e);
         [desc appendFormat:@"system type is %@\n", _source_addr];
         [desc appendFormat:@"destnation addr ton is %ld\n", _dest_addr_ton];
         [desc appendFormat:@"destination addr npi is %ld\n", _dest_addr_npi];
-        [desc appendFormat:@"destination addr is %@\n", _destination_addr];
+        [desc appendFormat:@"destination addr is %@\n", _dest_addr];
     }
     else if (_type == SMPP_PDU_REPLACE_SM)
     {
@@ -2547,7 +2564,6 @@ static UMSmppError SMPP_outgoingErrorCodeMapping(UMSmppError e);
         return [NSDate dateWithTimeIntervalSince1970:theTime];
     }
 }
-
 
 @end
 

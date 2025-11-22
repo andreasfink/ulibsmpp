@@ -1,15 +1,14 @@
 //
-//  NSString+HexFunctions.h
+//  NSString+smppFunctions.h
 //  UniversalSMSUtilitites
 //
 //  Created by Andreas Fink on 27.02.09.
 //  Copyright 2008-2014 Andreas Fink, Paradieshofstrasse 101, 4054 Basel, Switzerland
 //
 
-#if 0
-#import <ulib/framework.h>
+#import <ulib/ulib.h>
 
-@interface NSString (SMSUtilitiesHexFunctions)
+@interface NSString (smppFunctions)
 
 + (int) nibbleToInt:(char)c;
 - (NSString *) hex;
@@ -23,4 +22,3 @@
 - (NSString *) randomize;
 
 @end
-#endif

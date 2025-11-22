@@ -7,17 +7,13 @@
 //
 
 #import "UMSigAddr.h"
-#import "NSString+HexFunctions.h"
-#import "NSData+HexFunctions.h"
+#import "NSString+smppFunctions.h"
+#import "NSData+smppFunctions.h"
 #import <ulibsms/ulibsms.h>
 
 static int is_all_digits(NSString *str, int startpos);
 
 @implementation UMSigAddr
-@synthesize		ton;
-@synthesize		npi;
-@synthesize		addr;
-@synthesize     debugString;
 
 - (UMSigAddr *) initWithString: (NSString *)digits
 {
@@ -227,6 +223,11 @@ static int is_all_digits(NSString *str, int startpos);
 - (NSString *)asString
 {
 	return [self asString:1];
+}
+
+- (NSString *)stringValue;
+{
+    return [self asString:1];
 }
 
 - (NSData *)asPackedAlpha

@@ -15,9 +15,10 @@
 #import "SmscConnectionUserProtocol.h"
 #import <ulibsmpp/UMSmppError.h>
 #import <ulibsms/ulibsms.h>
+#import <ulibsmpp/NSData+smppFunctions.h>
 
 #define SMPP_RECONNECT_DELAY                 30
-#define SMPP_WAIT_FOR_BIND_RESPONSE_DELAY    30
+#define SMPP_WAIT_FOR_BIND_RESPONSE_DELAY    3000
 
 #define MC_UNDEF                SMS_PARAM_UNDEFINED
 #define MC_CLASS0                0
@@ -123,7 +124,7 @@ struct  SmppPduTableEntry	SmppPDUTable[] =
             return YES;
         }
     }
-    if ((_outgoingStatus == SMPP_STATUS_OUTGOING_ACTIVE) && (_user != NULL))
+    else if (_outgoingStatus == SMPP_STATUS_OUTGOING_ACTIVE)
     {
         return YES;
     }
@@ -278,7 +279,6 @@ struct  SmppPduTableEntry	SmppPDUTable[] =
 	int             err;
 	NSMutableData	*d;
 	unsigned char header[16];
-	
 	l	= pdu.pdulen;
     [self logOutgoingPdu:pdu];
 
@@ -908,9 +908,15 @@ end:
             {
                 UMSocketError sErr = UMSocketError_no_data;
                 sErr  = [_uc dataIsAvailable:_receivePollTimeoutMs];
+                
                 if((sErr == UMSocketError_has_data) || (sErr==UMSocketError_has_data_and_hup)) /* we received something */
                 {
                     UMSocketError sErr2 = [_uc receiveToBufferWithBufferLimit: 10240];
+                    if(sErr2 == UMSocketError_has_data)
+                    {
+                        [self checkForPackets]; /* process whatever is left */
+                        continue;
+                    }
                     if((sErr2== UMSocketError_no_data) || (sErr2==UMSocketError_connection_reset)) /* HUP */
                     {
                         NSString *msg = [NSString stringWithFormat:@"[SmscConnectionSMPP incomingReceiverThread]: EOF read"];
@@ -1221,7 +1227,7 @@ end:
     int udhLen;
     int dataLen;
     SmscConnectionTransaction *transaction;
-    NSString *username;
+ //   NSString *username;
 //    int err;
 
     UMMessageObject * msg = [_router createMessage];
@@ -1231,6 +1237,7 @@ end:
         msg.submissionType   = UMDIRTY_STRING(@"submit");
         msg.fromIp        = UMDIRTY_STRING([_uc connectedRemoteAddress]);
         msg.user = _user;
+        msg.userName = UMDIRTY_STRING(_user.username);
         [pdu resetCursor];
 
         /*serviceType = */
@@ -1313,19 +1320,19 @@ end:
         }
         if(esmClass & SMPP_PDU_ESM_CLASS_SUBMIT_UDH_INDICATOR)
         {
-            msg.pduUdhIndicator=UMDIRTY_INTEGER(1);
+            msg.udhIndicator=YES;
         }
         else
         {
-            msg.pduUdhIndicator=UMDIRTY_INTEGER(0);
+            msg.udhIndicator=NO;
         }
         if(esmClass & SMPP_PDU_ESM_CLASS_SUBMIT_RPI)
         {
-            msg.pduReplyPathIndicator = UMDIRTY_INTEGER(1);
+            msg.replyPathIndicator = YES;
         }
         else
         {
-            msg.pduReplyPathIndicator = UMDIRTY_INTEGER(0);
+            msg.replyPathIndicator = NO;
         }
         msg.pduPid =  UMDIRTY_INTEGER([pdu grabInt8]);
         msg.messagePriority = UMDIRTY_INTEGER([pdu grabInt8]);
@@ -1415,7 +1422,7 @@ end:
     //	[msg setDefaultMessageId: i];
         int length = (int)[pdu grabInt8];
             
-        if(msg.pduUdhIndicator.integerValue==YES)
+        if(msg.udhIndicator)
         {
             if(length< 1)
             {
@@ -1462,8 +1469,8 @@ end:
         }
         msg.pduUdh = UMDIRTY_DATA(udh);
         msg.pduContent = UMDIRTY_DATA(data);
-        msg.plaintextContent = UMDIRTY_STRING([data stringFromGsm8]);
-        
+        [msg expandUdh];
+        msg.plaintextContent = UMDIRTY_STRING([data smppStringFromGsm8]);
         [pdu grabTlvsWithDefinitions:_tlvDefs];
         msg.tlvsText = UMDIRTY_STRING([pdu.tlvs jsonString]);
         switch(pdu.dest_addr_subunit)
@@ -1522,6 +1529,7 @@ end:
         [_user increase];
         [self.inboundMessagesThroughput increase];
         msg.user = _user;
+        msg.userName = UMDIRTY_STRING(_user.username);
         msg.userReference = UMDIRTY_STRING([pdu sequenceString]);
         transaction = [[SmscConnectionTransaction alloc] init];
         [transaction setLowerObject:self];
@@ -2110,21 +2118,22 @@ end:
 
 - (UMMessageReport *)deliverPduToReport:(SmppPdu *)pdu
 {
-    UMMessageReport * report=NULL;
-    NSString *receiptedId =NULL;
+    UMMessageReport         *report=NULL;
+    NSString                *receiptedId=NULL;
     //NSString *submitDateString =NULL;
     //NSString *doneDateString =NULL;
-    NSData *messagePayload;
-    NSData *shortMessage;
+    NSData                  *messagePayload;
+    NSData                  *shortMessage;
     UMMessageStatusCode messageState = UMMESSAGE_STATUS_UNDEFINED;
-    NSData *networkErrorCode;
-    int errInt;
-    NSString *tmp;
-    NSString *r;
-    
-    /* case we are the terminal recipient of delivery report we not need the router */
+    NSData                  *networkErrorCode;
+    int                     errInt;
+    NSString                *tmp;
+    NSString                *r;
+
+
     report = [_router createReport];
     errInt = UM_ESME_RUNKNOWNERR;
+
 
     NSDictionary *tlvs = pdu.tlvs;
     /* check for SMPP v.3.4. and message_payload */
@@ -2361,7 +2370,7 @@ end:
     UMSigAddr *to;
     if([pdu dest_addr_ton] == UMTON_ALPHANUMERIC)
 	{
-		to = [[UMSigAddr alloc] initWithAlpha:[pdu destination_addr]];
+		to = [[UMSigAddr alloc] initWithAlpha:[pdu dest_addr]];
 		[to setNpi:(UMNpiType)[pdu dest_addr_npi]];
 	}
 	else
@@ -2369,7 +2378,7 @@ end:
 		to = [[UMSigAddr alloc] init];
 		[to setTon:(UMTonType)[pdu dest_addr_ton]];
 		[to setNpi:(UMNpiType)[pdu dest_addr_npi]];
-		[to setAddr:[pdu destination_addr]];
+		[to setAddr:[pdu dest_addr]];
 	}
     report.toNumber = to.stringValue;
     report.tlvsText = [tlvs jsonString];
@@ -2412,7 +2421,7 @@ end:
     
 	ton  = (int)[pdu dest_addr_ton];
 	npi  = (int)[pdu dest_addr_npi];
-	addr = [pdu destination_addr];
+	addr = [pdu dest_addr];
 	if(ton == UMTON_ALPHANUMERIC)
 	{
 		to = [[UMSigAddr alloc] initWithAlpha:addr];
@@ -2430,11 +2439,11 @@ end:
     int esmClass = (int)[pdu esm_class];
     if(esmClass & SMPP_PDU_ESM_CLASS_DELIVER_UDH_INDICATOR)
     {
-        msg.pduUdhIndicator = UMDIRTY_INTEGER(1);
+        msg.udhIndicator = YES;
     }
     if(esmClass & SMPP_PDU_ESM_CLASS_DELIVER_RPI)
     {
-        msg.pduReplyPathIndicator = UMDIRTY_INTEGER(1);
+        msg.replyPathIndicator = YES;
     }
     msg.pduPid = UMDIRTY_INTEGER(pdu.protocol_id);
 	msg.messagePriority = UMDIRTY_INTEGER(pdu.priority_flag);
@@ -2444,11 +2453,12 @@ end:
     
     int length = (int)[pdu sm_length];
     NSData *sm = [pdu short_message];
-    if(msg.pduUdhIndicator.integerValue)
+    if(msg.udhIndicator)
 	{
 		if(length< 1)
-			goto length_error;
-        
+        {
+            goto length_error;
+        }
         unsigned const char *d;
         d = [sm bytes];
 		udhLen = d[0];
@@ -2493,7 +2503,7 @@ length_error:
 	[self startIncomingReceiverThread];
     [self.logFeed info:0 inSubsection:@"init" withText:@"[SmscConnectionSMPP inbound] starting\r\n"];
     
-    _bindExpires = [[NSDate alloc]initWithTimeIntervalSinceNow:30]; /* we want to see authentication being passed within 30 seconds */
+    _bindExpires = [[NSDate alloc]initWithTimeIntervalSinceNow:130]; /* we want to see authentication being passed within 30 seconds */
 
 	while ((!_endThisConnection) && ((_incomingStatus ==SMPP_STATUS_INCOMING_CONNECTED) || (_incomingStatus ==  SMPP_STATUS_INCOMING_ACTIVE)))
 	{
@@ -3062,15 +3072,19 @@ length_error:
                     {
                         [self checkForPackets];
                     }
-                    else
+                    else if (err==UMSocketError_has_data)
                     {
-                        NSString *msg = [NSString stringWithFormat:@"[SmscConnectionSMPP outgoingReceiverThread]: socket error %d when reading from socket\r\n", err];
+                        [self checkForPackets];
+                    }
+                    else if(err==UMSocketError_has_data_and_hup)
+                    {
+                        NSString *msg = [NSString stringWithFormat:@"[SmscConnectionSMPP outgoingReceiverThread]: POLLHUP received"];
                         [self.logFeed info:0 inSubsection:@"outbound receiver" withText:msg];
                         _endThisConnection = YES;
                     }
-                    if(err==UMSocketError_has_data_and_hup)
+                    else
                     {
-                        NSString *msg = [NSString stringWithFormat:@"[SmscConnectionSMPP outgoingReceiverThread]: POLLHUP received"];
+                        NSString *msg = [NSString stringWithFormat:@"[SmscConnectionSMPP outgoingReceiverThread]: socket error %d when reading from socket\r\n", err];
                         [self.logFeed info:0 inSubsection:@"outbound receiver" withText:msg];
                         _endThisConnection = YES;
                     }
