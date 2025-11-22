@@ -765,7 +765,7 @@
 					"$(LOCAL_LIBRARY_DIR)/Application\\ Support/FinkTelecomServices/frameworks",
 				);
 				LD_RUNPATH_SEARCH_PATHS = "\"/Library/Application Support/\"";
-				MACOSX_DEPLOYMENT_TARGET = 15.0;
+				MACOSX_DEPLOYMENT_TARGET = 15.6;
 				MARKETING_VERSION = 2.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = me.fink.ulibsmpp;
 				PROVISIONING_PROFILE = "";
@@ -794,7 +794,7 @@
 					"$(LOCAL_LIBRARY_DIR)/Application\\ Support/FinkTelecomServices/frameworks",
 				);
 				LD_RUNPATH_SEARCH_PATHS = "\"/Library/Application Support/\"";
-				MACOSX_DEPLOYMENT_TARGET = 15.0;
+				MACOSX_DEPLOYMENT_TARGET = 15.6;
 				MARKETING_VERSION = 2.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = me.fink.ulibsmpp;
 				PROVISIONING_PROFILE = "";
