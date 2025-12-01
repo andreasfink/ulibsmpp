@@ -1,5 +1,5 @@
 dnl /* ==================================================================== 
-dnl  * Project "ulibsmpp"
+dnl  * Project "ulibsmpp6"
 dnl  * (c) 2016 Andreas Fink
 dnl  * ==================================================================== 
 dnl  */ 
@@ -10,14 +10,14 @@ AC_INIT([ulibsmpp],[1.5.2],[andreas@fink.org])
 
 dnl generic parameters
 COPYRIGHT="Copyright 2016 Andreas Fink"
-PROJECT_NAME="ulibsmpp"
+PROJECT_NAME="ulibsmpp6"
 AUTHOR="Andreas Fink <andreas@fink.org>"
 CONFIG_DEFINE="ULIBSMPP_CONFIG"
 VERSION=`head -n 1 VERSION`
 MAJORVER=`echo $VERSION | cut -f1 -d.`
 MINORVER=`echo $VERSION | cut -f2 -d.`
 REVISION=`echo $VERSION | cut -f3 -d.`
-CONFIG_HEADER=${PROJECT_NAME}/ulibsmpp_config.h
+CONFIG_HEADER=${PROJECT_NAME}/ulibsmpp6_config.h
 DEPENDENT_PKGCONFIGS="ulib"
 PKG_CONFIG_PATH="/usr/local/lib/pkgconfig"
 export PKG_CONFIG_PATH
@@ -215,7 +215,7 @@ AC_SUBST(SHARED_LIBRARY_EXTENSION)
 AC_CONFIG_FILES([Makefile.osx])
 AC_CONFIG_FILES([Makefile.linux])
 AC_CONFIG_FILES([Makefile.freebsd])
-AC_CONFIG_FILES([ulibsmpp.pc])
+AC_CONFIG_FILES([ulibsmpp6.pc])
 AC_CONFIG_FILES([make_buildnr.sh])
 AC_OUTPUT
 
