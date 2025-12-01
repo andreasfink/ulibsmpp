@@ -13,7 +13,7 @@ MAJORVER=@MAJORVER@
 MINORVER=@MINORVER@
 REVISION=@REVISION@
 
-LIB=lib@PROJECT_NAME@.@SHARED_LIBRARY_EXTENSION@
+LIB=@PROJECT_NAME@.@SHARED_LIBRARY_EXTENSION@
 SLIB=lib@PROJECT_NAME@.a
 
 PKGCONFIGFILE=@PROJECT_NAME@.pc
@@ -35,8 +35,14 @@ ${SLIB}: ${OFILES}
 	ar rcs ${SLIB} ${OFILES}
 	ranlib ${SLIB}
 
-install: ${LIB} ${SLIB}
+install: install_dev install_bin
+
+install_dev:
 	-mkdir -p ${DESTDIR}/usr/local/lib/pkgconfig
+	-mkdir -p ${DESTDIR}/usr/local/include/ulibsmpp6
+	cp $(HFILES) ${DESTDIR}/usr/local/include/ulibsmpp6
+
+install_bin: ${LIB} ${SLIB}
 	rm -f "${DESTDIR}/usr/local/lib/${LIB}.${MAJORVER}.${MINORVER}.${REVISION}"
 	rm -f "${DESTDIR}/usr/local/lib/${LIB}.${MAJORVER}.${MINORVER}"
 	rm -f "${DESTDIR}/usr/local/lib/${LIB}.${MAJORVER}"
@@ -47,8 +53,6 @@ install: ${LIB} ${SLIB}
 	ln -s "${LIB}.${MAJORVER}.${MINORVER}"             "${DESTDIR}/usr/local/lib/${LIB}.${MAJORVER}"
 	ln -s "${LIB}.${MAJORVER}"                         "${DESTDIR}/usr/local/lib/${LIB}"
 	-install -b -g bin -o root -m 644 ${PKGCONFIGFILE} ${DESTDIR}/usr/local/lib/pkgconfig/
-	-mkdir -p ${DESTDIR}/usr/local/include/ulibsmpp
-	cp $(HFILES) ${DESTDIR}/usr/local/include/ulibsmpp
 	ldconfig
 
 clean:
