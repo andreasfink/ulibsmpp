@@ -10,8 +10,8 @@
 #include <sys/signal.h>
 #include <unistd.h> /* for usleep */
 #import <ulibsmpp/SmscConnectionNACK.h>
-#import <ulibsmpp/NSMutableString+UniversalSMPP.h>
-#import <ulibsmpp/NSString+UniversalSMPP.h>
+#import <ulibsmpp/NSMutableString+ulibsmpp.h>
+#import <ulibsmpp/NSString+ulibsmpp.h>
 
 @implementation SmscConnectionNACK
 

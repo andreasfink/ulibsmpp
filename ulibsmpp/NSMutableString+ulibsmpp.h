@@ -1,5 +1,5 @@
 //
-//  NSMutableString+SmscConnection.h
+//  NSMutableString+ulibsmpp.h
 //  ulibsmpp
 //
 //  Created by Andreas Fink on 23.10.12.
@@ -11,9 +11,9 @@
 typedef int (*range_func_t)(int);
 #endif
 
-@interface NSMutableString(UniversalSMPP)
-- (int) checkRange:(NSRange)range withFunction:(range_func_t)filter;
-- (void)stripBlanks;
-- (long) integer16Value;
+@interface NSMutableString(ulibsmpp)
+- (int)smppCheckRange:(NSRange)range withFunction:(range_func_t)filter;
+- (void)smppStripBlanks;
+- (long)smppInteger16Value;
 
 @end

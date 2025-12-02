@@ -9,8 +9,8 @@
 #import <ulib/ulib.h>
 #import "SmscConnectionSMPP.h"
 #import "SmppPdu.h"
-#import "NSMutableString+UniversalSMPP.h"
-#import "NSString+UniversalSMPP.h"
+#import "NSMutableString+ulibsmpp.h"
+#import "NSString+ulibsmpp.h"
 #include <sys/signal.h>
 #import "SmscConnectionUserProtocol.h"
 
@@ -113,8 +113,8 @@ const SmppErrorCodeListEntry SmppErrorCodeList[] =
 };
 
 
-#import "NSMutableString+UniversalSMPP.h"
-#import "NSString+UniversalSMPP.h"
+#import "NSMutableString+ulibsmpp.h"
+#import "NSString+ulibsmpp.h"
 
 //#include "utils.h"
 
@@ -1301,7 +1301,7 @@ end:
             [from setTon: ton];
             [from setNpi: npi];
             [from setAddr: addr];
-            if(![addr hasOnlyDecimalDigits])
+            if(![addr smppHasOnlyDecimalDigits])
             {
                 @throw([NSException exceptionWithName:@"ESME_RINVSRCADR"
                                                reason:NULL
@@ -1331,7 +1331,7 @@ end:
             [to setTon: ton];
             [to setNpi: npi];
             [to setAddr: addr];
-            if(![addr hasOnlyDecimalDigits])
+            if(![addr smppHasOnlyDecimalDigits])
             {
                 @throw([NSException exceptionWithName:@"ESME_RINVDSTADR"
                                                reason:NULL
@@ -2312,9 +2312,9 @@ end:
         else
         {
             if ((_smppMessageIdType  & 0x02) ||
-                (![receiptedId checkRange:NSMakeRange(0, [receiptedId length]) withFunction:isdigit]))
+                (![receiptedId smppCheckRange:NSMakeRange(0, [receiptedId length]) withFunction:isdigit]))
             {
-                value = [receiptedId integer16Value];
+                value = [receiptedId smppInteger16Value];
                 tmp = [NSMutableString stringWithFormat:@"%llu", value];
             }
             else

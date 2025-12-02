@@ -8,8 +8,8 @@
 
 
 #import <ulibsmpp/GsmCharSet.h>
-#import <ulibsmpp/NSData+HexFunctions.h>
-#import <ulibsmpp/NSString+HexFunctions.h>
+#import <ulibsmpp/NSData+ulibsmpp.h>
+#import <ulibsmpp/NSString+ulibsmpp.h>
 #import <ulibsmpp/PointCode.h>
 #import <ulibsmpp/UMSigAddr.h>
 #import <ulibsmpp/UMPrefs.h>

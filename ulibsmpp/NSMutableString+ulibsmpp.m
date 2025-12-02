@@ -6,12 +6,12 @@
 //  Copyright 2008-2014 Andreas Fink, Paradieshofstrasse 101, 4054 Basel, Switzerland
 //
 
-#import "NSMutableString+UniversalSMPP.h"
-#import "NSString+UniversalSMPP.h"
+#import "NSMutableString+ulibsmpp.h"
+#import "NSString+ulibsmpp.h"
 
-@implementation NSMutableString (UniversalSMPP)
+@implementation NSMutableString (ulibsmpp)
 
-- (int) checkRange:(NSRange)range withFunction:(range_func_t)filter
+- (int) smppCheckRange:(NSRange)range withFunction:(range_func_t)filter
 {
     long end = range.location + range.length;
     long pos;
@@ -31,7 +31,7 @@
     return 1;
 }
 
-- (long) integer16Value
+- (long)smppInteger16Value
 {
     long number;
     char *endptr;
@@ -46,7 +46,7 @@
     return number;
 }
 
-- (void)stripBlanks
+- (void)smppStripBlanks
 {
 #ifdef LINUX
     /* TODO: we should have an alternative implementation */

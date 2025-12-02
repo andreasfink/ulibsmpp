@@ -1,13 +1,12 @@
 //
-//  NSData+HexFunctions.m
+//  NSData+ulibsmpp.m
 //  UniversalSMSUtilitites
 //
 //  Created by Andreas Fink on 27.02.09.
 //  Copyright 2008-2014 Andreas Fink, Paradieshofstrasse 101, 4054 Basel, Switzerland
 //
-#if 0
-#import "NSData+HexFunctions.h"
-#import "NSString+HexFunctions.h"
+#import "NSData+ulibsmpp.h"
+#import "NSString+ulibsmpp.h"
 #import "GsmCharSet.h"
 #import "stdint.h"
 
@@ -56,8 +55,8 @@
 	n = [str length];
 	for(i=0;i<n;i+=2)
 	{
-		a = [NSString nibbleToInt:[str characterAtIndex: i]];
-		b = [NSString nibbleToInt:[str characterAtIndex: i+1]];
+		a = [NSString smppNibbleToInt:[str characterAtIndex: i]];
+		b = [NSString smppNibbleToInt:[str characterAtIndex: i+1]];
 		c = (a <<4) | b;
 		[result appendBytes:&c length:1];
 	}
@@ -81,8 +80,8 @@
 	src = [self bytes];
 	for(i=0;i<n;i++)
 	{
-		a = [NSString nibbleToInt:src[i*2]];
-		b = [NSString nibbleToInt:src[i*2+1]];
+		a = [NSString smppNibbleToInt:src[i*2]];
+		b = [NSString smppNibbleToInt:src[i*2+1]];
 		c = (a <<4) | b;
 		[r appendBytes:&c length:1];
 	}
@@ -164,13 +163,13 @@
 				c = '^';
 				break;
 			default:
-                if(c1 > gsmToUnicode_table_size || (c1 < 0))
+                if(c1 > smppGsmToUnicode_table_size || (c1 < 0))
                 {
                     c = ' ';
                 }
                 else
                 {
-                    c = gsmToUnicode[c1];
+                    c = smppGsmToUnicode[c1];
                 }
 		}
 		uni[j++]= c;
@@ -318,4 +317,3 @@
 
 	
 @end
-#endif

@@ -8,5 +8,5 @@
 
 #import <Foundation/Foundation.h>
 
-extern const unichar gsmToUnicode[];
-extern int gsmToUnicode_table_size;
+extern const unichar smppGsmToUnicode[];
+extern int smppGsmToUnicode_table_size;

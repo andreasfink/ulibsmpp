@@ -7,8 +7,8 @@
 //
 
 #import "UMSigAddr.h"
-#import "NSString+HexFunctions.h"
-#import "NSData+HexFunctions.h"
+#import "NSString+ulibsmpp.h"
+#import "NSData+ulibsmpp.h"
 #import <ulibsms/ulibsms.h>
 
 static int is_all_digits(NSString *str, int startpos);
@@ -172,7 +172,7 @@ static int is_all_digits(NSString *str, int startpos);
             {
                 _ton = UMTON_ALPHANUMERIC;
                 _npi = UMNPI_UNKNOWN;
-                _addr = [[[digits gsm8]gsm8to7withNibbleLengthPrefix]hexString];
+                _addr = [[[digits smppGsm8]smppGsm8to7withNibbleLengthPrefix]hexString];
             }
             else
             {
@@ -220,7 +220,7 @@ static int is_all_digits(NSString *str, int startpos);
 	}
 	_ton = UMTON_ALPHANUMERIC;
 	_npi = UMNPI_UNKNOWN;
-	_addr = [digits stringFromGsm7withNibbleLengthPrefix];
+	_addr = [digits smppStringFromGsm7withNibbleLengthPrefix];
 	return self;
 }
 
