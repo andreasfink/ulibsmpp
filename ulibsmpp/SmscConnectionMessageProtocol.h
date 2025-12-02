@@ -8,6 +8,7 @@
 //
 
 #import <ulib/ulib.h>
+#import <ummessage/ummessage.h>
 #import <ulibsmpp/UniversalSMSUtilities.h>
 #import <ulibsmpp/SmscConnectionUserProtocol.h>
 /* this is the protocol a ShortMessage object must support as a minimum so a SMSC driver can fill a message it gets from the router */
@@ -61,6 +62,7 @@
 #define	MESSAGE_STATE_UNKNOWN		7
 #define	MESSAGE_STATE_REJECTED		8
 
+/* this is now in ummessage
 typedef enum UMReportMaskValue
 {
     UMDLR_MASK_REPORT_SUBMITTED = 1,
@@ -86,6 +88,7 @@ typedef enum UMRequestMaskValue
     REQUEST_MASK_FAIL            = 2,
     REQUEST_MASK_INTERMEDIATE    = 16,
 } UMRequestMaskValue;
+ */
 
 @class SRMessageState;
 
