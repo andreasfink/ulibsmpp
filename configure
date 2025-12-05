@@ -2295,14 +2295,14 @@ ac_compiler_gnu=$ac_cv_c_compiler_gnu
 
 
 COPYRIGHT="Copyright 2016 Andreas Fink"
-PROJECT_NAME="ulibsmpp6"
+PROJECT_NAME="ulibsmpp"
 AUTHOR="Andreas Fink <andreas@fink.org>"
 CONFIG_DEFINE="ULIBSMPP_CONFIG"
 VERSION=`head -n 1 VERSION`
 MAJORVER=`echo $VERSION | cut -f1 -d.`
 MINORVER=`echo $VERSION | cut -f2 -d.`
 REVISION=`echo $VERSION | cut -f3 -d.`
-CONFIG_HEADER=${PROJECT_NAME}/ulibsmpp6_config.h
+CONFIG_HEADER=${PROJECT_NAME}/ulibsmpp_config.h
 DEPENDENT_PKGCONFIGS="ulib"
 PKG_CONFIG_PATH="/usr/local/lib/pkgconfig"
 export PKG_CONFIG_PATH
@@ -3901,7 +3901,7 @@ ac_config_files="$ac_config_files Makefile.linux"
 
 ac_config_files="$ac_config_files Makefile.freebsd"
 
-ac_config_files="$ac_config_files ulibsmpp6.pc"
+ac_config_files="$ac_config_files ulibsmpp.pc"
 
 ac_config_files="$ac_config_files make_buildnr.sh"
 
@@ -4597,7 +4597,7 @@ do
     "Makefile.osx") CONFIG_FILES="$CONFIG_FILES Makefile.osx" ;;
     "Makefile.linux") CONFIG_FILES="$CONFIG_FILES Makefile.linux" ;;
     "Makefile.freebsd") CONFIG_FILES="$CONFIG_FILES Makefile.freebsd" ;;
-    "ulibsmpp6.pc") CONFIG_FILES="$CONFIG_FILES ulibsmpp6.pc" ;;
+    "ulibsmpp.pc") CONFIG_FILES="$CONFIG_FILES ulibsmpp.pc" ;;
     "make_buildnr.sh") CONFIG_FILES="$CONFIG_FILES make_buildnr.sh" ;;
 
   *) as_fn_error $? "invalid argument: '$ac_config_target'" "$LINENO" 5;;

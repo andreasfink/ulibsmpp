@@ -1,5 +1,5 @@
 //
-//  NSData+HexFunctions.h
+//  NSData+ulibsmpp.h
 //  UniversalSMSUtilitites
 //
 //  Created by Andreas Fink on 27.02.09.

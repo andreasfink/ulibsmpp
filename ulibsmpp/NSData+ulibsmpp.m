@@ -12,7 +12,7 @@
 
 #define NRP '?'
 
-@implementation NSData (DataHexFunctions)
+@implementation NSData (ulibsmpp)
 
 - (NSString *) smppHexString
 {
