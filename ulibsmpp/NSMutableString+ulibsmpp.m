@@ -11,7 +11,7 @@
 
 @implementation NSMutableString (ulibsmpp)
 
-- (int) smppCheckRange:(NSRange)range withFunction:(range_func_t)filter
+- (int) checkRange:(NSRange)range withFunction:(range_func_t)filter
 {
     long end = range.location + range.length;
     long pos;
@@ -31,7 +31,7 @@
     return 1;
 }
 
-- (long)smppInteger16Value
+- (long) integer16Value
 {
     long number;
     char *endptr;
@@ -46,7 +46,7 @@
     return number;
 }
 
-- (void)smppStripBlanks
+- (void)stripBlanks
 {
 #ifdef LINUX
     /* TODO: we should have an alternative implementation */
