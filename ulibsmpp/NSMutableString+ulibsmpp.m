@@ -6,10 +6,10 @@
 //  Copyright 2008-2014 Andreas Fink, Paradieshofstrasse 101, 4054 Basel, Switzerland
 //
 
-#import "NSMutableString+UniversalSMPP.h"
-#import "NSString+UniversalSMPP.h"
+#import "NSMutableString+ulibsmpp.h"
+#import "NSString+ulibsmpp.h"
 
-@implementation NSMutableString (UniversalSMPP)
+@implementation NSMutableString (ulibsmpp)
 
 - (int) checkRange:(NSRange)range withFunction:(range_func_t)filter
 {

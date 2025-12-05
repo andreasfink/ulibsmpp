@@ -11,7 +11,7 @@
 typedef int (*range_func_t)(int);
 #endif
 
-@interface NSMutableString(UniversalSMPP)
+@interface NSMutableString(ulibsmpp)
 - (int) checkRange:(NSRange)range withFunction:(range_func_t)filter;
 - (void)stripBlanks;
 - (long) integer16Value;
