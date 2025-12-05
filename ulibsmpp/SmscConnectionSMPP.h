@@ -129,7 +129,8 @@ typedef enum SMPPConnectionMode
     BOOL                _usesHexMessageIdInSubmitSmResp;
     BOOL                _usesHexMessageIdInDlrText;
     BOOL                _registered;
-    
+    BOOL                _useSSL;
+
     SmppAlphaCoding     _alphanumericOriginatorCoding;
     int                 _outstandingKeepalives;
     __weak id<SmppTerminationCallback>   _terminatedDelegate; /* we call this with [obj terminatedCallback:self] */
@@ -201,6 +202,7 @@ typedef enum SMPPConnectionMode
 @property (readwrite,assign)    SmppAlphaCoding alphanumericOriginatorCoding;
 @property (readwrite,assign)    BOOL            usesHexMessageIdInSubmitSmResp;
 @property (readwrite,assign)    BOOL            usesHexMessageIdInDlrText;
+@property (readwrite,assign)    BOOL            useSSL;
 @property (readwrite,assign)   NSInteger        bindAddrTon;
 @property (readwrite,assign)   NSInteger        bindAddrNpi;
 
