@@ -10,43 +10,11 @@
 #import "ulib/ulib.h"
 #import "NSData+ulibsmpp.h"
 #import "SmscConnectionSMPP.h"
-<<<<<<< HEAD
-
-
-@implementation SmppPdu
-@synthesize pdulen;
-@synthesize	type;
-@synthesize	err;
-@synthesize	seq;
-@synthesize	payload;
-@synthesize cursor;
-@synthesize source_addr_ton;
-@synthesize source_addr_npi;
-@synthesize source_addr;
-@synthesize destination_addr;
-@synthesize dest_addr_ton;
-@synthesize dest_addr_npi;
-@synthesize service_type;
-@synthesize receipted_message_id;
-@synthesize esm_class;
-@synthesize sm_length;
-@synthesize short_message;
-@synthesize data_coding;
-@synthesize protocol_id;
-@synthesize priority_flag;
-@synthesize message_payload;
-@synthesize tlv;
-@synthesize message_id;
-@synthesize replace_if_present_flag;
-@synthesize dest_addr_subunit;
-@synthesize source_addr_subunit;
-=======
 #import "UMSmppError.h"
 
 static UMSmppError SMPP_outgoingErrorCodeMapping(UMSmppError e);
 
 @implementation SmppPdu
->>>>>>> release-6.0
 
 - (SmppPdu *)init
 {
@@ -57,39 +25,22 @@ static UMSmppError SMPP_outgoingErrorCodeMapping(UMSmppError e);
     return self;
 }
 
-<<<<<<< HEAD
-- (SmppPdu *)initWithType:(SmppPduType)t err:(SmppErrorCode)e;
-=======
 - (SmppPdu *)initWithType:(SmppPduType)t err:(UMSmppError)e
->>>>>>> release-6.0
 {
     self = [super init];
     if(self)
     {
-<<<<<<< HEAD
-        pdulen     = 0;
-        type	= t;
-        err		= e;
-        seq		= 0;
-        cursor	= 0;
-        payload = [[NSMutableData alloc] init];
-=======
         _pdulen     = 0;
         _type	    = t;
         _err		= SMPP_outgoingErrorCodeMapping(e);
         _seq		= 0;
         _cursor 	= 0;
         _payload    = [[NSMutableData alloc] init];
->>>>>>> release-6.0
     }
 	return self;
 }
 
-<<<<<<< HEAD
-- (SmppPdu *)initFromData:(NSData *)d;
-=======
 - (SmppPdu *)initFromData:(NSData *)d
->>>>>>> release-6.0
 {
 	unsigned char header[16];
 	unsigned char *ptr;
@@ -98,24 +49,6 @@ static UMSmppError SMPP_outgoingErrorCodeMapping(UMSmppError e);
     if(self)
     {
         [d getBytes: header length:16];
-<<<<<<< HEAD
-        pdulen	= ((header[0] << 24) | (header[1] << 16) | (header[2] << 8) | (header[3]));
-        type	= ((header[4] << 24) | (header[5] << 16) | (header[6] << 8) | (header[7]));
-        err		= ((header[8] << 24) | (header[9] << 16) | (header[10] << 8) | (header[11]));
-        seq		= ((header[12] << 24) | (header[13] << 16) | (header[14] << 8) | (header[15]));
-        ptr = (unsigned char *) [d bytes];
-        
-        if(pdulen > 0)
-        {
-            payload = [[NSMutableData alloc] initWithBytes: &ptr[16] length:pdulen-16];
-        }
-        else
-        {
-            payload = [[NSMutableData alloc] init];
-        }
-        cursor	= 0;
-        tlv = [[NSMutableDictionary alloc] init];
-=======
         _pdulen	= ((header[0] << 24) | (header[1] << 16) | (header[2] << 8) | (header[3]));
         _type	= ((header[4] << 24) | (header[5] << 16) | (header[6] << 8) | (header[7]));
         _err		= ((header[8] << 24) | (header[9] << 16) | (header[10] << 8) | (header[11]));
@@ -132,7 +65,6 @@ static UMSmppError SMPP_outgoingErrorCodeMapping(UMSmppError e);
         }
         _cursor	= 0;
         _tlvs = [[NSMutableDictionary alloc] init];
->>>>>>> release-6.0
     }
 	return self;
 }
@@ -141,22 +73,13 @@ static UMSmppError SMPP_outgoingErrorCodeMapping(UMSmppError e);
 
 - (size_t)pdulen
 {
-<<<<<<< HEAD
-    pdulen = 16 + [payload length];
-    return pdulen;
-=======
     _pdulen = 16 + [_payload length];
     return _pdulen;
->>>>>>> release-6.0
 }
 
 - (SmppPdu *)initWithType:(SmppPduType)t
 {
-<<<<<<< HEAD
-	return [self initWithType:t err:ESME_ROK];
-=======
 	return [self initWithType:t err:UM_ESME_ROK];
->>>>>>> release-6.0
 }
 
 - (void) appendNSStringMax:(NSString *)s  maxLength: (NSInteger) maxlen
@@ -261,20 +184,12 @@ static UMSmppError SMPP_outgoingErrorCodeMapping(UMSmppError e);
 
 - (void) appendBytes:(const void *)bytes length: (NSUInteger) len
 {
-<<<<<<< HEAD
-	[payload appendBytes: (const void *) bytes length: len];
-=======
 	[_payload appendBytes: (const void *) bytes length: len];
->>>>>>> release-6.0
 }
 
 - (void) appendByte:(unsigned char)byte
 {
-<<<<<<< HEAD
-	[payload appendBytes: (const void *) &byte length: 1];
-=======
 	[_payload appendBytes: (const void *) &byte length: 1];
->>>>>>> release-6.0
 }
 
 - (void) appendInt8:(NSInteger) i
@@ -357,15 +272,6 @@ static UMSmppError SMPP_outgoingErrorCodeMapping(UMSmppError e);
 + (SmppPdu *)OutgoingBindRespOK:(NSString *)systemId supportedVersion:(NSInteger)version rx:(BOOL)rx tx:(BOOL)tx
 {
 	if((rx==YES) && (tx==YES))
-<<<<<<< HEAD
-		return [self OutgoingBindTransceiverRespOK:systemId supportedVersion:version];
-	if(rx==YES)
-		return [self OutgoingBindReceiverRespOK:systemId supportedVersion:version];
-	return [self OutgoingBindTransmitterRespOK:systemId supportedVersion:version];
-}
-
-+ (SmppPdu *)OutgoingBindRespError:(SmppErrorCode) err rx:(BOOL)rx tx:(BOOL)tx
-=======
     {
         return [self OutgoingBindTransceiverRespOK:systemId supportedVersion:version];
     }
@@ -377,16 +283,11 @@ static UMSmppError SMPP_outgoingErrorCodeMapping(UMSmppError e);
 }
 
 + (SmppPdu *)OutgoingBindRespError:(UMSmppError) err rx:(BOOL)rx tx:(BOOL)tx
->>>>>>> release-6.0
 {
     return [SmppPdu OutgoingBindRespError:err rx:rx tx:tx status:NULL];
 }
 
-<<<<<<< HEAD
-+ (SmppPdu *)OutgoingBindRespError:(SmppErrorCode) err rx:(BOOL)rx tx:(BOOL)tx status:(NSString *)status_text
-=======
 + (SmppPdu *)OutgoingBindRespError:(UMSmppError) err rx:(BOOL)rx tx:(BOOL)tx status:(NSString *)status_text
->>>>>>> release-6.0
 {
 	if((rx==YES) && (tx==YES))
     {
@@ -399,20 +300,12 @@ static UMSmppError SMPP_outgoingErrorCodeMapping(UMSmppError e);
 	return [self OutgoingBindTransmitterRespError:err status:status_text];
 }
 
-<<<<<<< HEAD
-+ (SmppPdu *)OutgoingBindTransmitterRespError:(SmppErrorCode) err
-=======
 + (SmppPdu *)OutgoingBindTransmitterRespError:(UMSmppError) err
->>>>>>> release-6.0
 {
     return [SmppPdu OutgoingBindTransmitterRespError:err status:NULL];
 }
 
-<<<<<<< HEAD
-+ (SmppPdu *)OutgoingBindTransmitterRespError:(SmppErrorCode) err status:(NSString *)status
-=======
 + (SmppPdu *)OutgoingBindTransmitterRespError:(UMSmppError) err status:(NSString *)status
->>>>>>> release-6.0
 {
 	SmppPdu *pdu;
 	pdu = [[SmppPdu alloc] initWithType:SMPP_PDU_BIND_TRANSMITTER_RESP err:err];
@@ -427,11 +320,7 @@ static UMSmppError SMPP_outgoingErrorCodeMapping(UMSmppError e);
 						  supportedVersion:(NSInteger)version
 {
 	SmppPdu *pdu;
-<<<<<<< HEAD
-	pdu = [[SmppPdu alloc] initWithType:SMPP_PDU_BIND_TRANSMITTER_RESP err:ESME_ROK];
-=======
 	pdu = [[SmppPdu alloc] initWithType:SMPP_PDU_BIND_TRANSMITTER_RESP err:UM_ESME_ROK];
->>>>>>> release-6.0
 	[pdu appendNSStringMax:systemId maxLength: 16];
 	[pdu appendTLVByte:0x34 withTag: SMPP_TLV_SC_INTERFACE_VERSION];
 	return pdu;
@@ -445,11 +334,7 @@ static UMSmppError SMPP_outgoingErrorCodeMapping(UMSmppError e);
 							  npi:(NSInteger)npi
 							range:(NSString *)range
 {
-<<<<<<< HEAD
-	SmppPdu *pdu = [[SmppPdu alloc] initWithType:SMPP_PDU_BIND_RECEIVER err:ESME_ROK];
-=======
 	SmppPdu *pdu = [[SmppPdu alloc] initWithType:SMPP_PDU_BIND_RECEIVER err:UM_ESME_ROK];
->>>>>>> release-6.0
 	[pdu appendNSStringMax:systemId maxLength:16];
 	[pdu appendNSStringMax:password maxLength:9];
 	[pdu appendNSStringMax:stype    maxLength:13];
@@ -461,20 +346,12 @@ static UMSmppError SMPP_outgoingErrorCodeMapping(UMSmppError e);
 }
 
 
-<<<<<<< HEAD
-+ (SmppPdu *)OutgoingBindReceiverRespError:(SmppErrorCode) err
-=======
 + (SmppPdu *)OutgoingBindReceiverRespError:(UMSmppError) err
->>>>>>> release-6.0
 {
     return [SmppPdu OutgoingBindReceiverRespError:err status:NULL];
 }
 
-<<<<<<< HEAD
-+ (SmppPdu *)OutgoingBindReceiverRespError:(SmppErrorCode) err status:(NSString *)status
-=======
 + (SmppPdu *)OutgoingBindReceiverRespError:(UMSmppError) err status:(NSString *)status
->>>>>>> release-6.0
 {
 	SmppPdu *pdu;
 	pdu = [[SmppPdu alloc] initWithType:SMPP_PDU_BIND_RECEIVER_RESP err:err];
@@ -489,11 +366,7 @@ static UMSmppError SMPP_outgoingErrorCodeMapping(UMSmppError e);
 					   supportedVersion:(NSInteger)version
 {
 	SmppPdu *pdu;
-<<<<<<< HEAD
-	pdu = [[SmppPdu alloc] initWithType:SMPP_PDU_BIND_RECEIVER_RESP err:ESME_ROK];
-=======
 	pdu = [[SmppPdu alloc] initWithType:SMPP_PDU_BIND_RECEIVER_RESP err:UM_ESME_ROK];
->>>>>>> release-6.0
 	[pdu appendNSStringMax:systemId maxLength: 16];
 	[pdu appendTLVByte:0x34 withTag: SMPP_TLV_SC_INTERFACE_VERSION];
 	return pdu;
@@ -519,20 +392,12 @@ static UMSmppError SMPP_outgoingErrorCodeMapping(UMSmppError e);
 	return pdu;
 }
 
-<<<<<<< HEAD
-+ (SmppPdu *)OutgoingBindTransceiverRespError:(SmppErrorCode) err
-=======
 + (SmppPdu *)OutgoingBindTransceiverRespError:(UMSmppError) err
->>>>>>> release-6.0
 {
     return [SmppPdu OutgoingBindTransceiverRespError:err status:NULL];
 }
             
-<<<<<<< HEAD
-+ (SmppPdu *)OutgoingBindTransceiverRespError:(SmppErrorCode) err status:(NSString *)status
-=======
 + (SmppPdu *)OutgoingBindTransceiverRespError:(UMSmppError) err status:(NSString *)status
->>>>>>> release-6.0
 {
 	SmppPdu *pdu;
 	pdu = [[SmppPdu alloc] initWithType:SMPP_PDU_BIND_TRANSCEIVER_RESP err:err];
@@ -547,11 +412,7 @@ static UMSmppError SMPP_outgoingErrorCodeMapping(UMSmppError e);
 						  supportedVersion:(NSInteger)version
 {
 	SmppPdu *pdu;
-<<<<<<< HEAD
-	pdu = [[SmppPdu alloc] initWithType:SMPP_PDU_BIND_TRANSCEIVER_RESP err:ESME_ROK];
-=======
 	pdu = [[SmppPdu alloc] initWithType:SMPP_PDU_BIND_TRANSCEIVER_RESP err:UM_ESME_ROK];
->>>>>>> release-6.0
 	[pdu appendNSStringMax:systemId maxLength: 16];
 	[pdu appendTLVByte:0x34 withTag: SMPP_TLV_SC_INTERFACE_VERSION];
 	return pdu;
@@ -561,11 +422,7 @@ static UMSmppError SMPP_outgoingErrorCodeMapping(UMSmppError e);
 					password:(NSString *)password
 {
 	SmppPdu *pdu;
-<<<<<<< HEAD
-	pdu = [[SmppPdu alloc] initWithType:SMPP_PDU_OUTBIND err:ESME_ROK];
-=======
 	pdu = [[SmppPdu alloc] initWithType:SMPP_PDU_OUTBIND err:UM_ESME_ROK];
->>>>>>> release-6.0
 	[pdu appendNSStringMax:systemId maxLength:16];
 	[pdu appendNSStringMax:password maxLength:9];
 	return pdu;
@@ -574,52 +431,32 @@ static UMSmppError SMPP_outgoingErrorCodeMapping(UMSmppError e);
 + (SmppPdu *)OutgoingUnbind
 {
 	SmppPdu *pdu;
-<<<<<<< HEAD
-	pdu = [[SmppPdu alloc] initWithType:SMPP_PDU_UNBIND err:ESME_ROK];
-=======
 	pdu = [[SmppPdu alloc] initWithType:SMPP_PDU_UNBIND err:UM_ESME_ROK];
->>>>>>> release-6.0
 	return pdu;
 }
 
 + (SmppPdu *)OutgoingUnbindRespOK
 {
 	SmppPdu *pdu;
-<<<<<<< HEAD
-	pdu = [[SmppPdu alloc] initWithType:SMPP_PDU_UNBIND_RESP err:ESME_ROK];
-	return pdu;
-}
-
-+ (SmppPdu *)OutgoingUnbindRespErr:(SmppErrorCode) err
-=======
 	pdu = [[SmppPdu alloc] initWithType:SMPP_PDU_UNBIND_RESP err:UM_ESME_ROK];
 	return pdu;
 }
 
 + (SmppPdu *)OutgoingUnbindRespErr:(UMSmppError) err
->>>>>>> release-6.0
 {
 	SmppPdu *pdu;
 	pdu = [[SmppPdu alloc] initWithType:SMPP_PDU_UNBIND_RESP err:err];
 	return pdu;
 }
 
-<<<<<<< HEAD
-+ (SmppPdu *)OutgoingGenericNack:(SmppErrorCode) err
-=======
 + (SmppPdu *)OutgoingGenericNack:(UMSmppError) err
->>>>>>> release-6.0
 {
 	SmppPdu *pdu;
 	pdu = [[SmppPdu alloc] initWithType:SMPP_PDU_GENERIC_NACK err:err];
 	return pdu;
 }
 
-<<<<<<< HEAD
-+ (SmppPdu *)OutgoingSubmitSm:(id<SmscConnectionMessageProtocol>)msg
-=======
 + (SmppPdu *)OutgoingSubmitSm:(UMMessageObject *)msg
->>>>>>> release-6.0
 {
     return [SmppPdu OutgoingSubmitSm:msg
                             esmClass:SMPP_PDU_ESM_CLASS_SUBMIT_DEFAULT_SMSC_MODE
@@ -627,11 +464,7 @@ static UMSmppError SMPP_outgoingErrorCodeMapping(UMSmppError e);
                              options:@{}];
 }
 
-<<<<<<< HEAD
-+ (SmppPdu *)OutgoingSubmitSm:(id<SmscConnectionMessageProtocol>)msg
-=======
 + (SmppPdu *)OutgoingSubmitSm:(UMMessageObject *)msg
->>>>>>> release-6.0
                       options:(NSDictionary *)options
 {
     if (options[@"CMT"])
@@ -647,54 +480,17 @@ static UMSmppError SMPP_outgoingErrorCodeMapping(UMSmppError e);
                              options:options];
 }
 
-<<<<<<< HEAD
-+ (SmppPdu *)OutgoingSubmitSm:(id<SmscConnectionMessageProtocol>)msg esmClass:(int)esmclass serviceType:(NSString *)servicetype
-=======
 + (SmppPdu *)OutgoingSubmitSm:(UMMessageObject *)msg esmClass:(int)esmclass serviceType:(NSString *)servicetype
->>>>>>> release-6.0
 {
     return [SmppPdu OutgoingSubmitSm:msg esmClass:esmclass serviceType:servicetype options:@{}];
 }
         
-<<<<<<< HEAD
-+ (SmppPdu *)OutgoingSubmitSm:(id<SmscConnectionMessageProtocol>)msg esmClass:(int)esmclass serviceType:(NSString *)servicetype options:(NSDictionary *)options
-=======
 + (SmppPdu *)OutgoingSubmitSm:(UMMessageObject *)msg esmClass:(int)esmclass serviceType:(NSString *)servicetype options:(NSDictionary *)options
->>>>>>> release-6.0
 {
 	SmppPdu *pdu;
 	NSData *data;
 	NSUInteger len;
 	int use_message_payload;
-<<<<<<< HEAD
-	
-	if(msg.udhIndicator)
-    {
-		esmclass |= SMPP_PDU_ESM_CLASS_SUBMIT_UDH_INDICATOR;
-    }
-	if(msg.replyPath)
-    {
-		esmclass |= SMPP_PDU_ESM_CLASS_SUBMIT_RPI;
-    }
-	pdu = [[SmppPdu alloc] initWithType:SMPP_PDU_SUBMIT_SM err:ESME_ROK];
-    
-	[pdu appendNSStringMax:servicetype maxLength: 6];
-	[pdu appendInt8:msg.source.ton];
-	[pdu appendInt8:msg.source.npi];
-	[pdu appendNSStringMax:msg.source.addr  maxLength:21];
-    
-	[pdu appendInt8:msg.destination.ton];
-	[pdu appendInt8:msg.destination.npi];
-    [pdu appendNSStringMax:msg.destination.addr  maxLength:21];
-	[pdu appendInt8:  esmclass]; //5.2.12
-	[pdu appendInt8: msg.pduPid]; //5.2.13
-	[pdu appendInt8: msg.messagePriority]; //5.2.13
-	[pdu appendDate: msg.deferred]; //scheduled time
-	[pdu appendDate: msg.validity];
-    //[pdu appendInt8:  [msg reportMask] ? 1 : 0];
-    
-    UMReportMaskValue reportMask = msg.deliveryReportMask;
-=======
     if(msg.udhIndicator)
     {
 		esmclass |= SMPP_PDU_ESM_CLASS_SUBMIT_UDH_INDICATOR;
@@ -723,7 +519,6 @@ static UMSmppError SMPP_outgoingErrorCodeMapping(UMSmppError e);
     //[pdu appendInt8:  [msg reportMask] ? 1 : 0];
     
     UMReportMaskValue reportMask = (UMReportMaskValue)msg.deliveryReportMask.integerValue;
->>>>>>> release-6.0
     UMRequestMaskValue requestMask = 0;
     if (reportMask & (UMDLR_MASK_SUCCESS | UMDLR_MASK_FAIL))
     {
@@ -738,18 +533,6 @@ static UMSmppError SMPP_outgoingErrorCodeMapping(UMSmppError e);
         requestMask |= REQUEST_MASK_INTERMEDIATE;
     }
     [pdu appendInt8:  requestMask];
-<<<<<<< HEAD
-    
-	[pdu appendInt8:  [msg replaceIfPresentFlag]];
-	[pdu appendInt8:  [msg pduDcs]];
-	[pdu appendInt8:  0];	/* predefined message text */
-    
-    
-    if(msg.udhIndicator)
-    {
-        NSMutableData *d = [NSMutableData dataWithData:msg.pduUdh];
-        [d appendData:msg.pduContent];
-=======
 	[pdu appendInt8:msg.replaceIfPresentFlag.integerValue];
 	[pdu appendInt8:msg.pduDcs.integerValue];
 	[pdu appendInt8:0];	/* predefined message text */
@@ -757,16 +540,11 @@ static UMSmppError SMPP_outgoingErrorCodeMapping(UMSmppError e);
     {
         NSMutableData *d = [NSMutableData dataWithData:msg.pduUdh.data];
         [d appendData:msg.pduContent.data];
->>>>>>> release-6.0
         data = d;
     }
     else
     {
-<<<<<<< HEAD
-        data = msg.pduContent;
-=======
         data = msg.pduContent.data;
->>>>>>> release-6.0
     }
 	
 	len = [data length];
@@ -816,82 +594,6 @@ static UMSmppError SMPP_outgoingErrorCodeMapping(UMSmppError e);
      SMPP_TLV_ITS_SESSION_INFO				= 0x1383,
      SMPP_TLV_USSD_SERVICE_OP				= 0x0501,
      */
-<<<<<<< HEAD
-    if(options[@"set_smsc1"] || options[@"messagemover"])
-    {
-        if([msg respondsToSelector:@selector(smsc1)])
-        {
-            NSString *smsc1 = [msg smsc1];
-            if(smsc1)
-            {
-                [pdu appendTLVString:smsc1 withTag:SMPP_TLV_VENDOR_SPECIFIC_SMSC1];
-            }
-        }
-    }
-    if(options[@"set_smsc2"] || options[@"messagemover"])
-    {
-        if([msg respondsToSelector:@selector(smsc2)])
-        {
-            NSString *smsc2 = [msg smsc2];
-            if(smsc2)
-            {
-                [pdu appendTLVString:smsc2 withTag:SMPP_TLV_VENDOR_SPECIFIC_SMSC2];
-            }
-        }
-    }
-    if(options[@"set_smsc3"] || options[@"messagemover"])
-    {
-        if([msg respondsToSelector:@selector(smsc3)])
-        {
-            NSString *smsc3 = [msg smsc3];
-            if(smsc3)
-            {
-                [pdu appendTLVString:smsc3 withTag:SMPP_TLV_VENDOR_SPECIFIC_SMSC3];
-            }
-        }
-    }
-    if(options[@"set_opc1"] || options[@"messagemover"])
-    {
-        if([msg respondsToSelector:@selector(opc1)])
-        {
-            NSString *opc1 = [msg opc1];
-            if(opc1)
-            {
-                [pdu appendTLVString:opc1 withTag:SMPP_TLV_VENDOR_SPECIFIC_OPC1];
-            }
-        }
-    }
-    if(options[@"set_dpc1"] || options[@"messagemover"])
-    {
-        if([msg respondsToSelector:@selector(dpc1)])
-        {
-            NSString *dpc1 = [msg dpc1];
-            if(dpc1)
-            {
-                [pdu appendTLVString:dpc1 withTag:SMPP_TLV_VENDOR_SPECIFIC_DPC1];
-            }
-        }
-    }
-    if(options[@"set_opc2"] || options[@"messagemover"])
-    {
-        if([msg respondsToSelector:@selector(opc2)])
-        {
-            NSString *opc2 = [msg opc2];
-            if(opc2)
-            {
-                [pdu appendTLVString:opc2 withTag:SMPP_TLV_VENDOR_SPECIFIC_OPC2];
-            }
-        }
-    }
-    if(options[@"set_dpc2"] || options[@"messagemover"])
-    {
-        if([msg respondsToSelector:@selector(dpc2)])
-        {
-            NSString *dpc2 = [msg dpc2];
-            if(dpc2)
-            {
-                [pdu appendTLVString:dpc2 withTag:SMPP_TLV_VENDOR_SPECIFIC_DPC2];
-=======
     
     if(options[@"set_smsc_srism_gt"] || options[@"messagemover"])
     {
@@ -986,7 +688,6 @@ static UMSmppError SMPP_outgoingErrorCodeMapping(UMSmppError e);
             if(dpc_fsm)
             {
                 [pdu appendTLVString:dpc_fsm withTag:SMPP_TLV_VENDOR_SPECIFIC_DPC_FSM];
->>>>>>> release-6.0
             }
         }
     }
@@ -994,11 +695,7 @@ static UMSmppError SMPP_outgoingErrorCodeMapping(UMSmppError e);
     {
         if([msg respondsToSelector:@selector(userFlags)])
         {
-<<<<<<< HEAD
-            NSInteger uf = [msg userFlags];
-=======
             NSInteger uf = [[msg userFlags] integerValue];
->>>>>>> release-6.0
             if(uf)
             {
                 NSString *s = [@(uf) stringValue];
@@ -1010,15 +707,6 @@ static UMSmppError SMPP_outgoingErrorCodeMapping(UMSmppError e);
     {
         if([msg respondsToSelector:@selector(msc)])
         {
-<<<<<<< HEAD
-            NSString *msc = [msg msc];
-            if(msc)
-            {
-                UMSigAddr *s = [UMSigAddr sigAddrFromString:msc];
-                [pdu appendTLVByte:s.ton withTag:SMPP_TLV_VENDOR_SPECIFIC_MSC_TON];
-                [pdu appendTLVByte:s.npi withTag:SMPP_TLV_VENDOR_SPECIFIC_MSC_NPI];
-                [pdu appendTLVString:s.addr withTag:SMPP_TLV_VENDOR_SPECIFIC_MSC_ADDR];
-=======
             NSString *toMsc = [[msg toMsc]stringValue];
             if(toMsc)
             {
@@ -1027,7 +715,6 @@ static UMSmppError SMPP_outgoingErrorCodeMapping(UMSmppError e);
                 [pdu appendTLVByte:s.npi withTag:SMPP_TLV_VENDOR_SPECIFIC_MSC_NPI];
                 [pdu appendTLVString:s.addr withTag:SMPP_TLV_VENDOR_SPECIFIC_MSC_ADDR];
                 [pdu appendTLVString:toMsc withTag:SMPP_TLV_VENDOR_SPECIFIC_TO_MSC];
->>>>>>> release-6.0
             }
         }
     }
@@ -1035,21 +722,14 @@ static UMSmppError SMPP_outgoingErrorCodeMapping(UMSmppError e);
     {
         if([msg respondsToSelector:@selector(hlr)])
         {
-<<<<<<< HEAD
-            NSString *hlr = [msg hlr];
-=======
             NSString *hlr = [[msg hlr] stringValue];
->>>>>>> release-6.0
             if(hlr)
             {
                 UMSigAddr *s = [UMSigAddr sigAddrFromString:hlr];
                 [pdu appendTLVByte:s.ton withTag:SMPP_TLV_VENDOR_SPECIFIC_HLR_TON];
                 [pdu appendTLVByte:s.npi withTag:SMPP_TLV_VENDOR_SPECIFIC_HLR_NPI];
                 [pdu appendTLVString:s.addr withTag:SMPP_TLV_VENDOR_SPECIFIC_HLR_ADDR];
-<<<<<<< HEAD
-=======
                 [pdu appendTLVString:hlr withTag:SMPP_TLV_VENDOR_SPECIFIC_HLR];
->>>>>>> release-6.0
             }
             
         }
@@ -1058,18 +738,11 @@ static UMSmppError SMPP_outgoingErrorCodeMapping(UMSmppError e);
     {
         if([msg respondsToSelector:@selector(imsi)])
         {
-<<<<<<< HEAD
-            NSString *imsi = [msg imsi];
-            if(imsi)
-            {
-                [pdu appendTLVString:imsi withTag:SMPP_TLV_VENDOR_SPECIFIC_IMSI];
-=======
             NSString *imsi = [[msg toImsi]stringValue];
             if(imsi)
             {
                 [pdu appendTLVString:imsi withTag:SMPP_TLV_VENDOR_SPECIFIC_IMSI];
                 [pdu appendTLVString:imsi withTag:SMPP_TLV_VENDOR_SPECIFIC_TO_IMSI];
->>>>>>> release-6.0
             }
         }
     }
@@ -1077,11 +750,7 @@ static UMSmppError SMPP_outgoingErrorCodeMapping(UMSmppError e);
     {
         if([msg respondsToSelector:@selector(mcc)])
         {
-<<<<<<< HEAD
-            NSString *mcc = [msg mcc];
-=======
             NSString *mcc = [[msg mcc] stringValue];
->>>>>>> release-6.0
             if(mcc)
             {
                 [pdu appendTLVString:mcc withTag:SMPP_TLV_VENDOR_SPECIFIC_MCC];
@@ -1092,11 +761,7 @@ static UMSmppError SMPP_outgoingErrorCodeMapping(UMSmppError e);
     {
         if([msg respondsToSelector:@selector(mnc)])
         {
-<<<<<<< HEAD
-            NSString *mnc = [msg mnc];
-=======
             NSString *mnc = [[msg mnc] stringValue];
->>>>>>> release-6.0
             if(mnc)
             {
                 [pdu appendTLVString:mnc withTag:SMPP_TLV_VENDOR_SPECIFIC_MNC];
@@ -1105,15 +770,9 @@ static UMSmppError SMPP_outgoingErrorCodeMapping(UMSmppError e);
     }
     if(options[@"set_method"] || options[@"messagemover"])
     {
-<<<<<<< HEAD
-        if([msg respondsToSelector:@selector(method)])
-        {
-             NSString *method = [msg method];
-=======
         if([msg respondsToSelector:@selector(deliveryMethod)])
         {
             NSString *method = [[msg deliveryMethod] stringValue];
->>>>>>> release-6.0
             if(method)
             {
                 [pdu appendTLVString:method withTag:SMPP_TLV_VENDOR_SPECIFIC_DELIVERY_METHOD];
@@ -1131,13 +790,6 @@ static UMSmppError SMPP_outgoingErrorCodeMapping(UMSmppError e);
 	return pdu;
 }
 
-<<<<<<< HEAD
-+ (SmppPdu *)OutgoingSubmitSmRespOK:(id<SmscConnectionMessageProtocol>)msg
-							 withId:(NSString *)msgId
-{
-	SmppPdu *pdu;
-	pdu = [[SmppPdu alloc] initWithType:SMPP_PDU_SUBMIT_SM_RESP err:ESME_ROK];
-=======
 
 + (void)appendMessageMoverTlvsFromMsg:(UMMessageObject *)msg toPdu:(SmppPdu *)pdu
 {
@@ -1303,28 +955,19 @@ static UMSmppError SMPP_outgoingErrorCodeMapping(UMSmppError e);
 {
 	SmppPdu *pdu;
 	pdu = [[SmppPdu alloc] initWithType:SMPP_PDU_SUBMIT_SM_RESP err:UM_ESME_ROK];
->>>>>>> release-6.0
 	// TODO: verify if id is better a NSData
 	[pdu appendNSStringMax:msgId maxLength: 65];
 	return pdu;
 }
 
-<<<<<<< HEAD
-+ (SmppPdu *)OutgoingSubmitSmRespErr:(SmppErrorCode) err
-=======
 + (SmppPdu *)OutgoingSubmitSmRespErr:(UMSmppError) err
->>>>>>> release-6.0
 {
 	SmppPdu *pdu;
 	pdu = [[SmppPdu alloc] initWithType:SMPP_PDU_SUBMIT_SM_RESP err:err];
 	return pdu;
 }
 
-<<<<<<< HEAD
-+ (SmppPdu *)OutgoingSubmitMulti:(id<SmscConnectionMessageProtocol>)msg distributionList:(NSString *) distributionListName
-=======
 + (SmppPdu *)OutgoingSubmitMulti:(UMMessageObject *)msg distributionList:(NSString *) distributionListName
->>>>>>> release-6.0
 {
 	SmppPdu *pdu;
 	int	esmclass = 0;
@@ -1332,21 +975,6 @@ static UMSmppError SMPP_outgoingErrorCodeMapping(UMSmppError e);
 	NSUInteger len;
 	int use_message_payload;
     
-<<<<<<< HEAD
-	pdu = [[SmppPdu alloc] initWithType:SMPP_PDU_SUBMIT_SM_MULTI err:ESME_ROK];
-    
-	esmclass = SMPP_PDU_ESM_CLASS_SUBMIT_STORE_AND_FORWARD_MODE;
-	if (msg.udhIndicator )
-		esmclass |= SMPP_PDU_ESM_CLASS_SUBMIT_UDH_INDICATOR;
-	if(msg.replyPath)
-		esmclass |= SMPP_PDU_ESM_CLASS_SUBMIT_RPI;
-	
-	
-    [pdu appendNSStringMax:@"" maxLength: 6]; // service type default
-	[pdu appendInt8: msg.source.ton];
-	[pdu appendInt8: msg.source.npi];
-	[pdu appendNSStringMax:msg.source.addr  maxLength:21];
-=======
 	pdu = [[SmppPdu alloc] initWithType:SMPP_PDU_SUBMIT_SM_MULTI err:UM_ESME_ROK];
     
 	esmclass = SMPP_PDU_ESM_CLASS_SUBMIT_STORE_AND_FORWARD_MODE;
@@ -1364,25 +992,10 @@ static UMSmppError SMPP_outgoingErrorCodeMapping(UMSmppError e);
     [pdu appendInt8:from.ton];
     [pdu appendInt8:from.npi];
     [pdu appendNSStringMax:from.addr  maxLength:21];
->>>>>>> release-6.0
 	[pdu appendInt8: 1]; /* number of destination addresses */
 	[pdu appendInt8: 2]; /* 2 = distribution list name, 1 = SME destination */
 	[pdu appendNSStringMax: distributionListName   maxLength:21];
 	[pdu appendInt8:  esmclass]; //5.2.12
-<<<<<<< HEAD
-	[pdu appendInt8:  msg.pduPid]; //5.2.13
-	[pdu appendInt8:  msg.messagePriority]; //5.2.13
-	[pdu appendDate:  msg.deferred]; //scheduled time
-	[pdu appendDate:  msg.validity];
-	[pdu appendInt8:  msg.deliveryReportMask ? 1 : 0];
-	[pdu appendInt8:  msg.replaceIfPresentFlag];
-	[pdu appendInt8:  msg.pduDcs];
-	[pdu appendInt8:  0];	/* predefined message text */
-    if(msg.udhIndicator)
-    {
-        NSMutableData *d = [NSMutableData dataWithData:msg.pduUdh];
-        [d appendData:msg.pduContent];
-=======
     [pdu appendInt8:  msg.pduPid.integerValue]; //5.2.13
     [pdu appendInt8:  msg.messagePriority.integerValue]; //5.2.13
     [pdu appendDate:  msg.deferred.dateValue]; //scheduled time
@@ -1395,16 +1008,11 @@ static UMSmppError SMPP_outgoingErrorCodeMapping(UMSmppError e);
     {
         NSMutableData *d = [NSMutableData dataWithData:msg.pduUdh.data];
         [d appendData:msg.pduContent.data];
->>>>>>> release-6.0
         data = d;
     }
     else
     {
-<<<<<<< HEAD
-        data = msg.pduContent;
-=======
         data = msg.pduContent.data;
->>>>>>> release-6.0
     }
 	len = [data length];
 	if(len > 254)
@@ -1421,11 +1029,7 @@ static UMSmppError SMPP_outgoingErrorCodeMapping(UMSmppError e);
 	
 	if([msg routerReference])
     {
-<<<<<<< HEAD
-		[pdu appendTLVString:[msg routerReference] withTag:SMPP_TLV_USER_MESSAGE_REFERENCE];
-=======
 		[pdu appendTLVString:msg.routerReference.stringValue withTag:SMPP_TLV_USER_MESSAGE_REFERENCE];
->>>>>>> release-6.0
     }
 	if(use_message_payload)
     {
@@ -1468,11 +1072,7 @@ static UMSmppError SMPP_outgoingErrorCodeMapping(UMSmppError e);
 								withId:(NSString *)msgid
 {
 	SmppPdu *pdu;
-<<<<<<< HEAD
-	pdu = [[SmppPdu alloc] initWithType:SMPP_PDU_SUBMIT_SM_MULTI err:ESME_ROK];
-=======
 	pdu = [[SmppPdu alloc] initWithType:SMPP_PDU_SUBMIT_SM_MULTI err:UM_ESME_ROK];
->>>>>>> release-6.0
 	// TODO: what about message ID?
 	[pdu appendNSStringMax: msgid  maxLength:65];
 	[pdu appendInt8: [unsuccessfulDeliveries count]];
@@ -1486,11 +1086,7 @@ static UMSmppError SMPP_outgoingErrorCodeMapping(UMSmppError e);
 	return pdu;
 }
 
-<<<<<<< HEAD
-+ (SmppPdu *)OutgoingSubmitMultiRespErr:(SmppErrorCode) err
-=======
 + (SmppPdu *)OutgoingSubmitMultiRespErr:(UMSmppError) err
->>>>>>> release-6.0
 {
 	SmppPdu *pdu;
 	pdu = [[SmppPdu alloc] init];
@@ -1500,29 +1096,17 @@ static UMSmppError SMPP_outgoingErrorCodeMapping(UMSmppError e);
 	return pdu;
 }
 
-<<<<<<< HEAD
-+ (SmppPdu *)OutgoingDeliverSm:(id<SmscConnectionMessageProtocol>)msg
-=======
 + (SmppPdu *)OutgoingDeliverSm:(UMMessageObject *)msg
->>>>>>> release-6.0
 {
 	return [SmppPdu OutgoingDeliverSm:msg esmClass:SMPP_PDU_ESM_CLASS_DELIVER_DEFAULT_TYPE serviceType:NULL];
 }
 
-<<<<<<< HEAD
-+ (SmppPdu *)OutgoingDeliverSm:(id<SmscConnectionMessageProtocol>)msg options:(NSDictionary *)options
-=======
 + (SmppPdu *)OutgoingDeliverSm:(UMMessageObject *)msg options:(NSDictionary *)options
->>>>>>> release-6.0
 {
     return [SmppPdu OutgoingDeliverSm:msg esmClass:SMPP_PDU_ESM_CLASS_DELIVER_DEFAULT_TYPE serviceType:NULL options:options];
 }
 
-<<<<<<< HEAD
-+ (SmppPdu *)OutgoingDeliverSm:(id<SmscConnectionMessageProtocol>)msg esmClass:(int)esmclass serviceType:(NSString *)servicetype
-=======
 + (SmppPdu *)OutgoingDeliverSm:(UMMessageObject *)msg esmClass:(int)esmclass serviceType:(NSString *)servicetype
->>>>>>> release-6.0
 {
     return [SmppPdu OutgoingDeliverSm:msg
                              esmClass:esmclass
@@ -1530,11 +1114,7 @@ static UMSmppError SMPP_outgoingErrorCodeMapping(UMSmppError e);
                               options:@{}];
 }
 
-<<<<<<< HEAD
-+ (SmppPdu *)OutgoingDeliverSm:(id<SmscConnectionMessageProtocol>)msg
-=======
 + (SmppPdu *)OutgoingDeliverSm:(UMMessageObject *)msg
->>>>>>> release-6.0
                       esmClass:(int)esmclass
                    serviceType:(NSString *)servicetype
                        options:(NSDictionary *)options;
@@ -1553,17 +1133,6 @@ static UMSmppError SMPP_outgoingErrorCodeMapping(UMSmppError e);
     {
         we_are_delivery_report = 0;
     }
-<<<<<<< HEAD
-	if (msg.udhIndicator)
-    {
-		esmclass |= SMPP_PDU_ESM_CLASS_SUBMIT_UDH_INDICATOR;
-    }
-    if(msg.replyPath)
-    {
-		esmclass |= SMPP_PDU_ESM_CLASS_SUBMIT_RPI;
-    }
-	pdu = [[SmppPdu alloc] initWithType:SMPP_PDU_DELIVER_SM err:ESME_ROK];
-=======
     if(msg.udhIndicator)
     {
         esmclass |= SMPP_PDU_ESM_CLASS_SUBMIT_UDH_INDICATOR;
@@ -1574,38 +1143,10 @@ static UMSmppError SMPP_outgoingErrorCodeMapping(UMSmppError e);
     }
 
 	pdu = [[SmppPdu alloc] initWithType:SMPP_PDU_DELIVER_SM err:UM_ESME_ROK];
->>>>>>> release-6.0
 	
 	[pdu appendNSStringMax:servicetype maxLength: 6];
 	if(we_are_delivery_report)
 	{ /* the generator of the deliver report is in charge of swappign sender/receiver */
-<<<<<<< HEAD
-		[pdu appendInt8: msg.source.ton];
-        [pdu appendInt8: msg.source.npi];
-        [pdu appendNSStringMax: msg.source.addr  maxLength:21];
-        [pdu appendInt8:  msg.destination.ton];
-        [pdu appendInt8:  msg.destination.npi];
-        [pdu appendNSStringMax: msg.destination.addr  maxLength:21];
-    }
-	else
-	{
-        [pdu appendInt8: msg.source.ton];
-        [pdu appendInt8: msg.source.npi];
-        [pdu appendNSStringMax: msg.source.addr  maxLength:21];
-        [pdu appendInt8:  msg.destination.ton];
-        [pdu appendInt8:  msg.destination.npi];
-        [pdu appendNSStringMax: msg.destination.addr  maxLength:21];
-    }
-    
-	[pdu appendInt8:  esmclass];
-	[pdu appendInt8:  msg.pduPid];
-	[pdu appendInt8:  msg.messagePriority];
-	[pdu appendDate:  msg.deferred];
-	[pdu appendDate:  msg.validity];
-	[pdu appendInt8:  msg.deliveryReportMask ? 1 : 0];
-	[pdu appendInt8:  msg.replaceIfPresentFlag];
-	[pdu appendInt8:  msg.pduDcs];
-=======
         UMSigAddr *from = [[UMSigAddr alloc]initWithString:msg.fromNumber.stringValue];
         [pdu appendInt8:from.ton];
         [pdu appendInt8:from.npi];
@@ -1637,52 +1178,11 @@ static UMSmppError SMPP_outgoingErrorCodeMapping(UMSmppError e);
 	[pdu appendInt8:  msg.deliveryReportMask.integerValue ? 1 : 0];
     [pdu appendInt8:  msg.replaceIfPresentFlag.integerValue ? 1 : 0];
 	[pdu appendInt8:  msg.pduDcs.integerValue];
->>>>>>> release-6.0
 	[pdu appendInt8:  0];	/* predefined message text must be NULL for deliver SM */
 	if(we_are_delivery_report)
 	{
 		NSString *ms;
 		NSString *reportText;
-<<<<<<< HEAD
-        NSInteger type = [msg messageStateCode];
-		switch(type)
-		{
-			case MESSAGE_STATE_ENROUTE:
-                ms = @"ENROUTE";
-				break;
-			case MESSAGE_STATE_ACCEPTED:
-				ms = @"ACCEPTD";
-				break;
-			case MESSAGE_STATE_DELIVERED:
-				ms = @"DELIVRD";
-				break;
-			case MESSAGE_STATE_EXPIRED:
-                ms = @"EXPIRED";
-				break;
-			case MESSAGE_STATE_DELETED:
-                ms = @"DELETED";
-				break;
-			case MESSAGE_STATE_UNDELIVERABLE:
-                ms = @"UNDELIV";
-				break;
-			case MESSAGE_STATE_REJECTED:
-				ms = @"REJECTD";
-				break;
-			case MESSAGE_STATE_UNKNOWN:
-			default:
-				ms = @"UNKNOWN";
-		}
-        
-		NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-        [formatter setDateFormat:@"yyyyMMddHHmmss"];
-        
-		reportText = [NSString stringWithFormat:@"id:%@ sub:001 dlvrd:001 submit date:%@ done date:%@ stat:%@ err:%d text:Report",
-					  msg.routerReference,
-					  msg.submitDate ? [formatter stringFromDate:msg.submitDate]:[formatter stringFromDate:[NSDate date]],
-					  msg.messageAttempted ? [formatter stringFromDate:msg.messageAttempted]:[formatter stringFromDate:[NSDate date]],
-					  ms,
-					  [msg networkErrorCode]];
-=======
         NSInteger type = msg.smppStateCode;
 		switch(type)
 		{
@@ -1730,29 +1230,19 @@ static UMSmppError SMPP_outgoingErrorCodeMapping(UMSmppError e);
                       msg.messageAttempted ? [formatter stringFromDate:msg.messageAttempted.dateValue]:[formatter stringFromDate:[NSDate date]],
 					  ms,
                       ne];
->>>>>>> release-6.0
 		data = [reportText dataUsingEncoding:NSISOLatin1StringEncoding allowLossyConversion:YES];
 	}
 	else
 	{
         if(msg.udhIndicator)
         {
-<<<<<<< HEAD
-            NSMutableData *d = [NSMutableData dataWithData:msg.pduUdh];
-            [d appendData:msg.pduContent];
-=======
             NSMutableData *d = [NSMutableData dataWithData:msg.pduUdh.data];
             [d appendData:msg.pduContent.data];
->>>>>>> release-6.0
             data = d;
         }
         else
         {
-<<<<<<< HEAD
-            data = msg.pduContent;
-=======
             data = msg.pduContent.data;
->>>>>>> release-6.0
         }
 	}
 	len = [data length];
@@ -1775,15 +1265,6 @@ static UMSmppError SMPP_outgoingErrorCodeMapping(UMSmppError e);
 	if(we_are_delivery_report)
 	{
 		/* we are a delivery report */
-<<<<<<< HEAD
-		if([[msg userMessageReference]length]==2)
-        {
-			[pdu appendTLVData:[msg userMessageReference] withTag:SMPP_TLV_USER_MESSAGE_REFERENCE];
-        }
-		[pdu appendTLVStringNullTerminated:[msg routerReference] withTag:SMPP_TLV_RECEIPTED_MESSAGE_ID];
-        [pdu appendTLVNetworkErrorCode:[msg networkErrorCode] networkType:SMPP_NETWORK_TYPE_GSM  withTag:SMPP_TLV_NETWORK_ERROR_CODE];
-		[pdu appendTLVByte: [SmppPdu messageState:[msg messageStateCode]] withTag: SMPP_TLV_MESSAGE_STATE];
-=======
 		if(msg.userMessageReference.data.length==2)
         {
 			[pdu appendTLVData:msg.userMessageReference.data withTag:SMPP_TLV_USER_MESSAGE_REFERENCE];
@@ -1791,7 +1272,6 @@ static UMSmppError SMPP_outgoingErrorCodeMapping(UMSmppError e);
         [pdu appendTLVStringNullTerminated:msg.routerReference.stringValue withTag:SMPP_TLV_RECEIPTED_MESSAGE_ID];
         [pdu appendTLVNetworkErrorCode:msg.networkErrorCode.integerValue networkType:SMPP_NETWORK_TYPE_GSM  withTag:SMPP_TLV_NETWORK_ERROR_CODE];
 		[pdu appendTLVByte: [SmppPdu messageState:msg.smppStateCode] withTag: SMPP_TLV_MESSAGE_STATE];
->>>>>>> release-6.0
 	}
 	/*
 	 ADDITIONAL TLV'S POSSIBLE HERE:
@@ -1824,11 +1304,7 @@ static UMSmppError SMPP_outgoingErrorCodeMapping(UMSmppError e);
 	return pdu;
 }
 
-<<<<<<< HEAD
-+ (SmppPdu *)OutgoingSubmitSmReport:(id<SmscConnectionMessageProtocol>)msg
-=======
 + (SmppPdu *)OutgoingSubmitSmReport:(UMMessageObject *)msg
->>>>>>> release-6.0
                     reportingEntity:(SmppReportingEntity)re
 {
     int esmclass;
@@ -1851,11 +1327,7 @@ static UMSmppError SMPP_outgoingErrorCodeMapping(UMSmppError e);
                          serviceType:@""];
 }
 
-<<<<<<< HEAD
-+ (SmppPdu *)OutgoingDeliverSmReport:(id<SmscConnectionMessageProtocol>)msg
-=======
 + (SmppPdu *)OutgoingDeliverSmReport:(UMMessageObject *)msg
->>>>>>> release-6.0
                      reportingEntity:(SmppReportingEntity)re
 {
 	int esmclass;
@@ -1878,30 +1350,18 @@ static UMSmppError SMPP_outgoingErrorCodeMapping(UMSmppError e);
                           serviceType:@""];
 }
 
-<<<<<<< HEAD
-+ (SmppPdu *)OutgoingDeliverSmRespOK:(id<SmscConnectionMessageProtocol>)msg
-=======
 + (SmppPdu *)OutgoingDeliverSmRespOK:(UMMessageObject *)msg
->>>>>>> release-6.0
 							  withId:(NSString *)msg_id
 {
 	SmppPdu *pdu;
     
-<<<<<<< HEAD
-	pdu = [[SmppPdu alloc] initWithType:SMPP_PDU_DELIVER_SM_RESP err:ESME_ROK];
-=======
 	pdu = [[SmppPdu alloc] initWithType:SMPP_PDU_DELIVER_SM_RESP err:UM_ESME_ROK];
->>>>>>> release-6.0
 //    [pdu appendNSStringMax: msg_id maxLength:65];
     [pdu appendNSStringMax: @"" maxLength:65];
 	return pdu;
 }
 
-<<<<<<< HEAD
-+ (SmppPdu *)OutgoingDeliverSmRespErr:(SmppErrorCode) err
-=======
 + (SmppPdu *)OutgoingDeliverSmRespErr:(UMSmppError) err
->>>>>>> release-6.0
 {
 	SmppPdu *pdu;
 	pdu = [[SmppPdu alloc] initWithType:SMPP_PDU_DELIVER_SM_RESP err:err];
@@ -1909,71 +1369,30 @@ static UMSmppError SMPP_outgoingErrorCodeMapping(UMSmppError e);
 	return pdu;
 }
 
-<<<<<<< HEAD
-+ (SmppPdu *)OutgoingDeliverSmReportRespOK:(id<SmscConnectionReportProtocol>)report
-=======
 + (SmppPdu *)OutgoingDeliverSmReportRespOK:(UMMessageReport *)report
->>>>>>> release-6.0
                                     withId:(NSString *)submit_id
 {
 	SmppPdu *pdu;
     
-<<<<<<< HEAD
-	pdu = [[SmppPdu alloc] initWithType:SMPP_PDU_DELIVER_SM_RESP err:ESME_ROK];
-=======
 	pdu = [[SmppPdu alloc] initWithType:SMPP_PDU_DELIVER_SM_RESP err:UM_ESME_ROK];
->>>>>>> release-6.0
     //    [pdu appendNSStringMax: submit_id maxLength:65];
     [pdu appendNSStringMax: @"" maxLength:65];
 	return pdu;
 }
 
 
-<<<<<<< HEAD
-+ (SmppPdu *)OutgoingDataSm:(id<SmscConnectionMessageProtocol>)msg
-=======
 + (SmppPdu *)OutgoingDataSm:(UMMessageObject *)msg
->>>>>>> release-6.0
 {
 	return [SmppPdu OutgoingDataSm:msg esmClass:SMPP_PDU_ESM_CLASS_SUBMIT_DEFAULT_SMSC_MODE serviceType:@""];
 }
 
-<<<<<<< HEAD
-+ (SmppPdu *)OutgoingDataSm:(id<SmscConnectionMessageProtocol>)msg esmClass:(int)esmclass serviceType:(NSString *)servicetype
-=======
 + (SmppPdu *)OutgoingDataSm:(UMMessageObject *)msg esmClass:(int)esmclass serviceType:(NSString *)servicetype
->>>>>>> release-6.0
 {
 	SmppPdu *pdu;
 	NSData *data;
 	NSUInteger len;
 	int use_message_payload;
 	
-<<<<<<< HEAD
-	if(msg.udhIndicator)
-		esmclass |= SMPP_PDU_ESM_CLASS_SUBMIT_UDH_INDICATOR;
-	if(msg.replyPath)
-		esmclass |= SMPP_PDU_ESM_CLASS_SUBMIT_RPI;
-	
-	pdu = [[SmppPdu alloc] initWithType:SMPP_PDU_DATA_SM err:ESME_ROK];
-	
-	[pdu appendNSStringMax:servicetype maxLength: 6];
-	[pdu appendInt8: msg.source.ton];
-	[pdu appendInt8: msg.source.npi];
-	[pdu appendNSStringMax: msg.source.addr  maxLength:65];
-	
-	[pdu appendInt8: msg.destination.ton];
-	[pdu appendInt8: msg.destination.npi];
-	[pdu appendNSStringMax: msg.destination.addr  maxLength:65];
-	[pdu appendInt8:  esmclass]; //5.2.12
-	[pdu appendInt8: msg.deliveryReportMask ? 1 : 0];
-	[pdu appendInt8:  msg.pduDcs];
-    
-    if(msg.udhIndicator)
-    {
-        NSMutableData *d = [NSMutableData dataWithData:msg.pduUdh];
-        [d appendData:msg.pduContent];
-=======
     if(msg.udhIndicator)
     {
         esmclass |= SMPP_PDU_ESM_CLASS_SUBMIT_UDH_INDICATOR;
@@ -2003,16 +1422,11 @@ static UMSmppError SMPP_outgoingErrorCodeMapping(UMSmppError e);
     {
         NSMutableData *d = [NSMutableData dataWithData:msg.pduUdh.data];
         [d appendData:msg.pduContent.data];
->>>>>>> release-6.0
         data = d;
     }
     else
     {
-<<<<<<< HEAD
-        data = msg.pduContent;
-=======
         data = msg.pduContent.data;
->>>>>>> release-6.0
     }
 
 	len = [data length];
@@ -2030,11 +1444,7 @@ static UMSmppError SMPP_outgoingErrorCodeMapping(UMSmppError e);
 	
 	if([msg routerReference])
     {
-<<<<<<< HEAD
-		[pdu appendTLVString:[msg routerReference] withTag:SMPP_TLV_USER_MESSAGE_REFERENCE];
-=======
         [pdu appendTLVString:msg.routerReference.stringValue withTag:SMPP_TLV_USER_MESSAGE_REFERENCE];
->>>>>>> release-6.0
     }
 	if(use_message_payload)
     {
@@ -2068,35 +1478,20 @@ static UMSmppError SMPP_outgoingErrorCodeMapping(UMSmppError e);
 }
 
 
-<<<<<<< HEAD
-+ (SmppPdu *)OutgoingDataSmRespOK:(id<SmscConnectionMessageProtocol>)msg
-                           withId:(NSString *)msgId
-{
-	SmppPdu *pdu;
-	pdu = [[SmppPdu alloc] initWithType:SMPP_PDU_DATA_SM_RESP err:ESME_ROK];
-=======
 + (SmppPdu *)OutgoingDataSmRespOK:(UMMessageObject *)msg
                            withId:(NSString *)msgId
 {
 	SmppPdu *pdu;
 	pdu = [[SmppPdu alloc] initWithType:SMPP_PDU_DATA_SM_RESP err:UM_ESME_ROK];
->>>>>>> release-6.0
 	// TODO: verify if id is better a NSData
 	[pdu appendNSStringMax:msgId maxLength: 65];
 	return pdu;
 }
 
-<<<<<<< HEAD
-+ (SmppPdu *)OutgoingDataSmRespErr:(SmppErrorCode) err messageId:(NSString *)msgid networkType:(SmppNetworkType)nt
-{
-	SmppPdu *pdu;
-	pdu = [[SmppPdu alloc] initWithType:SMPP_PDU_DATA_SM_RESP err:ESME_ROK];
-=======
 + (SmppPdu *)OutgoingDataSmRespErr:(UMSmppError) err messageId:(NSString *)msgid networkType:(SmppNetworkType)nt
 {
 	SmppPdu *pdu;
 	pdu = [[SmppPdu alloc] initWithType:SMPP_PDU_DATA_SM_RESP err:UM_ESME_ROK];
->>>>>>> release-6.0
 	// TODO: verify if id is better a NSData
 	[pdu appendNSStringMax:msgid maxLength: 65];
 	[pdu appendTLVNetworkErrorCode:err networkType:nt withTag:SMPP_TLV_NETWORK_ERROR_CODE];
@@ -2106,41 +1501,25 @@ static UMSmppError SMPP_outgoingErrorCodeMapping(UMSmppError e);
 + (SmppPdu *)OutgoingQuerySm
 {
 	SmppPdu *pdu;
-<<<<<<< HEAD
-    pdu = [[SmppPdu alloc] initWithType:SMPP_PDU_QUERY_SM err:ESME_ROK];
-=======
     pdu = [[SmppPdu alloc] initWithType:SMPP_PDU_QUERY_SM err:UM_ESME_ROK];
->>>>>>> release-6.0
 	if(pdu)
 	{
 	}
 	return pdu;
 }
 
-<<<<<<< HEAD
-+ (SmppPdu *)OutgoingQueryRespOK:(id<SmscConnectionMessageProtocol>)msg
-						  withId:(NSString *)msg_id
-{
-	SmppPdu *pdu;
-    pdu = [[SmppPdu alloc] initWithType:SMPP_PDU_QUERY_SM_RESP err:ESME_ROK];
-=======
 + (SmppPdu *)OutgoingQueryRespOK:(UMMessageObject *)msg
 						  withId:(NSString *)msg_id
 {
 	SmppPdu *pdu;
     pdu = [[SmppPdu alloc] initWithType:SMPP_PDU_QUERY_SM_RESP err:UM_ESME_ROK];
->>>>>>> release-6.0
 	if(pdu)
 	{
 	}
 	return pdu;
 }
 
-<<<<<<< HEAD
-+ (SmppPdu *)OutgoingQuerySmRespErr:(SmppErrorCode) err
-=======
 + (SmppPdu *)OutgoingQuerySmRespErr:(UMSmppError) err
->>>>>>> release-6.0
 {
 	SmppPdu *pdu;
     pdu = [[SmppPdu alloc] initWithType:SMPP_PDU_QUERY_SM_RESP err:err];
@@ -2153,11 +1532,7 @@ static UMSmppError SMPP_outgoingErrorCodeMapping(UMSmppError e);
 + (SmppPdu *)OutgoingCancelSm
 {
 	SmppPdu *pdu;
-<<<<<<< HEAD
-    pdu = [[SmppPdu alloc] initWithType:SMPP_PDU_CANCEL_SM err:ESME_ROK];
-=======
     pdu = [[SmppPdu alloc] initWithType:SMPP_PDU_CANCEL_SM err:UM_ESME_ROK];
->>>>>>> release-6.0
 	if(pdu)
 	{
 	}
@@ -2167,22 +1542,14 @@ static UMSmppError SMPP_outgoingErrorCodeMapping(UMSmppError e);
 + (SmppPdu *)OutgoingCancelSmRespOK
 {
 	SmppPdu *pdu;
-<<<<<<< HEAD
-    pdu = [[SmppPdu alloc] initWithType:SMPP_PDU_CANCEL_SM_RESP err:ESME_ROK];
-=======
     pdu = [[SmppPdu alloc] initWithType:SMPP_PDU_CANCEL_SM_RESP err:UM_ESME_ROK];
->>>>>>> release-6.0
 	if(pdu)
 	{
 	}
 	return pdu;
 }
 
-<<<<<<< HEAD
-+ (SmppPdu *)OutgoingCancelSmRespErr:(SmppErrorCode) err
-=======
 + (SmppPdu *)OutgoingCancelSmRespErr:(UMSmppError) err
->>>>>>> release-6.0
 {
 	SmppPdu *pdu;
     pdu = [[SmppPdu alloc] initWithType:SMPP_PDU_CANCEL_SM_RESP err:err];
@@ -2195,11 +1562,7 @@ static UMSmppError SMPP_outgoingErrorCodeMapping(UMSmppError e);
 + (SmppPdu *)OutgoingReplaceSm
 {
 	SmppPdu *pdu;
-<<<<<<< HEAD
-    pdu = [[SmppPdu alloc] initWithType:SMPP_PDU_REPLACE_SM err:ESME_ROK];
-=======
     pdu = [[SmppPdu alloc] initWithType:SMPP_PDU_REPLACE_SM err:UM_ESME_ROK];
->>>>>>> release-6.0
 	if(pdu)
 	{
 	}
@@ -2209,22 +1572,14 @@ static UMSmppError SMPP_outgoingErrorCodeMapping(UMSmppError e);
 + (SmppPdu *)OutgoingReplaceSmRespOK
 {
 	SmppPdu *pdu;
-<<<<<<< HEAD
-    pdu = [[SmppPdu alloc] initWithType:SMPP_PDU_REPLACE_SM_RESP err:ESME_ROK];
-=======
     pdu = [[SmppPdu alloc] initWithType:SMPP_PDU_REPLACE_SM_RESP err:UM_ESME_ROK];
->>>>>>> release-6.0
 	if(pdu)
 	{
 	}
 	return pdu;
 }
 
-<<<<<<< HEAD
-+ (SmppPdu *)OutgoingReplaceSmRespErr:(SmppErrorCode) err
-=======
 + (SmppPdu *)OutgoingReplaceSmRespErr:(UMSmppError) err
->>>>>>> release-6.0
 {
 	SmppPdu *pdu;
     pdu = [[SmppPdu alloc] initWithType:SMPP_PDU_REPLACE_SM_RESP err:err];
@@ -2237,11 +1592,7 @@ static UMSmppError SMPP_outgoingErrorCodeMapping(UMSmppError e);
 + (SmppPdu *)OutgoingEnquireLink
 {
 	SmppPdu *pdu;
-<<<<<<< HEAD
-    pdu = [[SmppPdu alloc] initWithType:SMPP_PDU_ENQUIRE_LINK err:ESME_ROK];
-=======
     pdu = [[SmppPdu alloc] initWithType:SMPP_PDU_ENQUIRE_LINK err:UM_ESME_ROK];
->>>>>>> release-6.0
 	if(pdu)
 	{
 	}
@@ -2251,11 +1602,7 @@ static UMSmppError SMPP_outgoingErrorCodeMapping(UMSmppError e);
 + (SmppPdu *)OutgoingEnquireLinkResp
 {
 	SmppPdu *pdu;
-<<<<<<< HEAD
-    pdu = [[SmppPdu alloc] initWithType:SMPP_PDU_ENQUIRE_LINK_RESP err:ESME_ROK];
-=======
     pdu = [[SmppPdu alloc] initWithType:SMPP_PDU_ENQUIRE_LINK_RESP err:UM_ESME_ROK];
->>>>>>> release-6.0
 	if(pdu)
 	{
 	}
@@ -2277,21 +1624,6 @@ static UMSmppError SMPP_outgoingErrorCodeMapping(UMSmppError e);
 {
 	switch(ms)
 	{
-<<<<<<< HEAD
-		case MESSAGE_STATE_ENROUTE:
-			return SMPP_MESSAGE_STATE_ENROUTE;
-		case MESSAGE_STATE_DELIVERED:
-			return SMPP_MESSAGE_STATE_DELIVERED;
-		case MESSAGE_STATE_EXPIRED:
-			return SMPP_MESSAGE_STATE_EXPIRED;
-		case MESSAGE_STATE_DELETED:
-			return SMPP_MESSAGE_STATE_DELETED;
-		case MESSAGE_STATE_UNDELIVERABLE:
-			return SMPP_MESSAGE_STATE_UNDELIVERABLE;
-		case MESSAGE_STATE_ACCEPTED:
-			return SMPP_MESSAGE_STATE_ACCEPTED;
-		case MESSAGE_STATE_REJECTED:
-=======
 		case UMMESSAGE_STATUS_ENROUTE:
 			return SMPP_MESSAGE_STATE_ENROUTE;
 		case UMMESSAGE_STATUS_DELIVERED:
@@ -2305,7 +1637,6 @@ static UMSmppError SMPP_outgoingErrorCodeMapping(UMSmppError e);
 		case UMMESSAGE_STATUS_ACCEPTED:
 			return SMPP_MESSAGE_STATE_ACCEPTED;
 		case UMMESSAGE_STATUS_REJECTED:
->>>>>>> release-6.0
 			return SMPP_MESSAGE_STATE_REJECTED;
 	}
 	return SMPP_MESSAGE_STATE_UNKNOWN;
@@ -2334,21 +1665,12 @@ static UMSmppError SMPP_outgoingErrorCodeMapping(UMSmppError e);
 	
 	unsigned const char *d;
 	
-<<<<<<< HEAD
-	d = [payload bytes];
-	
-	if( (cursor+sizeof(uint8_t)) > [payload length])
-		return 0;
-	
-	i = d[cursor++];
-=======
 	d = [_payload bytes];
 	
 	if( (_cursor+sizeof(uint8_t)) > [_payload length])
 		return 0;
 	
 	i = d[_cursor++];
->>>>>>> release-6.0
 	return i;
 }
 
@@ -2360,15 +1682,6 @@ static UMSmppError SMPP_outgoingErrorCodeMapping(UMSmppError e);
 	
 	unsigned const char *d;
 	
-<<<<<<< HEAD
-	d = [payload bytes];
-	
-	if( (cursor+sizeof(uint16_t)) > [payload length])
-		return 0;
-	
-	i1 = d[cursor++];
-	i2 = d[cursor++];
-=======
 	d = [_payload bytes];
 	
 	if( (_cursor+sizeof(uint16_t)) > [_payload length])
@@ -2376,7 +1689,6 @@ static UMSmppError SMPP_outgoingErrorCodeMapping(UMSmppError e);
 	
 	i1 = d[_cursor++];
 	i2 = d[_cursor++];
->>>>>>> release-6.0
 	i = (i1 << 8) | i2;
 	return i;
 }
@@ -2390,16 +1702,6 @@ static UMSmppError SMPP_outgoingErrorCodeMapping(UMSmppError e);
 	
 	unsigned const char *d;
 	
-<<<<<<< HEAD
-	d = [payload bytes];
-	
-	if( (cursor+sizeof(uint16_t) + 8) > [payload length])
-		return 0;
-	
-	i1 = d[cursor++];
-	i2 = d[cursor++];
-    i3 = d[cursor++];
-=======
 	d = [_payload bytes];
 	
 	if( (_cursor+sizeof(uint16_t) + 8) > [_payload length])
@@ -2408,7 +1710,6 @@ static UMSmppError SMPP_outgoingErrorCodeMapping(UMSmppError e);
 	i1 = d[_cursor++];
 	i2 = d[_cursor++];
     i3 = d[_cursor++];
->>>>>>> release-6.0
 	i = (i1 << 16) | (i2 << 8) | i3;
 	return i;
 }
@@ -2424,17 +1725,6 @@ static UMSmppError SMPP_outgoingErrorCodeMapping(UMSmppError e);
 	
 	unsigned const char *d;
 	
-<<<<<<< HEAD
-	d = [payload bytes];
-	
-	if( (cursor+sizeof(uint32_t)) > [payload length])
-		return 0;
-    
-	i1 = d[cursor++];
-	i2 = d[cursor++];
-	i3 = d[cursor++];
-	i4 = d[cursor++];
-=======
 	d = [_payload bytes];
 	
 	if( (_cursor+sizeof(uint32_t)) > [_payload length])
@@ -2444,7 +1734,6 @@ static UMSmppError SMPP_outgoingErrorCodeMapping(UMSmppError e);
 	i2 = d[_cursor++];
 	i3 = d[_cursor++];
 	i4 = d[_cursor++];
->>>>>>> release-6.0
 	i = (i1 << 24) | (i2 << 16) | (i3 << 8) | i4;
 	return i;
 }
@@ -2473,17 +1762,6 @@ static UMSmppError SMPP_outgoingErrorCodeMapping(UMSmppError e);
 	unsigned const char *in_string;
 	int len;
     
-<<<<<<< HEAD
-    if(payload==NULL)
-	{
-        return @"";
-	}
-	if(cursor >= [payload length])
-    {
-        return @"";
-    }
-	in_string = & ((unsigned char *)[payload bytes])[cursor];
-=======
     if(_payload==NULL)
 	{
         return @"";
@@ -2493,22 +1771,15 @@ static UMSmppError SMPP_outgoingErrorCodeMapping(UMSmppError e);
         return @"";
     }
 	in_string = & ((unsigned char *)[_payload bytes])[_cursor];
->>>>>>> release-6.0
 	for(len=0;len<max;len++)
     {
 		if(in_string[len] == '\0')
 		{
 			break;
 		}
-<<<<<<< HEAD
-        ++cursor;
-    }
-    ++cursor;        /* \0 */
-=======
         ++_cursor;
     }
     ++_cursor;        /* \0 */
->>>>>>> release-6.0
 	s = [[NSString alloc] initWithBytes:in_string length:len encoding:enc];
 	return s;
 }
@@ -2518,13 +1789,8 @@ static UMSmppError SMPP_outgoingErrorCodeMapping(UMSmppError e);
     unsigned const char *in_string;
     NSData *d;
     
-<<<<<<< HEAD
-    in_string = & ((unsigned char *)[payload bytes])[cursor];
-    cursor += len;
-=======
     in_string = & ((unsigned char *)[_payload bytes])[_cursor];
     _cursor += len;
->>>>>>> release-6.0
     d = [[NSData alloc] initWithBytes:in_string length:len];
     
     return d;
@@ -2532,11 +1798,7 @@ static UMSmppError SMPP_outgoingErrorCodeMapping(UMSmppError e);
 
 - (void) resetCursor
 {
-<<<<<<< HEAD
-	cursor = 0;
-=======
 	_cursor = 0;
->>>>>>> release-6.0
 }
 
 - (int)unpackDeliverSm
@@ -2546,28 +1808,6 @@ static UMSmppError SMPP_outgoingErrorCodeMapping(UMSmppError e);
 
 - (int)unpackDeliverSmUsingTlvDefinition:(NSDictionary *)tlvDefs;
 {
-<<<<<<< HEAD
-    service_type = [self grabStringWithEncoding:NSISOLatin1StringEncoding	maxLength:255];
-	source_addr_ton  = [self grabInt8];
-	source_addr_npi  = [self grabInt8];
-	source_addr = [self grabStringWithEncoding:NSISOLatin1StringEncoding	maxLength:40];
-	dest_addr_ton  = [self grabInt8];
-	dest_addr_npi  = [self grabInt8];
-	destination_addr = [self grabStringWithEncoding:NSISOLatin1StringEncoding	maxLength:31];
-	esm_class = (int)[self grabInt8];
-    protocol_id = [self grabInt8];
-    priority_flag = [self grabInt8];
-    schedule_delivery_time = [self grabStringWithEncoding:NSUTF8StringEncoding maxLength:17];
-    validity_period = [self grabStringWithEncoding:NSUTF8StringEncoding maxLength:17];
-    registered_delivery = [self grabInt8];
-    replace_if_present_flag = [self grabInt8];
-    data_coding = [self grabInt8];
-    sm_default_msg_id = [self grabInt8];;
-    sm_length = [self grabInt8];
-    short_message = [self grabOctetStringWithLength:(int)sm_length];
-    
-    if (sm_length != [short_message length])
-=======
     _service_type = [self grabStringWithEncoding:NSISOLatin1StringEncoding	maxLength:255];
 	_source_addr_ton  = [self grabInt8];
 	_source_addr_npi  = [self grabInt8];
@@ -2588,7 +1828,6 @@ static UMSmppError SMPP_outgoingErrorCodeMapping(UMSmppError e);
     _short_message = [self grabOctetStringWithLength:(int)_sm_length];
     
     if (_sm_length != [_short_message length])
->>>>>>> release-6.0
     {
         return -1;
     }
@@ -2598,16 +1837,6 @@ static UMSmppError SMPP_outgoingErrorCodeMapping(UMSmppError e);
 
 - (void) grabTlvsWithDefinitions:(NSDictionary *)tlvDefs
 {
-<<<<<<< HEAD
-    if(tlv == NULL)
-    {
-        tlv = [[NSMutableDictionary alloc]init];
-    }
-    int len = (int)[payload length];
-    id  val;
-    
-    while (cursor + 4 < len)
-=======
     if(_tlvs == NULL)
     {
         _tlvs = [[NSMutableDictionary alloc]init];
@@ -2616,7 +1845,6 @@ static UMSmppError SMPP_outgoingErrorCodeMapping(UMSmppError e);
     id  val;
     
     while (_cursor + 4 < len)
->>>>>>> release-6.0
     {
         unsigned long opt_len;
         SMPP_TLV_Tag opt_tag;
@@ -2627,224 +1855,94 @@ static UMSmppError SMPP_outgoingErrorCodeMapping(UMSmppError e);
         {
             if (opt_len > 2)
             {
-<<<<<<< HEAD
-                [self setCursor:[self cursor] + (int)opt_len];
-                continue;
-            }
-            user_message_reference = [self grabInt:opt_len];
-            val = [NSString stringWithFormat:@"%ld", user_message_reference];
-            tlv[@"user message reference"] = val;
-=======
                 _cursor  += opt_len;
                 continue;
             }
             _user_message_reference = [self grabInt:opt_len];
             val = [NSString stringWithFormat:@"%ld", _user_message_reference];
             _tlvs[@"user message reference"] = val;
->>>>>>> release-6.0
         }
         else if (opt_tag == SMPP_TLV_SOURCE_PORT)
         {
             if (opt_len > 2)
             {
-<<<<<<< HEAD
-                [self setCursor:[self cursor] + (int)opt_len];
-                continue;
-            }
-            source_port = [self grabInt:opt_len];
-            val = [NSString stringWithFormat:@"%ld", source_port];
-            tlv[@"source port"] = val;
-=======
                 _cursor  += opt_len;
                 continue;
             }
             _source_port = [self grabInt:opt_len];
             val = [NSString stringWithFormat:@"%ld", _source_port];
             _tlvs[@"source port"] = val;
->>>>>>> release-6.0
         }
         else if (opt_tag == SMPP_TLV_DESTINATION_PORT)
         {
             if (opt_len > 2)
             {
-<<<<<<< HEAD
-                [self setCursor:[self cursor] + (int)opt_len];
-                continue;
-            }
-            destination_port = [self grabInt:opt_len];
-            val = [NSString stringWithFormat:@"%ld", destination_port];
-            tlv[@"destination port"] = val;
-=======
                 _cursor  += opt_len;
                 continue;
             }
             _destination_port = [self grabInt:opt_len];
             val = [NSString stringWithFormat:@"%ld", _destination_port];
             _tlvs[@"destination port"] = val;
->>>>>>> release-6.0
         }
         else if (opt_tag == SMPP_TLV_SAR_MSG_REF_NUM)
         {
             if (opt_len > 2)
             {
-<<<<<<< HEAD
-                [self setCursor:[self cursor] + (int)opt_len];
-                continue;
-            }
-            sar_msg_ref_num = [self grabInt:opt_len];
-            val = [NSString stringWithFormat:@"%ld", sar_msg_ref_num];
-            tlv[@"sar msg ref num"] = val;
-=======
                 _cursor  += opt_len;
                 continue;
             }
             _sar_msg_ref_num = [self grabInt:opt_len];
             val = [NSString stringWithFormat:@"%ld", _sar_msg_ref_num];
             _tlvs[@"sar msg ref num"] = val;
->>>>>>> release-6.0
         }
         else if (opt_tag == SMPP_TLV_SAR_TOTAL_SEGMENTS)
         {
             if (opt_len > 1)
             {
-<<<<<<< HEAD
-                [self setCursor:[self cursor] + (int)opt_len];
-                continue;
-            }
-            sar_total_segments = [self grabInt:opt_len];
-            val = [NSString stringWithFormat:@"%ld", sar_total_segments];
-            tlv[@"sar total segments"] = val;
-=======
                 _cursor  += opt_len;
                 continue;
             }
             _sar_total_segments = [self grabInt:opt_len];
             val = [NSString stringWithFormat:@"%ld", _sar_total_segments];
             _tlvs[@"sar total segments"] = val;
->>>>>>> release-6.0
         }
         else if (opt_tag == SMPP_TLV_SAR_SEGMENT_SEQNUM)
         {
             if (opt_len > 1)
             {
-<<<<<<< HEAD
-                [self setCursor:[self cursor] + (int)opt_len];
-                continue;
-            }
-            sar_segment_seqnum = [self grabInt:opt_len];
-            val = [NSString stringWithFormat:@"%ld", sar_segment_seqnum];
-            tlv[@"sar segement seqnum"] = val;
-=======
                 _cursor  += opt_len;
                 continue;
             }
             _sar_segment_seqnum = [self grabInt:opt_len];
             val = [NSString stringWithFormat:@"%ld", _sar_segment_seqnum];
             _tlvs[@"sar segement seqnum"] = val;
->>>>>>> release-6.0
         }
         else if (opt_tag == SMPP_TLV_USER_RESPONSE_CODE)
         {
             if (opt_len > 1)
             {
-<<<<<<< HEAD
-                [self setCursor:[self cursor] + (int)opt_len];
-                continue;
-            }
-            user_response_code = [self grabInt:opt_len];
-            val = [NSString stringWithFormat:@"%ld", user_response_code];
-            tlv[@"user response code"] = val;
-=======
                 _cursor  += opt_len;
                 continue;
             }
             _user_response_code = [self grabInt:opt_len];
             val = [NSString stringWithFormat:@"%ld", _user_response_code];
             _tlvs[@"user response code"] = val;
->>>>>>> release-6.0
         }
         else if (opt_tag == SMPP_TLV_PRIVACY_INDICATOR)
         {
             if (opt_len > 1)
             {
-<<<<<<< HEAD
-                [self setCursor:[self cursor] + (int)opt_len];
-                continue;
-            }
-            privacy_indicator = [self grabInt:opt_len];
-            val = [NSString stringWithFormat:@"%ld", privacy_indicator];
-            tlv[@"privacy indicator"] = val;
-=======
                 _cursor  += opt_len;
                 continue;
             }
             _privacy_indicator = [self grabInt:opt_len];
             val = [NSString stringWithFormat:@"%ld", _privacy_indicator];
             _tlvs[@"privacy indicator"] = val;
->>>>>>> release-6.0
         }
         else if (opt_tag == SMPP_TLV_PAYLOAD_TYPE)
         {
             if (opt_len > 1)
             {
-<<<<<<< HEAD
-                [self setCursor:[self cursor] + (int)opt_len];
-                continue;
-            }
-            payload_type = [self grabInt:opt_len];
-            val = [NSString stringWithFormat:@"%ld", payload_type];
-            tlv[@"payload type"] = val;
-        }
-        else if (opt_tag == SMPP_TLV_MESSAGE_PAYLOAD)
-        {
-            if (opt_len > 65536 || cursor + opt_len > len)
-            {
-                [self setCursor:[self cursor] + (int)opt_len];
-                continue;
-            }
-            message_payload = [self grabOctetStringWithLength:(int)opt_len];
-            tlv[@"message payload"] = message_payload;
-        }
-        else if (opt_tag == SMPP_TLV_CALLBACK_NUM)
-        {
-            if (opt_len < 4 || opt_len > 19 || cursor + opt_len > len)
-            {
-                [self setCursor:[self cursor] + (int)opt_len];
-                continue;
-            }
-            callback_num = [self grabOctetStringWithLength:(int)opt_len];
-            tlv[@"callback num"] = callback_num;
-        }
-        else if (opt_tag == SMPP_TLV_SOURCE_SUBADDRESS)
-        {
-            if (opt_len < 2 || opt_len > 23 || cursor + opt_len > len)
-            {
-                [self setCursor:[self cursor] + (int)opt_len];
-                continue;
-            }
-            source_subaddress = [self grabOctetStringWithLength:(int)opt_len];
-            tlv[@"source subaddress"] = source_subaddress;
-        }
-        else if (opt_tag == SMPP_TLV_DEST_SUBADDRESS)
-        {
-            if (opt_len < 2 || opt_len > 23 || cursor + opt_len > len)
-            {
-                [self setCursor:[self cursor] + (int)opt_len];
-                continue;
-            }
-            dest_subaddress = [self grabOctetStringWithLength:(int)opt_len];
-            tlv[@"dest subaddress"] = dest_subaddress;
-        }
-        else if (opt_tag == SMPP_TLV_SOURCE_ADDR_SUBUNIT)
-        {
-            if (opt_len < 1 || opt_len > 1 || cursor + opt_len > len)
-            {
-                [self setCursor:[self cursor] + (int)opt_len];
-                continue;
-            }
-            source_addr_subunit = [self grabInt:(int)opt_len];
-            tlv[@"source subunit"] = @(source_addr_subunit);
-=======
                 _cursor  += opt_len;
                 continue;
             }
@@ -2901,20 +1999,10 @@ static UMSmppError SMPP_outgoingErrorCodeMapping(UMSmppError e);
             }
             _source_addr_subunit = [self grabInt:(int)opt_len];
             _tlvs[@"source subunit"] = @(_source_addr_subunit);
->>>>>>> release-6.0
         }
 
         else if (opt_tag == SMPP_TLV_DEST_ADDR_SUBUNIT)
         {
-<<<<<<< HEAD
-            if (opt_len < 1 || opt_len > 1 || cursor + opt_len > len)
-            {
-                [self setCursor:[self cursor] + (int)opt_len];
-                continue;
-            }
-            dest_addr_subunit = [self grabInt:(int)opt_len];
-            tlv[@"dest subunit"] = @(dest_addr_subunit);
-=======
             if (opt_len < 1 || opt_len > 1 || _cursor + opt_len > len)
             {
                 _cursor  += opt_len;
@@ -2922,43 +2010,12 @@ static UMSmppError SMPP_outgoingErrorCodeMapping(UMSmppError e);
             }
             _dest_addr_subunit = [self grabInt:(int)opt_len];
             _tlvs[@"dest subunit"] = @(_dest_addr_subunit);
->>>>>>> release-6.0
         }
 
         else if (opt_tag == SMPP_TLV_LANGUAGE_INDICATOR)
         {
             if (opt_len > 1)
             {
-<<<<<<< HEAD
-                [self setCursor:[self cursor] + (int)opt_len];
-                continue;
-            }
-            language_indicator = [self grabInt:opt_len];
-            val = [NSString stringWithFormat:@"%ld", language_indicator];
-            tlv[@"language indicator"] = val;
-        }
-        else if (opt_tag == SMPP_TLV_ITS_SESSION_INFO)
-        {
-            if (opt_len < 2 || opt_len > 2 || cursor + opt_len > len)
-            {
-                [self setCursor:[self cursor] + (int)opt_len];
-                continue;
-            }
-            its_session_info = [self grabOctetStringWithLength:(int)opt_len];
-            if (tlv)
-                tlv[@"its session info"] = its_session_info;
-        }
-        else if (opt_tag == SMPP_TLV_NETWORK_ERROR_CODE)
-        {
-            if (opt_len < 3 || opt_len > 3 || cursor + opt_len > len)
-            {
-                [self setCursor:[self cursor] + (int)opt_len];
-                continue;
-            }
-            network_error_code = [self grabOctetStringWithLength:(int)opt_len];
-            if (tlv)
-                tlv[@"network error code"] = network_error_code;
-=======
                 _cursor  += opt_len;
                 continue;
             }
@@ -2985,34 +2042,11 @@ static UMSmppError SMPP_outgoingErrorCodeMapping(UMSmppError e);
             }
             _network_error_code = [self grabOctetStringWithLength:(int)opt_len];
             _tlvs[@"network error code"] = _network_error_code;
->>>>>>> release-6.0
         }
         else if (opt_tag == SMPP_TLV_MESSAGE_STATE)
         {
             if (opt_len > 1)
             {
-<<<<<<< HEAD
-                [self setCursor:[self cursor] + (int)opt_len];
-                continue;
-            }
-            message_state = [self grabInt:opt_len];
-            val = [NSString stringWithFormat:@"%ld", message_state];
-            if (tlv)
-                tlv[@"message state"] = val;
-        }
-        else if (opt_tag == SMPP_TLV_RECEIPTED_MESSAGE_ID)
-        {
-            if (opt_len > 65 || cursor + opt_len > len)
-            {
-                [self setCursor:[self cursor] + (int)opt_len];
-                continue;
-            }
-            receipted_message_id = [self grabStringWithEncoding:NSUTF8StringEncoding maxLength:(int)opt_len];
-            if (tlv)
-            {
-                tlv[@"receipted message id"] = receipted_message_id;
-            }
-=======
                 _cursor  += opt_len;
                 continue;
             }
@@ -3029,7 +2063,6 @@ static UMSmppError SMPP_outgoingErrorCodeMapping(UMSmppError e);
             }
             _receipted_message_id = [self grabStringWithEncoding:NSUTF8StringEncoding maxLength:(int)opt_len];
             _tlvs[@"receipted message id"] = _receipted_message_id;
->>>>>>> release-6.0
         }
         else
         {
@@ -3043,54 +2076,32 @@ static UMSmppError SMPP_outgoingErrorCodeMapping(UMSmppError e);
                     NSMutableData *data = [[self grabOctetStringWithLength:(int)opt_len] mutableCopy];
                     [data appendByte:0]; /* failsafe */
                     NSString *stringValue =[NSString stringWithFormat:@"%s",(const char *)[data bytes]];
-<<<<<<< HEAD
-                    tlv[t.name] = stringValue;
-=======
                     _tlvs[t.name] = stringValue;
->>>>>>> release-6.0
                 }
                 else if(t.type==SMPP_TLV_INTEGER)
                 {
                     NSNumber *num = @([self grabInt:opt_len]);
-<<<<<<< HEAD
-                    tlv[t.name] = num;
-=======
                     _tlvs[t.name] = num;
->>>>>>> release-6.0
                 }
                 else// if(t.type==SMPP_TLV_OCTETS)
                 {
                     NSData *data = [self grabOctetStringWithLength:(int)opt_len];
-<<<<<<< HEAD
-                    tlv[t.name] = data;
-=======
                     _tlvs[t.name] = data;
->>>>>>> release-6.0
                 }
             }
             else
             {
                 NSString *optKey = [NSString stringWithFormat:@"0x%04X", (unsigned int)opt_tag];
                 NSData *data = [self grabOctetStringWithLength:(int)opt_len];
-<<<<<<< HEAD
-                tlv[optKey] = data;
-=======
                 _tlvs[optKey] = data;
->>>>>>> release-6.0
             }
         }
     }
 }
 
-<<<<<<< HEAD
-+ (NSString *)errorToString:(SmppErrorCode)err
-{
-    return [SmscConnectionSMPP smppErrorToString:err];
-=======
 + (NSString *)errorToString:(UMSmppError)err
 {
     return UMSmppErrorAsString(err);
->>>>>>> release-6.0
 }
 
 + (NSString *)pduTypeToString:(SmppPduType)type
@@ -3193,286 +2204,6 @@ static UMSmppError SMPP_outgoingErrorCodeMapping(UMSmppError e);
     
     desc = [[NSMutableString alloc] initWithString:@"SMPP PDU\n"];
     
-<<<<<<< HEAD
-    [desc appendFormat:@" len:     %08lX\n", (unsigned long)pdulen];
-    [desc appendFormat:@" type:    %08lX %@\n", (unsigned long)type,[SmppPdu pduTypeToString:type]];
-	[desc appendFormat:@" error:   %08lX %@\n", (unsigned long)err, [SmppPdu errorToString:err]];
-	[desc appendFormat:@" seq:     %08lX\n", (unsigned long)seq];
-	[desc appendFormat:@" payload: %@\n", payload];
-    
-    if (type == SMPP_PDU_BIND_TRANSMITTER || type == SMPP_PDU_BIND_RECEIVER || type == SMPP_PDU_BIND_TRANSCEIVER)
-    {
-        [desc appendFormat:@"system id is %@\n", system_id];
-        [desc appendFormat:@"password %@\n", password ? @"exists" : @"does not exist"];
-        [desc appendFormat:@"system type is %@\n", system_type];
-        [desc appendFormat:@"interface version is %ld\n", interface_version];
-        [desc appendFormat:@"addr npi is %ld\n", addr_npi];
-        [desc appendFormat:@"addr ton is %ld\n", addr_ton];
-        [desc appendFormat:@"system type is %@\n", address_range];
-    }
-    else if (type == SMPP_PDU_BIND_TRANSMITTER_RESP || type == SMPP_PDU_BIND_RECEIVER_RESP || type == SMPP_PDU_BIND_TRANSCEIVER_RESP)
-    {
-        [desc appendFormat:@"system id is %@\n", system_id];
-        [desc appendFormat:@"sc interface version is %ld\n", sc_interface_version];
-    }
-    else if (type == SMPP_PDU_OUTBIND)
-    {
-        [desc appendFormat:@"system id is %@\n", system_id];
-        [desc appendFormat:@"password %@\n", password ? @"exists" : @"does not exist"];
-    }
-    else if (type == SMPP_PDU_SUBMIT_SM)
-    {
-        [desc appendFormat:@"service type is %@\n", service_type];
-        [desc appendFormat:@"source addr ton is %ld\n", source_addr_ton];
-        [desc appendFormat:@"source addr npi is %ld\n", source_addr_npi];
-        [desc appendFormat:@"system type is %@\n", source_addr];
-        [desc appendFormat:@"destnation addr ton is %ld\n", dest_addr_ton];
-        [desc appendFormat:@"destination addr npi is %ld\n", dest_addr_npi];
-        [desc appendFormat:@"destination addr is %@\n", destination_addr];
-        [desc appendFormat:@"esm class is %ld\n", esm_class];
-        [desc appendFormat:@"source protocol id is %ld\n", protocol_id];
-        [desc appendFormat:@"priority flag is %ld\n", priority_flag];
-        [desc appendFormat:@"scheduled delivery time is %@\n", schedule_delivery_time];
-        [desc appendFormat:@"validity period is %@\n", validity_period];
-        [desc appendFormat:@"registered delivery is %ld\n", registered_delivery];
-        [desc appendFormat:@"replace if present is %ld\n", replace_if_present_flag];
-        [desc appendFormat:@"data coding is %ld\n", data_coding];
-        [desc appendFormat:@"sm default sm id is %ld\n", sm_default_msg_id];
-        [desc appendFormat:@"sm length is %ld\n", sm_length];
-        [desc appendFormat:@"short message is %@\n", short_message];
-        [desc appendFormat:@"user message reference is %ld\n", user_message_reference];
-        [desc appendFormat:@"source port is %ld\n", source_port];
-        [desc appendFormat:@"source address subunit is is %ld\n", source_addr_subunit];
-        [desc appendFormat:@"destination port is %ld\n", destination_port];
-        [desc appendFormat:@"destination address subunit is %ld\n", dest_addr_subunit];
-        [desc appendFormat:@"SAR message reference number is %ld\n", sar_msg_ref_num];
-        [desc appendFormat:@"SAR total segments is %ld\n", sar_total_segments];
-        [desc appendFormat:@"SAR seqment seqnum is %ld\n", sar_segment_seqnum];
-        [desc appendFormat:@"more messages to send is %ld\n", more_messages_to_send];
-        [desc appendFormat:@"payload type is %ld\n", payload_type];
-        [desc appendFormat:@"message payload is %@\n",message_payload];
-        [desc appendFormat:@"privacy indicator is %ld\n", privacy_indicator];
-        [desc appendFormat:@"callbacl number is %@\n", callback_num];
-        [desc appendFormat:@"callback number presence indicator is %ld\n", callback_num_pres_ind];
-        [desc appendFormat:@"callbacl number atag %@\n", callback_num_atag];
-        [desc appendFormat:@"source subaddress is %@\n", source_subaddress];
-        [desc appendFormat:@"destination subaddress is %@\n", dest_subaddress];
-        [desc appendFormat:@"user response code is %ld\n", user_response_code];
-        [desc appendFormat:@"display time is %ld\n", display_time];
-        [desc appendFormat:@"sms signal is %ld\n", sms_signal];
-        [desc appendFormat:@"ms validity is %ld\n", ms_validity];
-        [desc appendFormat:@"ms msg wait facilities is %ld\n", ms_msg_wait_facilities];
-        [desc appendFormat:@"number of messages is %ld\n", number_of_messages];
-        [desc appendFormat:@"alert on message delivery is %ld\n", alert_on_message_delivery];
-        [desc appendFormat:@"language indicator is %ld\n", language_indicator];
-        [desc appendFormat:@"its reply type is %ld\n", its_reply_type];
-        [desc appendFormat:@"source subaddress is %@\n", its_session_info];
-        [desc appendFormat:@"ussd service op is %@\n", ussd_service_op];
-    }
-    else if (type == SMPP_PDU_SUBMIT_SM_RESP)
-    {
-        [desc appendFormat:@"message id is %@\n", message_id];
-    }
-    else if (type == SMPP_PDU_SUBMIT_SM_MULTI)
-    {
-        [desc appendFormat:@"service type is %@\n", service_type];
-        [desc appendFormat:@"source addr ton is %ld\n", source_addr_ton];
-        [desc appendFormat:@"source addr npi is %ld\n", source_addr_npi];
-        [desc appendFormat:@"system type is %@\n", source_addr];
-        [desc appendFormat:@"number of dests is %ld\n", number_of_dests];
-        [desc appendFormat:@"dest address es is %@\n", dest_address_es];
-        [desc appendFormat:@"esm class is %ld\n", esm_class];
-        [desc appendFormat:@"source protocol id is %ld\n", protocol_id];
-        [desc appendFormat:@"priority flag is %ld\n", priority_flag];
-        [desc appendFormat:@"scheduled delivery time is %@\n", schedule_delivery_time];
-        [desc appendFormat:@"validity period is %@\n", validity_period];
-        [desc appendFormat:@"registered delivery is %ld\n", registered_delivery];
-        [desc appendFormat:@"replace if present is %ld\n", replace_if_present_flag];
-        [desc appendFormat:@"data coding is %ld\n", data_coding];
-        [desc appendFormat:@"sm default sm id is %ld\n", sm_default_msg_id];
-        [desc appendFormat:@"sm length is %ld\n", sm_length];
-        [desc appendFormat:@"short message is %@\n", short_message];
-        [desc appendFormat:@"user message reference is %ld\n", user_message_reference];
-        [desc appendFormat:@"source port is %ld\n", source_port];
-        [desc appendFormat:@"source address subunit is is %ld\n", source_addr_subunit];
-        [desc appendFormat:@"destination port is %ld\n", destination_port];
-        [desc appendFormat:@"destination address subunit is %ld\n", dest_addr_subunit];
-        [desc appendFormat:@"SAR message reference number is %ld\n", sar_msg_ref_num];
-        [desc appendFormat:@"SAR total segments is %ld\n", sar_total_segments];
-        [desc appendFormat:@"SAR seqment seqnum is %ld\n", sar_segment_seqnum];
-        [desc appendFormat:@"payload type is %ld\n", payload_type];
-        [desc appendFormat:@"message payload is %@\n",message_payload];
-        [desc appendFormat:@"privacy indicator is %ld\n", privacy_indicator];
-        [desc appendFormat:@"callbacl number is %@\n", callback_num];
-        [desc appendFormat:@"callback number presence indicator is %ld\n", callback_num_pres_ind];
-        [desc appendFormat:@"callbacl number atag %@\n", callback_num_atag];
-        [desc appendFormat:@"source subaddress is %@\n", source_subaddress];
-        [desc appendFormat:@"destination subaddress is %@\n", dest_subaddress];
-        [desc appendFormat:@"user response code is %ld\n", user_response_code];
-        [desc appendFormat:@"display time is %ld\n", display_time];
-        [desc appendFormat:@"sms signal is %ld\n", sms_signal];
-        [desc appendFormat:@"ms validity is %ld\n", ms_validity];
-        [desc appendFormat:@"ms msg wait facilities is %ld\n", ms_msg_wait_facilities];
-        [desc appendFormat:@"alert on message delivery is %ld\n", alert_on_message_delivery];
-        [desc appendFormat:@"language indicator is %ld\n", language_indicator];
-    }
-    else if (type == SMPP_PDU_SUBMIT_SM_MULTI_RESP)
-    {
-        [desc appendFormat:@"message id is %@\n", message_id];
-        [desc appendFormat:@"no unsuccess is %ld\n", no_unsuccess];
-    }
-    else if (type == SMPP_PDU_DELIVER_SM)
-    {
-        [desc appendFormat:@"service type is %@\n", service_type];
-        [desc appendFormat:@"source addr ton is %ld\n", source_addr_ton];
-        [desc appendFormat:@"source addr npi is %ld\n", source_addr_npi];
-        [desc appendFormat:@"system type is %@\n", source_addr];
-        [desc appendFormat:@"destnation addr ton is %ld\n", dest_addr_ton];
-        [desc appendFormat:@"destination addr npi is %ld\n", dest_addr_npi];
-        [desc appendFormat:@"destination addr is %@\n", destination_addr];
-        [desc appendFormat:@"esm class is %ld\n", esm_class];
-        [desc appendFormat:@"source protocol id is %ld\n", protocol_id];
-        [desc appendFormat:@"priority flag is %ld\n", priority_flag];
-        [desc appendFormat:@"scheduled delivery time is %@\n", schedule_delivery_time];
-        [desc appendFormat:@"validity period is %@\n", validity_period];
-        [desc appendFormat:@"registered delivery is %ld\n", registered_delivery];
-        [desc appendFormat:@"replace if present is %ld\n", replace_if_present_flag];
-        [desc appendFormat:@"data coding is %ld\n", data_coding];
-        [desc appendFormat:@"sm default sm id is %ld\n", sm_default_msg_id];
-        [desc appendFormat:@"sm length is %ld\n", sm_length];
-        [desc appendFormat:@"short message is %@\n", short_message];
-        [desc appendFormat:@"user message reference is %ld\n", user_message_reference];
-        [desc appendFormat:@"source port is %ld\n", source_port];
-        [desc appendFormat:@"destination port is %ld\n", destination_port];
-        [desc appendFormat:@"SAR message reference number is %ld\n", sar_msg_ref_num];
-        [desc appendFormat:@"SAR total segments is %ld\n", sar_total_segments];
-        [desc appendFormat:@"SAR seqment seqnum is %ld\n", sar_segment_seqnum];
-        [desc appendFormat:@"user response code is %ld\n", user_response_code];
-        [desc appendFormat:@"privacy indicator is %ld\n", privacy_indicator];
-        [desc appendFormat:@"payload type is %ld\n", payload_type];
-        [desc appendFormat:@"message payload is %@\n",message_payload];
-        [desc appendFormat:@"callbacl number is %@\n", callback_num];
-        [desc appendFormat:@"source subaddress is %@\n", source_subaddress];
-        [desc appendFormat:@"destination subaddress is %@\n", dest_subaddress];
-        [desc appendFormat:@"language indicator is %ld\n", language_indicator];
-        [desc appendFormat:@"source subaddress is %@\n", its_session_info];
-        [desc appendFormat:@"network error code is %@\n", network_error_code];
-        [desc appendFormat:@"message state is %ld\n", message_state];
-        [desc appendFormat:@"receipted message id is %@\n", receipted_message_id];
-    }
-    else if (type == SMPP_PDU_DELIVER_SM_RESP)
-    {
-        [desc appendFormat:@"message id is %@\n", message_id];
-    }
-    else if (type == SMPP_PDU_DATA_SM)
-    {
-        [desc appendFormat:@"service type is %@\n", service_type];
-        [desc appendFormat:@"source addr ton is %ld\n", source_addr_ton];
-        [desc appendFormat:@"source addr npi is %ld\n", source_addr_npi];
-        [desc appendFormat:@"system type is %@\n", source_addr];
-        [desc appendFormat:@"destnation addr ton is %ld\n", dest_addr_ton];
-        [desc appendFormat:@"destination addr npi is %ld\n", dest_addr_npi];
-        [desc appendFormat:@"destination addr is %@\n", destination_addr];
-        [desc appendFormat:@"esm class is %ld\n", esm_class];
-        [desc appendFormat:@"registered delivery is %ld\n", registered_delivery];
-        [desc appendFormat:@"data coding is %ld\n", data_coding];
-        [desc appendFormat:@"source port is %ld\n", source_port];
-        [desc appendFormat:@"source address subunit is is %ld\n", source_addr_subunit];
-        [desc appendFormat:@"source network type is %ld\n", source_network_type];
-        [desc appendFormat:@"source bearer type is %ld\n", source_bearer_type];
-        [desc appendFormat:@"source telematics id is %ld\n", source_telematics_id];
-        [desc appendFormat:@"destination network type is %ld\n", dest_network_type];
-        [desc appendFormat:@"destination bearer type is %ld\n", dest_bearer_type];
-        [desc appendFormat:@"destination telematics id is %ld\n", dest_telematics_id];
-        [desc appendFormat:@"SAR message reference number is %ld\n", sar_msg_ref_num];
-        [desc appendFormat:@"SAR total segments is %ld\n", sar_total_segments];
-        [desc appendFormat:@"SAR seqment seqnum is %ld\n", sar_segment_seqnum];
-        [desc appendFormat:@"more messages to send is %ld\n", more_messages_to_send];
-        [desc appendFormat:@"quality of service, time to live is %ld\n", qos_time_to_live];
-        [desc appendFormat:@"payload type is %ld\n", payload_type];
-        [desc appendFormat:@"message payload is %@\n",message_payload];
-        [desc appendFormat:@"set pdf is %ld\n", set_dpf];
-        [desc appendFormat:@"receipted message id is %@\n", receipted_message_id];
-        [desc appendFormat:@"message state is %ld\n", message_state];
-        [desc appendFormat:@"network error code is %@\n", network_error_code];
-        [desc appendFormat:@"user message reference is %ld\n", user_message_reference];
-        [desc appendFormat:@"privacy indicator is %ld\n", privacy_indicator];
-        [desc appendFormat:@"callbacl number is %@\n", callback_num];
-        [desc appendFormat:@"callback number presence indicator is %ld\n", callback_num_pres_ind];
-        [desc appendFormat:@"callbacl number atag %@\n", callback_num_atag];
-        [desc appendFormat:@"source subaddress is %@\n", source_subaddress];
-        [desc appendFormat:@"destination subaddress is %@\n", dest_subaddress];
-        [desc appendFormat:@"user response code is %ld\n", user_response_code];
-        [desc appendFormat:@"display time is %ld\n", display_time];
-        [desc appendFormat:@"sms signal is %ld\n", sms_signal];
-        [desc appendFormat:@"ms validity is %ld\n", ms_validity];
-        [desc appendFormat:@"ms msg wait facilities is %ld\n", ms_msg_wait_facilities];
-        [desc appendFormat:@"alert on message delivery is %ld\n", alert_on_message_delivery];
-        [desc appendFormat:@"language indicator is %ld\n", language_indicator];
-        [desc appendFormat:@"its reply type is %ld\n", its_reply_type];
-        [desc appendFormat:@"source subaddress is %@\n", its_session_info];
-    }
-    else if (type == SMPP_PDU_DATA_SM_RESP)
-    {
-        [desc appendFormat:@"message id is %@\n", message_id];
-        [desc appendFormat:@"delivery failure reason is %ld\n", delivery_failure_reason];
-        [desc appendFormat:@"network error code is %@\n", network_error_code];
-        [desc appendFormat:@"additional satus info text is %@\n", additional_status_info_text];
-        [desc appendFormat:@"dpf result is %ld\n", dpf_result];
-    }
-    else if (type == SMPP_PDU_QUERY_SM)
-    {
-        [desc appendFormat:@"message id is %@\n", message_id];
-        [desc appendFormat:@"source addr ton is %ld\n", source_addr_ton];
-        [desc appendFormat:@"source addr npi is %ld\n", source_addr_npi];
-        [desc appendFormat:@"system type is %@\n", source_addr];
-    }
-    else if (type == SMPP_PDU_QUERY_SM_RESP)
-    {
-        [desc appendFormat:@"message id is %@\n", message_id];
-        [desc appendFormat:@"final date is info text is %@\n", final_date];
-        [desc appendFormat:@"message state is %ld\n", message_state];
-        [desc appendFormat:@"error code is %ld\n", error_code];
-    }
-    else if (type == SMPP_PDU_CANCEL_SM)
-    {
-        [desc appendFormat:@"service type is %@\n", service_type];
-        [desc appendFormat:@"message id is %@\n", message_id];
-        [desc appendFormat:@"source addr ton is %ld\n", source_addr_ton];
-        [desc appendFormat:@"source addr npi is %ld\n", source_addr_npi];
-        [desc appendFormat:@"system type is %@\n", source_addr];
-        [desc appendFormat:@"destnation addr ton is %ld\n", dest_addr_ton];
-        [desc appendFormat:@"destination addr npi is %ld\n", dest_addr_npi];
-        [desc appendFormat:@"destination addr is %@\n", destination_addr];
-    }
-    else if (type == SMPP_PDU_REPLACE_SM)
-    {
-        [desc appendFormat:@"service type is %@\n", service_type];
-        [desc appendFormat:@"message id is %@\n", message_id];
-        [desc appendFormat:@"source addr ton is %ld\n", source_addr_ton];
-        [desc appendFormat:@"source addr npi is %ld\n", source_addr_npi];
-        [desc appendFormat:@"system type is %@\n", source_addr];
-        [desc appendFormat:@"scheduled delivery time is %@\n", schedule_delivery_time];
-        [desc appendFormat:@"validity period is %@\n", validity_period];
-        [desc appendFormat:@"registered delivery is %ld\n", registered_delivery];
-        [desc appendFormat:@"sm default sm id is %ld\n", sm_default_msg_id];
-        [desc appendFormat:@"sm length is %ld\n", sm_length];
-        [desc appendFormat:@"short message is %@\n", short_message];
-    }
-    else if (type == SMPP_PDU_ALERT_NOTIFICATION)
-    {
-        [desc appendFormat:@"source addr ton is %ld\n", source_addr_ton];
-        [desc appendFormat:@"source addr npi is %ld\n", source_addr_npi];
-        [desc appendFormat:@"system type is %@\n", source_addr];
-        [desc appendFormat:@"esme addr ton is %ld\n", esme_addr_ton];
-        [desc appendFormat:@"esme addr npi is %ld\n", esme_addr_npi];
-        [desc appendFormat:@"esme addr is %@\n", esme_addr];
-        [desc appendFormat:@"ms avability status is %ld\n", ms_availability_status];
-    }
-    
-    [desc appendFormat:@"tlvs dictionary for custom tlvs is %@\n", tlv];
-    
-=======
     [desc appendFormat:@" len:     %08lX\n", (unsigned long)_pdulen];
     [desc appendFormat:@" type:    %08lX %@\n", (unsigned long)_type,[SmppPdu pduTypeToString:_type]];
 	[desc appendFormat:@" error:   %08lX %@\n", (unsigned long)_err, [SmppPdu errorToString:_err]];
@@ -3750,7 +2481,6 @@ static UMSmppError SMPP_outgoingErrorCodeMapping(UMSmppError e);
     }
     
     [desc appendFormat:@"tlvs dictionary for custom tlvs is %@\n", _tlvs];
->>>>>>> release-6.0
     [desc appendString:@"SMPP PDU dump ends"];
     
     return desc;
@@ -3758,22 +2488,14 @@ static UMSmppError SMPP_outgoingErrorCodeMapping(UMSmppError e);
 
 - (NSString *)sequenceString
 {
-<<<<<<< HEAD
-    return [NSString stringWithFormat:@"%08lx",(unsigned long)[self seq]];
-=======
     return [NSString stringWithFormat:@"%08lx",(unsigned long)_seq];
->>>>>>> release-6.0
 }
 
 - (void)setSequenceString:(NSString *)s
 {
     unsigned long ul;
     sscanf([s UTF8String],"%08lx",&ul);
-<<<<<<< HEAD
-    [self setSeq:ul];
-=======
     _seq = ul;
->>>>>>> release-6.0
 }
 
 + (NSDate *)smppTimestampFromString:(NSString *)str
@@ -3781,11 +2503,7 @@ static UMSmppError SMPP_outgoingErrorCodeMapping(UMSmppError e);
     @autoreleasepool
     {
         const char *ts = str.UTF8String;
-<<<<<<< HEAD
-        int microsec = 0;
-=======
         //int microsec;
->>>>>>> release-6.0
         time_t theTime;
         
         if(strlen(ts) != 16)
@@ -3819,11 +2537,7 @@ static UMSmppError SMPP_outgoingErrorCodeMapping(UMSmppError e);
         else if (p == '+')
         {
             trec.tm_gmtoff = -(15 * 60 * n);
-<<<<<<< HEAD
-            microsec = t * 100000;
-=======
             //microsec = t * 100000;
->>>>>>> release-6.0
             theTime = timegm(&trec);
         }
         else if (p == 'R')
@@ -3851,10 +2565,6 @@ static UMSmppError SMPP_outgoingErrorCodeMapping(UMSmppError e);
     }
 }
 
-<<<<<<< HEAD
-
-@end
-=======
 @end
 
 
@@ -3862,4 +2572,3 @@ static UMSmppError SMPP_outgoingErrorCodeMapping(UMSmppError e)
 {
     return e;
 }
->>>>>>> release-6.0

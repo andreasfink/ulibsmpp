@@ -62,7 +62,6 @@
 #define	MESSAGE_STATE_UNKNOWN		7
 #define	MESSAGE_STATE_REJECTED		8
 
-<<<<<<< HEAD:ulibsmpp/SmscConnectionMessageProtocol.h
 /* this is now in ummessage
 typedef enum UMReportMaskValue
 {
@@ -90,8 +89,7 @@ typedef enum UMRequestMaskValue
     REQUEST_MASK_INTERMEDIATE    = 16,
 } UMRequestMaskValue;
  */
-=======
->>>>>>> release-6.0:ulibsmpp6/SmscConnectionMessageProtocol.h
+
 
 @class SRMessageState;
 

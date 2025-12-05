@@ -39,8 +39,8 @@ install: install_dev install_bin
 
 install_dev:
 	-mkdir -p ${DESTDIR}/usr/local/lib/pkgconfig
-	-mkdir -p ${DESTDIR}/usr/local/include/ulibsmpp6
-	cp $(HFILES) ${DESTDIR}/usr/local/include/ulibsmpp6
+	-mkdir -p ${DESTDIR}/usr/local/include/ulibsmpp
+	cp $(HFILES) ${DESTDIR}/usr/local/include/ulibsmpp
 
 install_bin: ${LIB} ${SLIB}
 	rm -f "${DESTDIR}/usr/local/lib/${LIB}.${MAJORVER}.${MINORVER}.${REVISION}"

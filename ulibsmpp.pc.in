@@ -5,11 +5,11 @@ exec_prefix=${prefix}
 libdir=${exec_prefix}/lib
 includedir=${prefix}/include
 
-Name: ulibsmpp6
+Name: ulibsmpp
 Cflags: -I${includedir}
-Libs: -L${libdir} -l:libulibsmpp6.@SHARED_LIBRARY_EXTENSION@.@MAJORVER@.@MINORVER@
+Libs: -L${libdir} -l:libulibsmpp.@SHARED_LIBRARY_EXTENSION@.@MAJORVER@.@MINORVER@
 
-Description: universal SMPP library version6
+Description: universal SMPP library 
 Version: @VERSION@
 Requires: ulib
 
