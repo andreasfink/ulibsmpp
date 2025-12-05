@@ -1,0 +1,16 @@
+#ulibsmpp pkg-config source file
+
+prefix=/usr/local
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+
+Name: ulibsmpp6
+Cflags: -I${includedir}
+Libs: -L${libdir} -l:libulibsmpp6.@SHARED_LIBRARY_EXTENSION@.@MAJORVER@.@MINORVER@
+
+Description: universal SMPP library version6
+Version: @VERSION@
+Requires: ulib
+
+
