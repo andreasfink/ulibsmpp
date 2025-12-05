@@ -15,7 +15,7 @@
 #import "SmscConnectionUserProtocol.h"
 #import <ulibsmpp/UMSmppError.h>
 #import <ulibsms/ulibsms.h>
-#import <ulibsmpp/NSData+smppFunctions.h>
+#import <ulibsmpp/NSData+ulibsmpp.h>
 
 #define SMPP_RECONNECT_DELAY                 30
 #define SMPP_WAIT_FOR_BIND_RESPONSE_DELAY    3000

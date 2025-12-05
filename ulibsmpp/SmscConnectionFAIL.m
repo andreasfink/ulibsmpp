@@ -10,6 +10,7 @@
 #include <sys/signal.h>
 #include <unistd.h> /* for usleep */
 #import <ulibsmpp/SmscConnectionFAIL.h>
+<<<<<<< HEAD:ulibsmpp6/SmscConnectionFAIL.m
 <<<<<<< HEAD:ulibsmpp/SmscConnectionFAIL.m
 #import <ulibsmpp/NSMutableString+ulibsmpp.h>
 #import <ulibsmpp/NSString+ulibsmpp.h>
@@ -18,6 +19,10 @@
 =======
 #import <ulibsmpp/NSMutableString+UniversalSMPP.h>
 #import <ulibsmpp/NSString+UniversalSMPP.h>
+=======
+#import <ulibsmpp/NSMutableString+ulibsmpp.h>
+#import <ulibsmpp/NSString+ulibsmpp.h>
+>>>>>>> release-6.0:ulibsmpp/SmscConnectionFAIL.m
 #import <ulibsmpp/UMSmppError.h>
 >>>>>>> release-6.0:ulibsmpp6/SmscConnectionFAIL.m
 

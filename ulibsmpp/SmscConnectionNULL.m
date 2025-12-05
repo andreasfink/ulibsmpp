@@ -10,9 +10,14 @@
 #import <ulibsmpp/SmscConnectionNULL.h>
 #include <sys/signal.h>
 #include <unistd.h> /* for usleep */
+<<<<<<< HEAD:ulibsmpp6/SmscConnectionNULL.m
 #import <ulibsmpp/NSString+ulibsmpp.h>
 #import <ulibsmpp/NSMutableString+ulibsmpp.h>
 #import <ulibsmpp/NSData+ulibsmpp.h>
+=======
+#import <ulibsmpp/NSMutableString+ulibsmpp.h>
+#import <ulibsmpp/NSString+ulibsmpp.h>
+>>>>>>> release-6.0:ulibsmpp/SmscConnectionNULL.m
 
 @implementation SmscConnectionNULL
 

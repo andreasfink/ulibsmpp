@@ -17,8 +17,8 @@
 #import <ulibsmpp/UMSmppError.h>
 #import <ulibsmpp/UMDeliveryReportType.h>
 #import <ulibsmpp/UMDeliveryReportType.h>
-#import <ulibsmpp/NSData+smppFunctions.h>
-#import <ulibsmpp/NSString+smppFunctions.h>
+#import <ulibsmpp/NSData+ulibsmpp.h>
+#import <ulibsmpp/NSString+ulibsmpp.h>
 #import <ulibsmpp/UMNetworkError.h>
 
 

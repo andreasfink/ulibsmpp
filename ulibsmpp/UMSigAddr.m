@@ -7,6 +7,7 @@
 //
 
 #import "UMSigAddr.h"
+<<<<<<< HEAD:ulibsmpp6/UMSigAddr.m
 <<<<<<< HEAD:ulibsmpp/UMSigAddr.m
 #import "NSString+ulibsmpp.h"
 #import "NSData+ulibsmpp.h"
@@ -14,6 +15,10 @@
 #import "NSString+smppFunctions.h"
 #import "NSData+smppFunctions.h"
 >>>>>>> release-6.0:ulibsmpp6/UMSigAddr.m
+=======
+#import "NSString+ulibsmpp.h"
+#import "NSData+ulibsmpp.h"
+>>>>>>> release-6.0:ulibsmpp/UMSigAddr.m
 #import <ulibsms/ulibsms.h>
 
 static int is_all_digits(NSString *str, int startpos);
