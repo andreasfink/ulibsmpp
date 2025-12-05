@@ -40,7 +40,7 @@ typedef enum GSM_CBSDataCodingScheme
 } GSM_CBSDataCodingScheme;
 
 
-const unichar gsmToUnicode[] =
+const unichar smppGsmToUnicode[] =
 {
 /* 0 - 15 */
 '@',
@@ -91,4 +91,4 @@ const unichar gsmToUnicode[] =
 'x',   'y',   'z',  0xE4,  0xF6,  0xF1,  0xFC,  0xE0    /* äöñüà */
 };
 
-int gsmToUnicode_table_size = sizeof(gsmToUnicode);
+int smppGsmToUnicode_table_size = sizeof(smppGsmToUnicode);

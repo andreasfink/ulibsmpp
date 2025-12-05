@@ -8,7 +8,7 @@
 
 #import "SmppPdu.h"
 #import "ulib/ulib.h"
-#import "NSData+smppFunctions.h"
+#import "NSData+ulibsmpp.h"
 #import "SmscConnectionSMPP.h"
 #import "UMSmppError.h"
 

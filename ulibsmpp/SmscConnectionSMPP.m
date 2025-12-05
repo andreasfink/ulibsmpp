@@ -9,13 +9,13 @@
 #import <ulib/ulib.h>
 #import "SmscConnectionSMPP.h"
 #import "SmppPdu.h"
-#import "NSMutableString+UniversalSMPP.h"
-#import "NSString+UniversalSMPP.h"
+#import "NSMutableString+ulibsmpp.h"
+#import "NSString+ulibsmpp.h"
 #include <sys/signal.h>
 #import "SmscConnectionUserProtocol.h"
 #import <ulibsmpp/UMSmppError.h>
 #import <ulibsms/ulibsms.h>
-#import <ulibsmpp/NSData+smppFunctions.h>
+#import <ulibsmpp/NSData+ulibsmpp.h>
 
 #define SMPP_RECONNECT_DELAY                 30
 #define SMPP_WAIT_FOR_BIND_RESPONSE_DELAY    3000
@@ -65,8 +65,8 @@ struct  SmppPduTableEntry	SmppPDUTable[] =
 ;
 
 
-#import "NSMutableString+UniversalSMPP.h"
-#import "NSString+UniversalSMPP.h"
+#import "NSMutableString+ulibsmpp.h"
+#import "NSString+ulibsmpp.h"
 
 @implementation SmscConnectionSMPP
 
@@ -1256,7 +1256,7 @@ end:
             [from setTon: ton];
             [from setNpi: npi];
             [from setAddr: addr];
-            if(![addr hasOnlyDecimalDigits])
+            if(![addr smppHasOnlyDecimalDigits])
             {
                 @throw([NSException exceptionWithName:@"ESME_RINVSRCADR"
                                                reason:NULL
@@ -1285,7 +1285,7 @@ end:
             [to setTon: ton];
             [to setNpi: npi];
             [to setAddr: addr];
-            if(![addr hasOnlyDecimalDigits])
+            if(![addr smppHasOnlyDecimalDigits])
             {
                 @throw([NSException exceptionWithName:@"ESME_RINVDSTADR"
                                                reason:NULL
@@ -2323,9 +2323,9 @@ end:
         else
         {
             if ((_smppMessageIdType  & 0x02) ||
-                (![receiptedId checkRange:NSMakeRange(0, [receiptedId length]) withFunction:isdigit]))
+                (![receiptedId smppCheckRange:NSMakeRange(0, [receiptedId length]) withFunction:isdigit]))
             {
-                value = [receiptedId integer16Value];
+                value = [receiptedId smppInteger16Value];
                 tmp = [NSMutableString stringWithFormat:@"%llu", value];
             }
             else
