@@ -40,7 +40,16 @@
 - (void) unregisterSendingSmscConnection:(id<SmscConnectionRouterUserProtocol>) smscConnection;
 
 
-- (id<SmscConnectionUserProtocol>) authenticateUser:(NSString *)username withPassword:(NSString *)password;
+- (id<SmscConnectionUserProtocol>) authenticateUser:(NSString *)username
+                                       withPassword:(NSString *)password
+                                          ipAddress:(NSString *)ipAddress
+                                         systemType:(NSString *)systemType
+                                   interfaceVersion:(NSNumber *)interfaceVersion
+                                           bindType:(NSString *)bindType
+                                            bindTon:(NSNumber *)bindTon
+                                            bindNpi:(NSNumber *)bindNpi
+                                        bindAddress:(NSString *)bindAddress;
+
 - (BOOL) userExists:(NSString *)username;
 
 @optional

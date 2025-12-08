@@ -14,7 +14,7 @@
 - (BOOL) hasCredits;
 - (BOOL) withinSpeedlimit;
 - (void) increase; /* counter for speed limit */
-- (void) removeCredits:(NSInteger)count;
+- (void) removeCredits:(double)count;
 - (NSString *) username;
 - (NSString *) password;
 - (void) errorCounterIncrease;

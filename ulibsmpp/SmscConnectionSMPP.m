@@ -1769,20 +1769,20 @@ end:
 	//int err = 0;
 	NSString	*usr;
 	NSString	*pwd;
-	//NSString	*sType;
-	//int			addrTon;
-	//int			addrNpi;
-	//NSString	*addrAddr;
-	/*int			interfaceVersion;*/
+	NSString	*systemType;
+	int			bindTon;
+	int			bindNpi;
+	NSString	*bindAddr;
+	int			interfaceVersion;
 	
 	[pdu resetCursor];
 	usr = [pdu grabStringWithEncoding:NSISOLatin1StringEncoding	maxLength:16];
 	pwd = [pdu grabStringWithEncoding:NSISOLatin1StringEncoding	maxLength:9];
-	/*sType = */[pdu grabStringWithEncoding:NSISOLatin1StringEncoding	maxLength:9];
-	/*interfaceVersion = (int) */[pdu grabInt8];
-	/*addrTon  = (int) */[pdu grabInt8];
-	/*addrNpi  = (int) */[pdu grabInt8];
-	/*addrAddr = */ [pdu grabStringWithEncoding:NSISOLatin1StringEncoding	maxLength:31];
+	systemType = [pdu grabStringWithEncoding:NSISOLatin1StringEncoding	maxLength:9];
+	interfaceVersion = (int) [pdu grabInt8];
+	bindTon  = (int) [pdu grabInt8];
+	bindNpi  = (int) [pdu grabInt8];
+	bindAddr = [pdu grabStringWithEncoding:NSISOLatin1StringEncoding	maxLength:31];
     _user = NULL;
 	if([_router userExists:usr]==NO)
 	{
@@ -1794,7 +1794,34 @@ end:
 	}
     else
     {
-        _user = [_router authenticateUser:usr withPassword:pwd];
+
+        NSString *bindType;
+        if(rx && tx)
+        {
+            bindType=@"TRX";
+        }
+        else if(rx)
+        {
+            bindType=@"RX";
+        }
+        else if(tx)
+        {
+            bindType=@"TX";
+        }
+        else
+        {
+            bindType=@"NULL";
+        }
+        _user = [_router authenticateUser:usr
+                             withPassword:pwd
+                                ipAddress:_uc.connectedRemoteAddress
+                               systemType:systemType
+                         interfaceVersion:@(interfaceVersion)
+                                 bindType:bindType
+                                  bindTon:@(bindTon)
+                                  bindNpi:@(bindNpi)
+                              bindAddress:bindAddr];
+
         if(!_user)
         {
             _lastStatus = [NSString stringWithFormat:@"User '%@' has wrong password",usr];
