@@ -20,6 +20,7 @@
 - (UMMessageObject *)createMessage;
 /* asking the router to provide a new report object */
 - (UMMessageReport *)createReport;
+- (NSString *)newSessionId;
 
 /* generic stuff */
 
@@ -48,7 +49,8 @@
                                            bindType:(NSString *)bindType
                                             bindTon:(NSNumber *)bindTon
                                             bindNpi:(NSNumber *)bindNpi
-                                        bindAddress:(NSString *)bindAddress;
+                                        bindAddress:(NSString *)bindAddress
+                                            session:(NSString *)session;
 
 - (BOOL) userExists:(NSString *)username;
 
@@ -64,4 +66,5 @@
                     localPort:(NSNumber *)localPort
                   serviceType:(NSString *)serviceType
                          user:(NSString *)username;
+
 @end

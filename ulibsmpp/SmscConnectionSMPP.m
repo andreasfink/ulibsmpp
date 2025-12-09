@@ -1812,6 +1812,7 @@ end:
         {
             bindType=@"NULL";
         }
+        NSString *session = [_router newSessionId];
         _user = [_router authenticateUser:usr
                              withPassword:pwd
                                 ipAddress:_uc.connectedRemoteAddress
@@ -1820,7 +1821,8 @@ end:
                                  bindType:bindType
                                   bindTon:@(bindTon)
                                   bindNpi:@(bindNpi)
-                              bindAddress:bindAddr];
+                              bindAddress:bindAddr
+                                  session:session];
 
         if(!_user)
         {
