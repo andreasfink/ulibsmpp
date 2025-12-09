@@ -55,7 +55,7 @@
 @optional
 
 - (UMMessageObject *)queryMessage:(NSString *)msgid;
-- (UMMessageObject *)queryMessage:(NSString *)msgid withNumber:(NSString *)msisdn;
+- (UMMessageObject *)queryMessage:(NSString *)msgid withNumber:(NSString *)msisdn ton:(UMTonType)ton npi:(UMNpiType)npi;
 
 @optional
 - (BOOL) isAddressWhitelisted:(NSString *)remoteIpAddress

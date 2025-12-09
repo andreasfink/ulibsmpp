@@ -2005,7 +2005,7 @@ end:
     
     if([_router respondsToSelector:@selector(queryMessage:withNumber:)])
     {
-        UMMessageObject *msg = [_router queryMessage:messageId withNumber:addr];
+        UMMessageObject *msg = [_router queryMessage:messageId withNumber:addr ton:ton npi:npi];
         pdu2 = [SmppPdu OutgoingQueryRespOK:msg withId:messageId];
     }
     if([_router respondsToSelector:@selector(queryMessage:)])
