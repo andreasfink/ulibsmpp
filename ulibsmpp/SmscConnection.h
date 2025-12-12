@@ -110,7 +110,8 @@ enum SmppAlphaCoding;
     UMThroughputCounter *_outboundMessagesThroughput;
     UMThroughputCounter *_inboundReportsThroughput;
     UMThroughputCounter *_outboundReportsThroughput;
-    
+    id                  _supplierRateTable;
+
 //    UMLogFeed           *packetLogFeed;
 //    UMLogFeed           *comLogFeed;
 }
@@ -147,6 +148,7 @@ enum SmppAlphaCoding;
 @property(readwrite,strong)     NSString            *lastStatus;
 @property(readwrite,assign)     int                 max_tcp_segment_size;
 @property(readwrite,strong)     id<SmscConnectionReadyProtocol> readyForServiceDelegate;
+@property(readwrite,strong)     id                  supplierRateTable;
 
 + (NSString *)uniqueMessageId;
 + (NSString *)uniqueMessageIdWithPrefix:(NSString *)prefix;
