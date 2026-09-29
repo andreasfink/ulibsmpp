@@ -7,7 +7,6 @@
 //
 
 #import <ulib/ulib.h>
-#import <ulibasn1/ulibasn1.h>
 #import <ulibsmpp/GSMErrorCode.h>
 #import <ulibsmpp/UMSmppError.h>
 #import <ulibsmpp/UMDeliveryReportErrorCode.h>

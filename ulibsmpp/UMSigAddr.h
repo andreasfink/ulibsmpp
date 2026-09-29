@@ -6,8 +6,7 @@
 //  Copyright 2008-2014 Andreas Fink, Paradieshofstrasse 101, 4054 Basel, Switzerland
 //
 
-#import <ulib/framework.h>
-#import <ulibasn1/ulibasn1.h>
+#import <ulib/ulib.h>
 
 typedef	enum UMTonType
 {
