@@ -10,16 +10,20 @@
 		221D0F691AEA71CF000E8189 /* ulibsmpp.m in Sources */ = {isa = PBXBuildFile; fileRef = A6DB3E73191E41810090FC94 /* ulibsmpp.m */; };
 		221D0F6B1AEA71D8000E8189 /* NSMutableString+ulibsmpp.m in Sources */ = {isa = PBXBuildFile; fileRef = A6DDD9D61636221A002FA7CC /* NSMutableString+ulibsmpp.m */; };
 		22567EE61AEA6FA500603C7A /* ulibsmpp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 22278AF2162D53D200633C39 /* ulibsmpp.framework */; };
-		A642ADB91AC9CEE500854472 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 22278AFA162D53D200633C39 /* Foundation.framework */; };
+		A62D71F03074F243004EBF39 /* libummessage.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A62D71EF3074F243004EBF39 /* libummessage.a */; };
+		A62D71F13074F243004EBF39 /* libummessage.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A62D71EF3074F243004EBF39 /* libummessage.a */; };
+		A62D71F33074F24E004EBF39 /* libulibsms.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A62D71F23074F24E004EBF39 /* libulibsms.a */; };
+		A62D71F43074F24E004EBF39 /* libulibsms.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A62D71F23074F24E004EBF39 /* libulibsms.a */; };
+		A62D71F63074F295004EBF39 /* libulibsmpp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A62D71F53074F295004EBF39 /* libulibsmpp.a */; };
+		A62D71F73074F295004EBF39 /* libulibsmpp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A62D71F53074F295004EBF39 /* libulibsmpp.a */; };
+		A62D71F93074F307004EBF39 /* libulib.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A62D71F83074F307004EBF39 /* libulib.a */; };
+		A62D71FA3074F307004EBF39 /* libulib.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A62D71F83074F307004EBF39 /* libulib.a */; };
 		A672E3672DA575220003207A /* SmscConnectionReportProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = A672E3662DA575220003207A /* SmscConnectionReportProtocol.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		A672E3692DA5754C0003207A /* SmscRouterError.h in Headers */ = {isa = PBXBuildFile; fileRef = A672E3682DA5754C0003207A /* SmscRouterError.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		A672E36B2DA575520003207A /* SmscRouterError.m in Sources */ = {isa = PBXBuildFile; fileRef = A672E36A2DA575520003207A /* SmscRouterError.m */; };
-		A67502B42EC62CC10027A592 /* ummessage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A67502B32EC62CC10027A592 /* ummessage.framework */; };
 		A6793D921934AA2F0090FC94 /* ulibsmpp.h in Headers */ = {isa = PBXBuildFile; fileRef = A6DDD9C816361D92002FA7CC /* ulibsmpp.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		A6793D941934AA2F0090FC94 /* NSMutableString+ulibsmpp.h in Headers */ = {isa = PBXBuildFile; fileRef = A6DDD9D51636221A002FA7CC /* NSMutableString+ulibsmpp.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		A6793DA91934AAAD0090FC94 /* UniversalSMSUtilities.h in Headers */ = {isa = PBXBuildFile; fileRef = A6DDD95E1635FD4B002FA7CC /* UniversalSMSUtilities.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		A6798B9F22BBBAD00019806C /* ulib.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A6798B9E22BBBAD00019806C /* ulib.framework */; };
-		A68348C528854CF3003351AF /* ulibasn1.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A68348C428854CF3003351AF /* ulibasn1.framework */; };
 		A6BCC88E2AE6DF0800C34D40 /* UMPrefs.m in Sources */ = {isa = PBXBuildFile; fileRef = A6BCC8762AE6DF0700C34D40 /* UMPrefs.m */; };
 		A6BCC88F2AE6DF0800C34D40 /* UMSigAddrWithHistory.m in Sources */ = {isa = PBXBuildFile; fileRef = A6BCC8772AE6DF0700C34D40 /* UMSigAddrWithHistory.m */; };
 		A6BCC8902AE6DF0800C34D40 /* UMPrefs.h in Headers */ = {isa = PBXBuildFile; fileRef = A6BCC8782AE6DF0700C34D40 /* UMPrefs.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -97,16 +101,16 @@
 
 /* Begin PBXFileReference section */
 		22278AF2162D53D200633C39 /* ulibsmpp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ulibsmpp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		22278AFA162D53D200633C39 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		22567EE01AEA6FA500603C7A /* ulibsmppTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ulibsmppTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A6019BAF1AC15C3A00854472 /* VERSION */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = VERSION; sourceTree = "<group>"; };
+		A62D71EF3074F243004EBF39 /* libummessage.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libummessage.a; path = /usr/local/lib/libummessage.a; sourceTree = "<absolute>"; };
+		A62D71F23074F24E004EBF39 /* libulibsms.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libulibsms.a; path = /usr/local/lib/libulibsms.a; sourceTree = "<absolute>"; };
+		A62D71F53074F295004EBF39 /* libulibsmpp.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libulibsmpp.a; path = /usr/local/lib/libulibsmpp.a; sourceTree = "<absolute>"; };
+		A62D71F83074F307004EBF39 /* libulib.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libulib.a; path = /usr/local/lib/libulib.a; sourceTree = "<absolute>"; };
 		A639C02B2D3D330A009BFAC7 /* configure.ac */ = {isa = PBXFileReference; lastKnownFileType = text; path = configure.ac; sourceTree = "<group>"; };
 		A672E3662DA575220003207A /* SmscConnectionReportProtocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SmscConnectionReportProtocol.h; sourceTree = "<group>"; };
 		A672E3682DA5754C0003207A /* SmscRouterError.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SmscRouterError.h; sourceTree = "<group>"; };
 		A672E36A2DA575520003207A /* SmscRouterError.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SmscRouterError.m; sourceTree = "<group>"; };
-		A67502B32EC62CC10027A592 /* ummessage.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ummessage.framework; path = "/Library/Application Support/FinkTelecomServices/frameworks/ummessage.framework"; sourceTree = "<absolute>"; };
-		A6798B9E22BBBAD00019806C /* ulib.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ulib.framework; path = "/Library/Application Support/FinkTelecomServices/frameworks/ulib.framework"; sourceTree = "<absolute>"; };
-		A68348C428854CF3003351AF /* ulibasn1.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ulibasn1.framework; path = "/Library/Application Support/FinkTelecomServices/frameworks/ulibasn1.framework"; sourceTree = "<absolute>"; };
 		A6BCC8762AE6DF0700C34D40 /* UMPrefs.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UMPrefs.m; sourceTree = "<group>"; };
 		A6BCC8772AE6DF0700C34D40 /* UMSigAddrWithHistory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UMSigAddrWithHistory.m; sourceTree = "<group>"; };
 		A6BCC8782AE6DF0700C34D40 /* UMPrefs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UMPrefs.h; sourceTree = "<group>"; };
@@ -186,10 +190,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A6798B9F22BBBAD00019806C /* ulib.framework in Frameworks */,
-				A642ADB91AC9CEE500854472 /* Foundation.framework in Frameworks */,
-				A67502B42EC62CC10027A592 /* ummessage.framework in Frameworks */,
-				A68348C528854CF3003351AF /* ulibasn1.framework in Frameworks */,
+				A62D71F33074F24E004EBF39 /* libulibsms.a in Frameworks */,
+				A62D71F73074F295004EBF39 /* libulibsmpp.a in Frameworks */,
+				A62D71F03074F243004EBF39 /* libummessage.a in Frameworks */,
+				A62D71FA3074F307004EBF39 /* libulib.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -197,7 +201,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A62D71F43074F24E004EBF39 /* libulibsms.a in Frameworks */,
 				22567EE61AEA6FA500603C7A /* ulibsmpp.framework in Frameworks */,
+				A62D71F93074F307004EBF39 /* libulib.a in Frameworks */,
+				A62D71F13074F243004EBF39 /* libummessage.a in Frameworks */,
+				A62D71F63074F295004EBF39 /* libulibsmpp.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -214,10 +222,10 @@
 				A6F6941D1B4E855F0090FC94 /* ulibsmpp.pc.in */,
 				A6DDD92E1635FD4B002FA7CC /* ulibsmpp */,
 				22278B11162D53D200633C39 /* ulibsmppTests */,
-				22278AF4162D53D200633C39 /* Frameworks */,
 				22278AF3162D53D200633C39 /* Products */,
 				A6DDD9261635FAFA002FA7CC /* SupportingFiles */,
 				A6DDD9241635FAEF002FA7CC /* Resources */,
+				A62D71EE3074F214004EBF39 /* Libraries */,
 			);
 			sourceTree = "<group>";
 		};
@@ -230,22 +238,22 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		22278AF4162D53D200633C39 /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-				22278AFA162D53D200633C39 /* Foundation.framework */,
-				A6798B9E22BBBAD00019806C /* ulib.framework */,
-				A68348C428854CF3003351AF /* ulibasn1.framework */,
-				A67502B32EC62CC10027A592 /* ummessage.framework */,
-			);
-			name = Frameworks;
-			sourceTree = "<group>";
-		};
 		22278B11162D53D200633C39 /* ulibsmppTests */ = {
 			isa = PBXGroup;
 			children = (
 			);
 			path = ulibsmppTests;
+			sourceTree = "<group>";
+		};
+		A62D71EE3074F214004EBF39 /* Libraries */ = {
+			isa = PBXGroup;
+			children = (
+				A62D71EF3074F243004EBF39 /* libummessage.a */,
+				A62D71F23074F24E004EBF39 /* libulibsms.a */,
+				A62D71F53074F295004EBF39 /* libulibsmpp.a */,
+				A62D71F83074F307004EBF39 /* libulib.a */,
+			);
+			path = Libraries;
 			sourceTree = "<group>";
 		};
 		A6DDD9241635FAEF002FA7CC /* Resources */ = {
@@ -622,11 +630,7 @@
 				DYLIB_INSTALL_NAME_BASE = "$(DSTROOT)/$(INSTALL_PATH)";
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					/Library/Frameworks,
-					"\"/Library/Application Support/FinkTelecomServices/frameworks\"",
-				);
+				FRAMEWORK_SEARCH_PATHS = "";
 				GCC_C_LANGUAGE_STANDARD = c11;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
@@ -645,9 +649,10 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				GENERATE_PROFILING_CODE = YES;
-				HEADER_SEARCH_PATHS = "";
+				HEADER_SEARCH_PATHS = /usr/local/include;
 				INFOPLIST_FILE = SupportingFiles/Info.plist;
 				INSTALL_PATH = /FinkTelecomServices/frameworks;
+				LIBRARY_SEARCH_PATHS = /usr/local/lib;
 				MACOSX_DEPLOYMENT_TARGET = 13.1;
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_CFLAGS = "-DULIBSMPP_CONFIG=Debug";
@@ -700,11 +705,7 @@
 				DYLIB_CURRENT_VERSION = 2.0.0;
 				DYLIB_INSTALL_NAME_BASE = "$(DSTROOT)/$(INSTALL_PATH)";
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					/Library/Frameworks,
-					"\"/Library/Application Support/FinkTelecomServices/frameworks\"",
-				);
+				FRAMEWORK_SEARCH_PATHS = "";
 				GCC_C_LANGUAGE_STANDARD = c11;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -719,9 +720,10 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				GENERATE_PROFILING_CODE = YES;
-				HEADER_SEARCH_PATHS = "";
+				HEADER_SEARCH_PATHS = /usr/local/include;
 				INFOPLIST_FILE = SupportingFiles/Info.plist;
 				INSTALL_PATH = /FinkTelecomServices/frameworks;
+				LIBRARY_SEARCH_PATHS = /usr/local/lib;
 				MACOSX_DEPLOYMENT_TARGET = 13.1;
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_CFLAGS = "-DULIBSMPP_CONFIG=Release";
@@ -746,11 +748,6 @@
 				CURRENT_PROJECT_VERSION = 2.0.0;
 				DEVELOPMENT_TEAM = HG8655K94F;
 				DYLIB_CURRENT_VERSION = 2.1.1;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(LOCAL_LIBRARY_DIR)/Application\\ Support/FinkTelecomServices/frameworks",
-					"$(LOCAL_LIBRARY_DIR)/Application\\ Support/FinkTelecomServices/frameworks",
-				);
 				LD_RUNPATH_SEARCH_PATHS = "\"/Library/Application Support/\"";
 				MACOSX_DEPLOYMENT_TARGET = 12.4;
 				MARKETING_VERSION = 2.1.1;
@@ -772,11 +769,6 @@
 				CURRENT_PROJECT_VERSION = 2.0.0;
 				DEVELOPMENT_TEAM = HG8655K94F;
 				DYLIB_CURRENT_VERSION = 2.1.1;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(LOCAL_LIBRARY_DIR)/Application\\ Support/FinkTelecomServices/frameworks",
-					"$(LOCAL_LIBRARY_DIR)/Application\\ Support/FinkTelecomServices/frameworks",
-				);
 				LD_RUNPATH_SEARCH_PATHS = "\"/Library/Application Support/\"";
 				MACOSX_DEPLOYMENT_TARGET = 12.4;
 				MARKETING_VERSION = 2.1.1;

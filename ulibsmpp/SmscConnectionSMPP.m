@@ -1930,18 +1930,17 @@ end:
 
 - (void) handleIncomingBindReceiverResp: (SmppPdu *)pdu
 {
-    NSString *systemId;
     UMSmppError err;
     
     [pdu resetCursor];
     _bindExpires = NULL;
 
-    systemId = [pdu grabStringWithEncoding:NSISOLatin1StringEncoding	maxLength:16];
+    _systemId = [pdu grabStringWithEncoding:NSISOLatin1StringEncoding	maxLength:16];
     
     err = pdu.err;
     if ((err != UM_ESME_ROK) && (err != UM_ESME_RALYBND))
     {
-        NSString *msg = [NSString stringWithFormat:@"SmscConnectionSMPP:handleIncomingBindReceiverResp: [%@]: SMSC rejected login to transmit, code 0x%08lx (%@) with <%@>.\r\n", _name, (unsigned long )err, UMSmppErrorAsString(err), systemId];
+        NSString *msg = [NSString stringWithFormat:@"SmscConnectionSMPP:handleIncomingBindReceiverResp: [%@]: SMSC rejected login to transmit, code 0x%08lx (%@) with <%@>.\r\n", _name, (unsigned long )err, UMSmppErrorAsString(err), _systemId];
         [self.logFeed majorError:0 withText:msg];
         if(_outgoingStatus != SMPP_STATUS_OUTGOING_MAJOR_FAILURE_RETRY_TIMER)
         {

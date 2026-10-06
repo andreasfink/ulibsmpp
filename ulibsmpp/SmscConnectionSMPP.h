@@ -134,6 +134,8 @@ typedef enum SMPPConnectionMode
     SmppAlphaCoding     _alphanumericOriginatorCoding;
     int                 _outstandingKeepalives;
     __weak id<SmppTerminationCallback>   _terminatedDelegate; /* we call this with [obj terminatedCallback:self] */
+    NSString            *_systemId;
+    
 	/*
      @property(readwrite,retain)     UMLogFeed *packetLogFeed;
      @property(readwrite,retain)     UMLogFeed *comLogFeed;
@@ -204,7 +206,8 @@ typedef enum SMPPConnectionMode
 @property (readwrite,assign)    BOOL            usesHexMessageIdInDlrText;
 @property (readwrite,assign)    BOOL            useSSL;
 @property (readwrite,assign)   NSInteger        bindAddrTon;
-@property (readwrite,assign)   NSInteger        bindAddrNpi;
+@property (readwrite,assign)    NSInteger        bindAddrNpi;
+@property (readwrite,strong)    NSString        *systemId;
 
 - (SmscConnectionSMPP *)init;
 
